@@ -6,15 +6,23 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.auth.repository.UserRepository;
+import org.example.memoaserver.global.security.dto.DetailsAuthDTO;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
+import org.example.memoaserver.global.security.jwt.details.CustomUserDetails;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,6 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
             PrintWriter printWriter = response.getWriter();
             printWriter.println("Token is expired");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
             return;
         }
 
@@ -40,11 +49,32 @@ public class JwtFilter extends OncePerRequestFilter {
         if (!category.equals("access")) {
             PrintWriter printWriter = response.getWriter();
             printWriter.println("Token is not access");
-
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
             return;
         }
 
-        String username = jwtUtil.getUsername(accessToken);
+        Long username = Long.valueOf(jwtUtil.getUsername(accessToken));
+        String role = jwtUtil.getRole(accessToken);
+
+        Optional<String> email = userRepository.findEmailById(username);
+
+        if (email.isEmpty()) {
+            PrintWriter printWriter = response.getWriter();
+            printWriter.println("User not found");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            return;
+        }
+
+        DetailsAuthDTO userEntity = new DetailsAuthDTO();
+        userEntity.setEmail(email.get());
+        userEntity.setRole(role);
+        CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        filterChain.doFilter(request, response);
     }
 }

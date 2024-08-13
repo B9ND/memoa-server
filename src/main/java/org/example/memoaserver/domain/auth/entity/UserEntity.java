@@ -1,9 +1,12 @@
 package org.example.memoaserver.domain.auth.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Getter @Setter
 @Entity
 public class UserEntity {
     @Id
@@ -24,4 +27,6 @@ public class UserEntity {
     private Integer grade;
 
     private Date birth;
+
+    private String role;
 }
