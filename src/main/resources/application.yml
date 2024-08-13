@@ -1,3 +1,25 @@
 spring:
     application:
         name: memoa-server
+    data:
+        redis:
+            host: ${REDIS_HOST}
+            password: ${REDIS_PASSWORD}
+            port: ${REDIS_PORT}
+    datasource:
+        password: ${MYSQL_PASSWORD}
+        url: ${MYSQL_HOST}
+        username: ${MYSQL_USER}
+    jpa:
+        hibernate:
+            ddl-auto: create
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+        show-sql: true
+    jwt:
+        access:
+            expiration: ${ACCESS_END}
+        refresh:
+            expiration: ${REFRESH_END}
+        secret: ${JWT_KEY}

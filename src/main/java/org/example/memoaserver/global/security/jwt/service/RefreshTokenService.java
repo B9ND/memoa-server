@@ -1,6 +1,8 @@
 package org.example.memoaserver.global.security.jwt.service;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -19,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class RefreshTokenService {
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String TOKEN_PREFIX = "refresh_token:";
-    private static final String INVERSE_INDEX_PREFIX = "refresh_to_phoneNumber:";
+    private static final String INVERSE_INDEX_PREFIX = "refresh_to_username:";
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
 
@@ -74,6 +77,55 @@ public class RefreshTokenService {
         response.addCookie(createCookie("refresh", newRefresh, jwtProperties.getRefresh().getExpiration()));
 
         return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    public void logout(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        String refresh = null;
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("refresh")) {
+                refresh = cookie.getValue();
+                break;
+            }
+        }
+
+        if (refresh == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        try {
+            jwtUtil.isExpired(refresh);
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        String category = jwtUtil.getCategory(refresh);
+        if (!category.equals("refresh")) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        Boolean isExist = existsByRefreshToken(refresh);
+        if (!isExist) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        deleteByRefreshToken(refresh);
+        Cookie cookie = new Cookie("refresh", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     public Cookie createCookie(String key, String value, Long maxAge) {
