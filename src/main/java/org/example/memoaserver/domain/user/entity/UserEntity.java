@@ -1,13 +1,11 @@
-package org.example.memoaserver.domain.auth.entity;
+package org.example.memoaserver.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Getter @Setter
-@Entity
+@Entity(name = "user")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,17 +14,9 @@ public class UserEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 50)
-    private String password;
-
-    @Column(length = 50)
     private String nickname;
 
-    private String school;
-
-    private Integer grade;
-
-    private Date birth;
-
     private String role;
+
+    private String password;
 }

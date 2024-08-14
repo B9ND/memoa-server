@@ -7,6 +7,7 @@ public class JwtSignatureException extends RuntimeException {
     public JwtSignatureException(String message, Throwable cause) {
         super(message, cause);
     }
+
     public JwtSignatureException(Throwable cause) {
         super(cause);
     }

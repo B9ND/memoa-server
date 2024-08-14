@@ -1,23 +1,26 @@
 package org.example.memoaserver.global.security.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.domain.auth.dto.UserDTO;
+import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
-import org.example.memoaserver.global.security.jwt.service.RefreshTokenService;
 import org.example.memoaserver.global.security.properties.JwtProperties;
+import org.example.memoaserver.global.service.RefreshTokenService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -27,23 +30,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtProperties jwtProperties;
     private final RefreshTokenService refreshTokenService;
 
-    private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-    private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
-    throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
+
         try {
-            UserDTO loginRequest = objectMapper.readValue(req.getReader(), UserDTO.class);
-            String username = loginRequest.getUsername();
+            UserDTO loginRequest = objectMapper.readValue(request.getReader(), UserDTO.class);
+
+            String email = loginRequest.getEmail();
             String password = loginRequest.getPassword();
 
-            if (!checkEmailVerification(loginRequest.getEmail())) {
-                throw new RuntimeException("Invalid email address");
+            if (!isPhoneNumberCorrect(loginRequest)) {
+                throw new RuntimeException("email is incorrect");
             }
 
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
-
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
             return authenticationManager.authenticate(authToken);
         } catch(IOException e) {
 
@@ -51,12 +52,42 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
-    public static Boolean checkEmailVerification(String email) {
-        if (email == null) {
-            return false;
-        }
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        String email = authentication.getName();
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        GrantedAuthority auth = iterator.next();
+        String role = auth.getAuthority();
+
+        String access = jwtUtil.createJwt("access", email, role, jwtProperties.getAccess().getExpiration());
+        String refresh = jwtUtil.createJwt("refresh", email, role, jwtProperties.getRefresh().getExpiration());
+
+        response.setHeader("Authorization", access);
+        response.addCookie(createCookie("refresh", refresh, jwtProperties.getRefresh().getExpiration()));
+        refreshTokenService.addRefreshEntity(email, refresh, jwtProperties.getRefresh().getExpiration());
+
+        response.setStatus(HttpStatus.OK.value());
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    private Cookie createCookie(String key, String value, Long maxAge) {
+        Cookie cookie = new Cookie(key, value);
+        int maxAgeInt = maxAge.intValue();
+        cookie.setMaxAge(maxAgeInt);
+        //cookie.setSecure(true);
+        //cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        return cookie;
+    }
+
+    private Boolean isPhoneNumberCorrect(UserDTO userDTO) {
+        return true;
     }
 }

@@ -12,13 +12,15 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final SecretKey secretKey;
+
+    private SecretKey secretKey;
+
     public JwtUtil(@Value("${spring.jwt.secret}")String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
-    public String getUsername(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseClaimsJws(token).getPayload().get("username", String.class);
+    public String getEmail(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("email", String.class);
     }
 
     public String getRole(String token) {
@@ -33,20 +35,21 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJWT(String category, String username, String role, Long expiredTime) {
+    public String createJwt(String category, String phoneNumber, String role, Long expiredTime) {
         try {
             return Jwts.builder()
                     .claim("category", category)
-                    .claim("username", username)
+                    .claim("email", phoneNumber)
                     .claim("role", role)
                     .issuedAt(new Date(System.currentTimeMillis()))
-                    .issuedAt(new Date(System.currentTimeMillis() + expiredTime))
+                    .expiration(new Date(System.currentTimeMillis() + expiredTime))
                     .signWith(secretKey)
                     .compact();
-        } catch(JwtSignatureException e) {
+        } catch (JwtSignatureException e) {
             throw new JwtSignatureException("Invalid JWT signature");
-        } catch(Exception e) {
-            throw new RuntimeException("Jwt processing failed");
+        } catch (Exception e) {
+            throw new RuntimeException("JWT processing error");
         }
+
     }
 }

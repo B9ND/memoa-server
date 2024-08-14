@@ -2,13 +2,12 @@ package org.example.memoaserver.global.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.domain.auth.repository.UserRepository;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
+import org.example.memoaserver.global.security.jwt.filter.CustomLogoutFilter;
 import org.example.memoaserver.global.security.jwt.filter.JwtFilter;
 import org.example.memoaserver.global.security.jwt.filter.LoginFilter;
-import org.example.memoaserver.global.security.jwt.service.RefreshTokenService;
 import org.example.memoaserver.global.security.properties.JwtProperties;
-import org.example.memoaserver.global.security.jwt.filter.CustomLogoutFilter;
+import org.example.memoaserver.global.service.RefreshTokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,9 +25,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
@@ -40,29 +39,30 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, UserRepository userRepository) throws Exception {
-         LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtProperties, refreshTokenService);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtProperties, refreshTokenService);
+        loginFilter.setFilterProcessesUrl("/auth/login");
 
-         http
-                 .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+        http
+                .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 
-                     @Override
-                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
-                         CorsConfiguration configuration = new CorsConfiguration();
+                        CorsConfiguration configuration = new CorsConfiguration();
 
-                         configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                         configuration.setAllowedMethods(Collections.singletonList("*"));
-                         configuration.setAllowCredentials(true);
-                         configuration.setAllowedHeaders(Collections.singletonList("*"));
-                         configuration.setMaxAge(3600L);
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowCredentials(true);
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setMaxAge(3600L);
 
-                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
-                         return configuration;
-                     }
-                 })));
+                        return configuration;
+                    }
+                })));
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -71,21 +71,21 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/auth/*").permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/auth/*", "/").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/webjars/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 
-         http
-                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService), LogoutFilter.class)
-                 .addFilterBefore(new JwtFilter(jwtUtil, userRepository), LoginFilter.class)
-                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService), LogoutFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
+                .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
-
-         http
+        http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
 
         return http.build();
     }
@@ -95,5 +95,6 @@ public class SecurityConfig {
 
         return configuration.getAuthenticationManager();
     }
+
 
 }

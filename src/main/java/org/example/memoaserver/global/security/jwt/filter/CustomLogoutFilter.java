@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
-import org.example.memoaserver.global.security.jwt.service.RefreshTokenService;
+import org.example.memoaserver.global.service.RefreshTokenService;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
