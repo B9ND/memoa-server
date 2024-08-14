@@ -21,6 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -29,6 +31,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
     private final RefreshTokenService refreshTokenService;
+
+    private static final String EMAIL_PATTERN =
+            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+
+    private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -40,8 +48,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             String email = loginRequest.getEmail();
             String password = loginRequest.getPassword();
 
-            if (!isPhoneNumberCorrect(loginRequest)) {
-                throw new RuntimeException("email is incorrect");
+            if (!checkEmailVerification(email)) {
+                throw new RuntimeException("Invalid email");
             }
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
@@ -87,7 +95,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         return cookie;
     }
 
-    private Boolean isPhoneNumberCorrect(UserDTO userDTO) {
-        return true;
+    private Boolean checkEmailVerification(String email) {
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }
