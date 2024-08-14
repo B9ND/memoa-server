@@ -5,14 +5,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.domain.user.entity.UserEntity;
+import org.example.memoaserver.domain.user.service.AuthCodeService;
 import org.example.memoaserver.domain.user.service.UserService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.service.RefreshTokenService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,6 +19,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
+    private final AuthCodeService authCodeService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO user) {
@@ -33,6 +32,18 @@ public class AuthController {
                     .badRequest()
                     .body(e.getMessage());
         }
+    }
+
+    @PostMapping("/send-code")
+    public String sendAuthCode(@RequestParam(name = "email") String email) {
+        authCodeService.sendAuthCode(email);
+        return "Authentication code sent to " + email;
+    }
+
+    @PostMapping("/verify-code")
+    public String verifyAuthCode(@RequestParam(name = "email") String email, @RequestParam(name = "code") String code) {
+        boolean isVerified = authCodeService.verifyAuthCode(email, code);
+        return isVerified ? "Code verified successfully!" : "Invalid or expired code.";
     }
 
     @PostMapping("/reissue")

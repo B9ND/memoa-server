@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.properties.JwtProperties;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
+    @Qualifier("redisTemplate0")
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String TOKEN_PREFIX = "refresh_token:";
     private static final String INVERSE_INDEX_PREFIX = "refresh_to_email:";
