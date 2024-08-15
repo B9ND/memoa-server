@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter @Setter
 @Entity(name = "user")
 public class UserEntity {
@@ -19,4 +21,10 @@ public class UserEntity {
     private String role;
 
     private String password;
+
+    private String school;
+
+    private Date birth;
+
+    private Integer grade;
 }
