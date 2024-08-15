@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface SchoolRepository extends JpaRepository<SchoolEntity, Long> {
     List<SchoolEntity> findByNameContainingIgnoreCase(String name);
+    Boolean existsByName(String name);
 }

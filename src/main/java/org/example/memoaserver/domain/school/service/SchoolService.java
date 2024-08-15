@@ -21,6 +21,10 @@ public class SchoolService {
     public void addSchool(SchoolDTO school) {
         log.info(school.getName());
 
+        if (schoolRepository.existsByName(school.getName())) {
+            throw new RuntimeException("already exists school");
+        }
+
         SchoolEntity schoolEntity = new SchoolEntity();
         schoolEntity.setName(school.getName());
 
