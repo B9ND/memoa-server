@@ -1,19 +1,28 @@
 package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.global.security.incode.SHA256;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class AuthCodeService {
     private static final int EXPIRATION_TIME = 5;
 
     private final EmailService emailService;
     private final RedisTemplate<String, Object> redisTemplate1;
+    private final SHA256 sha256 = new SHA256();
 
     public AuthCodeService(@Qualifier("redisTemplate1") RedisTemplate<String, Object> redisTemplate1,
                            EmailService emailService) {
@@ -27,21 +36,36 @@ public class AuthCodeService {
         return String.valueOf(code);
     }
 
-    public void sendAuthCode(String email) {
+    public void sendAuthCode(String email) throws IOException, NoSuchAlgorithmException {
         String authCode = generateAuthCode();
-        redisTemplate1.opsForValue().set(email, authCode, EXPIRATION_TIME, TimeUnit.MINUTES);
+        String hashedAuthCode = sha256.encode(authCode);
+        redisTemplate1.opsForValue().set(email, hashedAuthCode, EXPIRATION_TIME, TimeUnit.MINUTES);
 
-        // HTML 메시지 작성
-        String htmlBody = "<h1>Your Authentication Code</h1>"
-                + "<p>Your authentication code is: <strong>" + authCode + "</strong></p>"
-                + "<p>This code will expire in " + EXPIRATION_TIME + " minutes.</p>";
+        ClassPathResource resource = new ClassPathResource("templates/mail.html");
+        String htmlBody = new String(Files.readAllBytes(resource.getFile().toPath()));
+
+        htmlBody = htmlBody.replace("${authCode}", authCode);
+        htmlBody = htmlBody.replace("${expirationTime}", String.valueOf(EXPIRATION_TIME));
 
         emailService.sendMail(email, "Your Authentication Code", htmlBody);
     }
 
-    public boolean verifyAuthCode(String email, String authCode) {
+    public boolean verifyAuthCode(String email, String authCode) throws NoSuchAlgorithmException {
         String storedCode = (String) redisTemplate1.opsForValue().get(email);
 //        System.out.println(storedCode);
-        return storedCode != null && storedCode.equals(authCode);
+        if (storedCode == null) {
+            return false;
+        }
+
+        log.info(String.valueOf(sha256.matches(authCode, storedCode)));
+
+        if (!sha256.matches(authCode, storedCode)) {
+            return false;
+        }
+
+
+
+        redisTemplate1.delete(email);
+        return true;
     }
 }

@@ -12,6 +12,9 @@ import org.example.memoaserver.global.service.RefreshTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -36,12 +39,18 @@ public class AuthController {
 
     @PostMapping("/send-code")
     public String sendAuthCode(@RequestParam(name = "email") String email) {
-        authCodeService.sendAuthCode(email);
+        try {
+            authCodeService.sendAuthCode(email);
+        } catch (IOException e) {
+            return "send auth code failed";
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
         return "Authentication code sent to " + email;
     }
 
     @PostMapping("/verify-code")
-    public String verifyAuthCode(@RequestParam(name = "email") String email, @RequestParam(name = "code") String code) {
+    public String verifyAuthCode(@RequestParam(name = "email") String email, @RequestParam(name = "code") String code) throws NoSuchAlgorithmException {
         boolean isVerified = authCodeService.verifyAuthCode(email, code);
         return isVerified ? "Code verified successfully!" : "Invalid or expired code.";
     }
