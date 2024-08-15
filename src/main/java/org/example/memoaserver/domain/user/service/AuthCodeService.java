@@ -22,12 +22,17 @@ public class AuthCodeService {
 
     private final EmailService emailService;
     private final RedisTemplate<String, Object> redisTemplate1;
+    private final RedisTemplate<String, Object> redisTemplate2;
     private final SHA256 sha256 = new SHA256();
 
-    public AuthCodeService(@Qualifier("redisTemplate1") RedisTemplate<String, Object> redisTemplate1,
+    public AuthCodeService(@Qualifier("redisTemplate1")
+                           RedisTemplate<String, Object> redisTemplate1,
+                           @Qualifier("redisTemplate2")
+                           RedisTemplate<String, Object> redisTemplate2,
                            EmailService emailService) {
         this.redisTemplate1 = redisTemplate1;
         this.emailService = emailService;
+        this.redisTemplate2 = redisTemplate2;
     }
 
     public String generateAuthCode() {
@@ -36,7 +41,8 @@ public class AuthCodeService {
         return String.valueOf(code);
     }
 
-    public void sendAuthCode(String email) throws IOException, NoSuchAlgorithmException {
+    public void sendAuthCode(String email)
+            throws IOException, NoSuchAlgorithmException {
         String authCode = generateAuthCode();
         String hashedAuthCode = sha256.encode(authCode);
         redisTemplate1.opsForValue().set(email, hashedAuthCode, EXPIRATION_TIME, TimeUnit.MINUTES);
@@ -48,6 +54,10 @@ public class AuthCodeService {
         htmlBody = htmlBody.replace("${expirationTime}", String.valueOf(EXPIRATION_TIME));
 
         emailService.sendMail(email, "Your Authentication Code", htmlBody);
+    }
+
+    public void saveVerifiedEmail(String email) {
+        redisTemplate2.opsForValue().set(email, email);
     }
 
     public boolean verifyAuthCode(String email, String authCode) throws NoSuchAlgorithmException {

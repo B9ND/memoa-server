@@ -38,4 +38,19 @@ public class RedisConfig {
 
         return redisTemplate;
     }
+    
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate2() {
+        LettuceConnectionFactory factory = new LettuceConnectionFactory();
+        factory.setDatabase(2);
+        factory.afterPropertiesSet();
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(factory);
+
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+
+        return redisTemplate;
+    }
 }
