@@ -3,18 +3,22 @@ package org.example.memoaserver.global.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.service.AuthCodeService;
 import org.example.memoaserver.domain.user.service.UserService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.service.RefreshTokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody UserDTO user) {
         try {
             UserEntity userEntity = userService.register(user);
+
             return ResponseEntity
                     .ok(userEntity);
         } catch (Exception e) {

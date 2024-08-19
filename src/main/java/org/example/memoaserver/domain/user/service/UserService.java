@@ -1,6 +1,5 @@
 package org.example.memoaserver.domain.user.service;
 
-import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.repository.UserRepository;
@@ -42,15 +41,17 @@ public class UserService {
             throw new CustomConflictException("you need to use email [xxx@xxx.com]");
         }
 
-        if (!checkVerification(email)) {
-            throw new CustomConflictException("this email does not verify");
-        }
-
         Boolean isExist = userRepository.existsByEmail(email);
 
         if (isExist) {
             throw new CustomConflictException("your email already exists");
         }
+
+        if (!checkVerification(email)) {
+            throw new CustomConflictException("this email does not verify");
+        }
+
+        redisTemplate2.delete(email);
 
         UserEntity userEntity = new UserEntity();
 

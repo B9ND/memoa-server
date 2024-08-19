@@ -90,7 +90,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         int maxAgeInt = maxAge.intValue();
         cookie.setMaxAge(maxAgeInt);
         //cookie.setSecure(true);
-        //cookie.setPath("/");
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
         return cookie;
     }
