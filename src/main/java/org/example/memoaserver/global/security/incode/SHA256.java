@@ -19,9 +19,7 @@ public class SHA256 {
         return hexString.toString();
     }
 
-    // 매칭 메서드
     public boolean matches(String rawInput, String hashedValue) throws NoSuchAlgorithmException {
-        // 입력된 값을 해싱하여 기존 해시 값과 비교
         String hashedInput = encode(rawInput);
         return hashedInput.equals(hashedValue);
     }

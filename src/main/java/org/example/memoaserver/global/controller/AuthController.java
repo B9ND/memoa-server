@@ -23,7 +23,6 @@ import java.security.NoSuchAlgorithmException;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final JwtUtil jwtUtil;
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
     private final AuthCodeService authCodeService;
@@ -65,6 +64,7 @@ public class AuthController {
 
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+
         return refreshTokenService.reissue(request, response);
     }
 }

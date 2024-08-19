@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JwtSignatureException.class)
     public ResponseEntity<?> handleJwtSignatureException(JwtSignatureException ex) {
+
         return new ResponseEntity<>("create token failed", HttpStatus.UNAUTHORIZED);
     }
 
