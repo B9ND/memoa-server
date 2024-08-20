@@ -14,10 +14,6 @@ spring:
     application:
         name: memoa-server
     data:
-        mongodb:
-            uri: imsi # 임시 데이터 후에 추가 필요
-            username: imsi
-            password: imsi
         redis:
             host: ${REDIS_HOST}
             password: ${REDIS_PASSWORD}
