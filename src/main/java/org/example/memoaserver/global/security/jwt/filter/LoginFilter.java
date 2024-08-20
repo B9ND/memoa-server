@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
+import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
 import org.example.memoaserver.global.security.properties.JwtProperties;
 import org.example.memoaserver.global.service.RefreshTokenService;
 import org.springframework.http.HttpStatus;
@@ -61,7 +62,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
 
         String email = authentication.getName();
 
@@ -73,8 +74,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String access = jwtUtil.createJwt("access", email, role, jwtProperties.getAccess().getExpiration());
         String refresh = jwtUtil.createJwt("refresh", email, role, jwtProperties.getRefresh().getExpiration());
 
-        response.setHeader("Authorization", access);
-        response.addCookie(createCookie("refresh", refresh, jwtProperties.getRefresh().getExpiration()));
+        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(access, refresh);
+
+        response.setContentType("application/json");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getWriter(), jwtTokenDTO);
+
         refreshTokenService.addRefreshEntity(email, refresh, jwtProperties.getRefresh().getExpiration());
 
         response.setStatus(HttpStatus.OK.value());
@@ -83,16 +88,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    }
-
-    private Cookie createCookie(String key, String value, Long maxAge) {
-        Cookie cookie = new Cookie(key, value);
-        int maxAgeInt = maxAge.intValue();
-        cookie.setMaxAge(maxAgeInt);
-        //cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        return cookie;
     }
 
     private Boolean checkEmailVerification(String email) {
