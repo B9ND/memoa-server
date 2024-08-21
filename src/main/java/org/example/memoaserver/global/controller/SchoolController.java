@@ -16,6 +16,7 @@ public class SchoolController {
 
     @PostMapping("/add-school")
     public void addSchool(@RequestBody SchoolDTO school) {
+
         schoolService.addSchool(school);
     }
 
@@ -23,6 +24,7 @@ public class SchoolController {
     public List<SchoolEntity> search(
             @RequestParam(name = "search") String schoolName
     ) {
+
         return schoolService.searchSchool(schoolName);
     }
 }

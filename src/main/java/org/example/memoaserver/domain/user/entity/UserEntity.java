@@ -1,5 +1,6 @@
 package org.example.memoaserver.domain.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class UserEntity {
 
     private String role;
 
+    @JsonIgnore
     private String password;
 
     private String school;

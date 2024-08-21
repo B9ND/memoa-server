@@ -1,12 +1,10 @@
 package org.example.memoaserver.domain.user.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.global.security.incode.SHA256;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -57,7 +55,7 @@ public class AuthCodeService {
     }
 
     public void saveVerifiedEmail(String email) {
-        redisTemplate2.opsForValue().set(email, email);
+        redisTemplate2.opsForValue().set(email, email, EXPIRATION_TIME, TimeUnit.MINUTES);
     }
 
     public boolean verifyAuthCode(String email, String authCode) throws NoSuchAlgorithmException {

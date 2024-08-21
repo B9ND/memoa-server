@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.details.CustomUserDetails;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
@@ -56,6 +58,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String email = jwtUtil.getEmail(accessToken);
         String role = jwtUtil.getRole(accessToken);
+
+//        log.info(email, category);
 
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(email);
