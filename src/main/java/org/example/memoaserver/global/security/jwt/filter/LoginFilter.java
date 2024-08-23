@@ -74,7 +74,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String access = jwtUtil.createJwt("access", email, role, jwtProperties.getAccess().getExpiration());
         String refresh = jwtUtil.createJwt("refresh", email, role, jwtProperties.getRefresh().getExpiration());
 
-        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(access, refresh);
+        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(("Bearer " + access), refresh);
 
         response.setContentType("application/json");
         ObjectMapper objectMapper = new ObjectMapper();
