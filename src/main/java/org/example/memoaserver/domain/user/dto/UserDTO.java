@@ -1,5 +1,6 @@
 package org.example.memoaserver.domain.user.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

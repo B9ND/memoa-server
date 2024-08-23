@@ -19,6 +19,7 @@ public class UserEntity {
 
     private String nickname;
 
+    @JsonIgnore
     private String role;
 
     @JsonIgnore

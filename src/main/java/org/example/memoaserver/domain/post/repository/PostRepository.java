@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> findByCreatedAtBetween(LocalDate createdAt, LocalDate createdAt2);
+    List<PostEntity> findByIsReleasedTrue();
 }

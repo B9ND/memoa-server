@@ -62,6 +62,10 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     private Boolean checkVerification(String email) {
         return redisTemplate2.hasKey(email);
     }
