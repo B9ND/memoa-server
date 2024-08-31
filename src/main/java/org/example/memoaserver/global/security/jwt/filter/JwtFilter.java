@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +26,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = req.getHeader("Authorization");
+        String accessToken;
+        try {
+            accessToken = req.getHeader("Authorization").replace("Bearer ", "");
+        } catch (NullPointerException e) {
+            filterChain.doFilter(req, res);
+            return;
+        }
 
         if (accessToken == null) {
 
@@ -59,7 +66,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String email = jwtUtil.getEmail(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
-//        log.info(email, category);
+//        log.info("email: {}, role: {}, category: {}", email, role, jwtUtil.getCategory(accessToken));
 
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(email);

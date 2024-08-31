@@ -1,5 +1,6 @@
 package org.example.memoaserver.global.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
+import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
 import org.example.memoaserver.global.security.properties.JwtProperties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,20 +30,8 @@ public class RefreshTokenService {
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
 
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-        String refresh = null;
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies == null) {
-            return new ResponseEntity<>("can't find all of the cookies", HttpStatus.UNAUTHORIZED);
-        }
-
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refresh")) {
-                refresh = cookie.getValue();
-                break;
-            }
-        }
+    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String refresh = request.getHeader("Refresh");
 
         if (refresh == null) {
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
@@ -80,27 +70,17 @@ public class RefreshTokenService {
         deleteByRefreshToken(refresh);
         addRefreshEntity(email, newRefresh, jwtProperties.getRefresh().getExpiration());
 
-        response.setHeader("Authorization", newAccess);
-        response.addCookie(createCookie("refresh", newRefresh,jwtProperties.getRefresh().getExpiration()));
+        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(("Bearer " + newAccess), newRefresh);
+
+        response.setContentType("application/json");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getWriter(), jwtTokenDTO);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String refresh = null;
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refresh")) {
-                refresh = cookie.getValue();
-                break;
-            }
-        }
+        String refresh = request.getHeader("Refresh");
 
         if (refresh == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -127,11 +107,6 @@ public class RefreshTokenService {
         }
 
         deleteByRefreshToken(refresh);
-        Cookie cookie = new Cookie("refresh", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-
-        response.addCookie(cookie);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
