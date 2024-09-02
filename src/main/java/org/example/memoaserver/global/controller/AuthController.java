@@ -8,10 +8,7 @@ import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.service.AuthCodeService;
 import org.example.memoaserver.domain.user.service.UserService;
-import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.service.RefreshTokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,8 +60,7 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-
+    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return refreshTokenService.reissue(request, response);
     }
 }

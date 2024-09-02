@@ -1,5 +1,6 @@
 package org.example.memoaserver.global.security.jwt.details;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 public class CustomUserDetails implements UserDetails {
 
     private final UserEntity userEntity;
@@ -29,6 +31,8 @@ public class CustomUserDetails implements UserDetails {
                 return userEntity.getRole();
             }
         });
+
+        log.info("Authorities : {}", collection);
 
         return collection;
     }
