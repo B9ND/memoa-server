@@ -14,14 +14,20 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
 
-    public void addFollower(UserDTO user, FollowDTO follower) {
-        Long userId = userRepository.findByEmail(user.getEmail()).getId();
-        Long followId = userRepository.findByEmail(user.getEmail()).getId();
+    public void addFollower(String user, String follower) {
+        Long userId = userRepository.findByEmail(user).getId();
+        Long followId = userRepository.findByEmail(follower).getId();
 
         FollowEntity followEntity = new FollowEntity();
         followEntity.setFollowing(userId);
         followEntity.setFollower(followId);
 
         followRepository.save(followEntity);
+    }
+
+    public void removeFollower(String user, String follower) {
+        Long userId = userRepository.findByEmail(user).getId();
+        Long followId = userRepository.findByEmail(follower).getId();
+        followRepository.deleteByFollowingAndFollower(userId, followId);
     }
 }
