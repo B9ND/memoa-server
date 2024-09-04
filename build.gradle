@@ -13,14 +13,14 @@ java {
     }
 }
 
-jar {
-    enabled = false
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+}
+
+jar {
+    enabled = false
 }
 
 repositories {
