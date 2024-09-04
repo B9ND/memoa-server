@@ -7,5 +7,5 @@ import lombok.Setter;
 public class TagDTO {
     private String name;
 
-    private Long postId;
+    private Long post;
 }

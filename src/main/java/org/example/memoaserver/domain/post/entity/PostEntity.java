@@ -1,8 +1,7 @@
 package org.example.memoaserver.domain.post.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,6 +11,7 @@ import java.time.LocalDate;
 @Entity(name = "post")
 @Getter @Setter
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +31,14 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
+
+    @Builder
+    public PostEntity(Long id, String title, String content, Boolean isReleased, LocalDate createdAt, UserEntity user) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.isReleased = isReleased;
+        this.createdAt = createdAt;
+        this.user = user;
+    }
 }

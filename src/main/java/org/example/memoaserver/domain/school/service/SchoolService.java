@@ -34,7 +34,7 @@ public class SchoolService {
                     departmentEntity.setSchoolEntity(schoolEntity);
                     return departmentEntity;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         schoolEntity.setDepartments(departmentEntities);
 

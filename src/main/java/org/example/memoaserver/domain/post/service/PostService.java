@@ -8,6 +8,8 @@ import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
 import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.post.repository.TagRepository;
+import org.example.memoaserver.domain.user.entity.UserEntity;
+import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,26 +20,22 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
+    private final UserAuthHolder userAuthHolder;
 
     public void writePost(PostDTO postDTO) {
-        PostEntity postEntity = new PostEntity();
-
-        postEntity.setTitle(postDTO.getTitle());
-        postEntity.setContent(postDTO.getContent());
-        postEntity.setIsReleased(postDTO.getIsReleased());
-        postEntity.setUser(postDTO.getUser());
-
+        UserEntity user = userAuthHolder.current();
+        PostEntity postEntity = PostEntity.builder()
+                .title(postDTO.getTitle())
+                .content(postDTO.getContent())
+                .isReleased(postDTO.getIsReleased())
+                .user(user)
+                .build();
         postRepository.save(postEntity);
-
         List<TagEntity> tagEntities = postDTO.getTags().stream()
-                .map(p -> {
-                    TagEntity t = new TagEntity();
-                    t.setName(p.getName());
-                    t.setPostId(postEntity.getId());
-                    return t;
-                })
-                .toList();
-
+                .map(p -> TagEntity.builder()
+                            .name(p.getName())
+                            .postId(postEntity.getId())
+                            .build()).toList();
         tagRepository.saveAll(tagEntities);
     }
 
@@ -53,8 +51,7 @@ public class PostService {
 
     public List<PostDTO> getAllPosts() {
         List<PostEntity> post = postRepository.findByIsReleasedTrue();
-        return post.parallelStream().map(postEntity -> {
-            return PostDTO.builder()
+        return post.parallelStream().map(postEntity -> PostDTO.builder()
                     .id(postEntity.getId())
                     .title(postEntity.getTitle())
                     .content(postEntity.getContent())
@@ -62,7 +59,6 @@ public class PostService {
                     .isReleased(postEntity.getIsReleased())
                     .tags(findTagById(postEntity.getId()))
                     .createdAt(postEntity.getCreatedAt())
-                    .build();
-        }).toList();
+                    .build()).toList();
     }
 }
