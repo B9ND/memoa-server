@@ -3,7 +3,6 @@ package org.example.memoaserver.domain.post.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 
 import java.time.LocalDate;
