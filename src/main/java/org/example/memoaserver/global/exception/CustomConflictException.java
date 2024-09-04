@@ -24,4 +24,5 @@ public class CustomConflictException extends RuntimeException {
 
         super();
     }
+
 }
