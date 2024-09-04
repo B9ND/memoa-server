@@ -34,16 +34,13 @@ public class UserService {
 
     public UserEntity register(UserDTO userDTO) {
         String email = userDTO.getEmail();
-        String rawPassword = userDTO.getPassword();
-        String hashedPassword = bCryptPasswordEncoder.encode(rawPassword);
+        String hashedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
 
         if (!checkEmailVerification(email)) {
             throw new CustomConflictException("you need to use email [xxx@xxx.com]");
         }
 
-        Boolean isExist = userRepository.existsByEmail(email);
-
-        if (isExist) {
+        if (userRepository.existsByEmail(email)) {
             throw new CustomConflictException("your email already exists");
         }
 

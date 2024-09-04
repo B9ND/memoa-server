@@ -7,7 +7,6 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.service.RefreshTokenService;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -15,7 +14,6 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
-    private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
 
     @Override

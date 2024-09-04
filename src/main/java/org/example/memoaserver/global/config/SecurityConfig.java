@@ -78,7 +78,7 @@ public class SecurityConfig {
                         .requestMatchers("/post/*").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService), LogoutFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(refreshTokenService), LogoutFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
