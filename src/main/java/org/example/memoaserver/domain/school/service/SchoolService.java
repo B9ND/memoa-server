@@ -10,7 +10,7 @@ import org.example.memoaserver.global.exception.SchoolAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
