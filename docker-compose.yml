@@ -8,7 +8,7 @@ services:
       - "6379:6379"
     restart: always
     networks:
-      - my-network
+      - redis-network
   app:
     image: memoa-server-app:latest
     build:
@@ -33,7 +33,7 @@ services:
       JWT_KEY: ${JWT_KEY}
     restart: always
     networks:
-      - my-network
+      - redis-network
 
 networks:
-  my-network:
+  redis-network:

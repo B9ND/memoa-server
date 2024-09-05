@@ -48,6 +48,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            cd .
             docker pull ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
 
             export MAIL_USER=${{ secrets.MAIL_USER }}
