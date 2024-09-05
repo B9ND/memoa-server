@@ -50,7 +50,8 @@ jobs:
           script: |
             cd .
             docker pull ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
-
+          
+            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
             export MAIL_USER=${{ secrets.MAIL_USER }}
             export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
             export REDIS_HOST=${{ secrets.REDIS_HOST }}

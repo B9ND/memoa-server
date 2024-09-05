@@ -6,14 +6,10 @@ services:
     container_name: memoa-redis
     ports:
       - "6379:6379"
-    restart: always
     networks:
       - redis-network
   app:
-    image: memoa-server-app:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME}/memoa-server-app:latest
     ports:
       - "8080:8080"
     environment:
