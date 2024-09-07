@@ -6,6 +6,7 @@ services:
     container_name: memoa-redis
     ports:
       - "6379:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     networks:
       - redis-network
 

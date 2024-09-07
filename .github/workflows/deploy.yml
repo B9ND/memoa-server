@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  docker:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,28 +41,46 @@ jobs:
           docker tag memoa-server-app:latest ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
 
+  deploy:
+    runs-on: ubunut-latest
+
+    steps:
       - name: SSH into EC2 and Deploy
-        uses: appleboy/ssh-action@v0.1.5
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          ACCESS_END: ${{ secrets.ACCESS_END }}
+          REFRESH_END: ${{ secrets.REFRESH_END }}
+          JWT_KEY: ${{ secrets.JWT_KEY }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: DOCKER_USERNAME, MAIL_USER, MAIL_PASSWORD, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_USER, ACCESS_END, REFRESH_END, JWT_KEY
           script: |
             cd .
-            docker pull ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
-          
-            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
-            export MAIL_USER=${{ secrets.MAIL_USER }}
-            export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
-            export REDIS_HOST=${{ secrets.REDIS_HOST }}
-            export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-            export REDIS_PORT=${{ secrets.REDIS_PORT }}
-            export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-            export MYSQL_HOST=${{ secrets.MYSQL_HOST }}
-            export MYSQL_USER=${{ secrets.MYSQL_USER }}
-            export ACCESS_END=${{ secrets.ACCESS_END }}
-            export REFRESH_END=${{ secrets.REFRESH_END }}
-            export JWT_KEY=${{ secrets.JWT_KEY }}
+            docker pull $DOCKER_USERNAME/memoa-server-app:latest
+            
+            echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
+            echo "MAIL_USER=$MAIL_USER" >> .env
+            echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
+            echo "REDIS_HOST=$REDIS_HOST" >> .env
+            echo "REDIS_PASSWORD=$REDIS_PASSWORD" >> .env
+            echo "REDIS_PORT=$REDIS_PORT" >> .env
+            echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
+            echo "MYSQL_HOST=$MYSQL_HOST" >> .env
+            echo "MYSQL_USER=$MYSQL_USER" >> .env
+            echo "ACCESS_END=$ACCESS_END" >> .env
+            echo "REFRESH_END=$REFRESH_END" >> .env
+            echo "JWT_KEY=$JWT_KEY" >> .env
 
             docker-compose down
-            docker-compose up -d
+            docker-compose --env-file .env up -d
