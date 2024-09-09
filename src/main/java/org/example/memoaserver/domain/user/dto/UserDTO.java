@@ -25,8 +25,8 @@ public class UserDTO {
 
     public static UserDTO of(Optional<UserEntity> userEntity) {
         return UserDTO.builder()
-                .email(userEntity.getEmail())
-                .nickname(userEntity.getNickname())
+                .email(userEntity.get().getEmail())
+                .nickname(userEntity.get().getNickname())
                 .build();
     }
 }

@@ -75,7 +75,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/*", "/").permitAll()
                         .requestMatchers("/school/*").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/post/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/post/*", "friend/*").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new CustomLogoutFilter(refreshTokenService), LogoutFilter.class)

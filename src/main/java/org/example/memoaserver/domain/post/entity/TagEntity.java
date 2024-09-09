@@ -1,9 +1,6 @@
 package org.example.memoaserver.domain.post.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name = "tag")
@@ -17,6 +14,10 @@ public class TagEntity {
     private String name;
 
     private Long postId;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "post_id", nullable = false)
+//    private PostEntity post;
 
     @Builder
     public TagEntity(Long id, String name, Long postId) {
