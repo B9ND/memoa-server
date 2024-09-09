@@ -34,16 +34,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
-        ErrorResponse errorResponse;
-
-        if (ex.getMessage().contains("already exists school")) {
-            errorResponse = new ErrorResponse("이미 존재하는 학교입니다.", ex.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
-        }
-
-        errorResponse = new ErrorResponse("서버 오류 발생", null);
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
+//        ErrorResponse errorResponse;
+//
+//        if (ex.getMessage().contains("already exists school")) {
+//            errorResponse = new ErrorResponse("이미 존재하는 학교입니다.", ex.getMessage());
+//            return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+//        }
+//
+//        errorResponse = new ErrorResponse("서버 오류 발생", null);
+//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }

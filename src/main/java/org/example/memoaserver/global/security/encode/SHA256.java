@@ -1,4 +1,4 @@
-package org.example.memoaserver.global.security.incode;
+package org.example.memoaserver.global.security.encode;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

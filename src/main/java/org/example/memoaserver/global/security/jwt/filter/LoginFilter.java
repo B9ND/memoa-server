@@ -2,7 +2,6 @@ package org.example.memoaserver.global.security.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -74,7 +73,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String access = jwtUtil.createJwt("access", email, role, jwtProperties.getAccess().getExpiration());
         String refresh = jwtUtil.createJwt("refresh", email, role, jwtProperties.getRefresh().getExpiration());
 
-        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(access, refresh);
+        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(("Bearer " + access), refresh);
 
         response.setContentType("application/json");
         ObjectMapper objectMapper = new ObjectMapper();

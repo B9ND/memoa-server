@@ -1,7 +1,7 @@
 package org.example.memoaserver.domain.user.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.global.security.incode.SHA256;
+import org.example.memoaserver.global.security.encode.SHA256;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;

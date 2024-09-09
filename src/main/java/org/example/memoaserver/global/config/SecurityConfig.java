@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Configuration
@@ -74,11 +75,10 @@ public class SecurityConfig {
                         .requestMatchers("/auth/*", "/").permitAll()
                         .requestMatchers("/school/*").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/post/*").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
-                );
-
-        http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService), LogoutFilter.class)
+                )
+                .addFilterBefore(new CustomLogoutFilter(refreshTokenService), LogoutFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
