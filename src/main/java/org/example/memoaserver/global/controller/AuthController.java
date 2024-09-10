@@ -51,12 +51,12 @@ public class AuthController {
     }
 
     @PostMapping("/verify-code")
-    public String verifyAuthCode(@RequestParam(name = "email") String email, @RequestParam(name = "code") String code) throws NoSuchAlgorithmException {
+    public Boolean verifyAuthCode(@RequestParam(name = "email") String email, @RequestParam(name = "code") String code) throws NoSuchAlgorithmException {
         boolean isVerified = authCodeService.verifyAuthCode(email, code);
         if (isVerified) {
             authCodeService.saveVerifiedEmail(email);
         }
-        return isVerified ? "Code verified successfully!" : "Invalid or expired code.";
+        return isVerified;
     }
 
     @PostMapping("/reissue")
