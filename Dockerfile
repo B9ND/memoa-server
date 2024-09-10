@@ -2,7 +2,7 @@ FROM openjdk:17
 
 LABEL authors="kmg"
 
-ARG JAR_FILE=build/libs/memoa-server-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=build/libs/mosimgi-server-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
 EXPOSE 8080
