@@ -71,8 +71,6 @@ public class AuthCodeService {
             return false;
         }
 
-
-
         redisTemplate1.delete(email);
         return true;
     }
