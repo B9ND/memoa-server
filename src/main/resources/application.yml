@@ -35,3 +35,14 @@ spring:
         refresh:
             expiration: ${REFRESH_END}
         secret: ${JWT_KEY}
+
+springdoc:
+    api-docs:
+        enabled: true
+        version: openapi_3_0
+        path: /v3/api-docs
+    default-consumes-media-type: application/json
+    auto-tag-classes: true
+    swagger-ui:
+        operationsSorter: method
+        path: /swagger-ui.html

@@ -50,8 +50,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     //swagger
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2' // swagger
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2' //swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 }
 
 tasks.named('test') {
