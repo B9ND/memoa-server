@@ -40,4 +40,3 @@ services:
 
 networks:
   redis-network:
-    driver: bridge
