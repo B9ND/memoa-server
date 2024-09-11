@@ -20,18 +20,18 @@ public class SwaggerConfig {
                                 .title("memoa")
                                 .version("1.0")
                                 .description("Memoa Server API")
-                )
-                .addSecurityItem(new SecurityRequirement().addList("Authorization"))
-                .components(
-                        new Components()
-                                .addSecuritySchemes("Authorization",
-                                        new SecurityScheme()
-                                                .type(SecurityScheme.Type.HTTP)
-                                                .scheme("bearer")
-                                                .bearerFormat("JWT")
-                                                .in(SecurityScheme.In.HEADER)
-                                                .name("Authorization")
-                                )
                 );
+//                .addSecurityItem(new SecurityRequirement().addList("Authorization"))
+//                .components(
+//                        new Components()
+//                                .addSecuritySchemes("Authorization",
+//                                        new SecurityScheme()
+//                                                .type(SecurityScheme.Type.HTTP)
+//                                                .scheme("bearer")
+//                                                .bearerFormat("JWT")
+//                                                .in(SecurityScheme.In.HEADER)
+//                                                .name("Authorization")
+//                                )
+//                );
     }
 }
