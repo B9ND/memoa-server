@@ -56,7 +56,7 @@ public class SecurityConfig {
 
                         configuration.setAllowedOrigins(Collections.singletonList("*"));
                         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                        configuration.setAllowCredentials(true);
+//                        configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
 
