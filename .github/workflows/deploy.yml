@@ -5,6 +5,20 @@ on:
     branches:
       - main
 
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  MAIL_USER: ${{ secrets.MAIL_USER }}
+  MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+  REDIS_HOST: ${{ secrets.REDIS_HOST }}
+  REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+  REDIS_PORT: ${{ secrets.REDIS_PORT }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+  MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+  MYSQL_USER: ${{ secrets.MYSQL_USER }}
+  ACCESS_END: ${{ secrets.ACCESS_END }}
+  REFRESH_END: ${{ secrets.REFRESH_END }}
+  JWT_KEY: ${{ secrets.JWT_KEY }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,23 +30,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: set yml
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: src/main/resources/application.yml
-        env:
-          spring.datasource.url: ${{ secrets.MYSQL_HOST }}
-          spring.datasource.username: ${{ secrets.MYSQL_USER }}
-          spring.datasource.password: ${{ secrets.MYSQL_PASSWORD }}
-          spring.jwt.secret: ${{ secrets.JWT_KEY }}
-          spring.jwt.access.expiration: ${{ secrets.ACCESS_END }}
-          spring.jwt.refresh.expiration: ${{ secrets.REFRESH_END }}
-          spring.data.redis.host: ${{ secrets.REDIS_HOST }}
-          spring.data.redis.password: ${{ secrets.REDIS_PASSWORD }}
-          spring.data.redis.port: ${{ secrets.REDIS_PORT }}
-          spring.mail.username: ${{ secrets.MAIL_USER }}
-          spring.mail.password: ${{ secrets.MAIL_PASSWORD }}
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -60,19 +57,7 @@ jobs:
 
       - name: SSH into EC2 and Deploy
         uses: appleboy/ssh-action@v1.0.3
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          MAIL_USER: ${{ secrets.MAIL_USER }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-          REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          ACCESS_END: ${{ secrets.ACCESS_END }}
-          REFRESH_END: ${{ secrets.REFRESH_END }}
-          JWT_KEY: ${{ secrets.JWT_KEY }}
+        envs: GITHUB_SHA
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
