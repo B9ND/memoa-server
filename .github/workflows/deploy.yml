@@ -65,7 +65,7 @@ jobs:
             cd .
             
             docker stop memoa-server
-            docker rm qvick
+            docker rm memoa-server
             docker rmi ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
             docker run -d -p 80:8080 --name memoa-server ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
