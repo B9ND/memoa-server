@@ -13,9 +13,10 @@ spring:
 
     application:
         name: memoa-server
+
     data:
         redis:
-            host: redis
+            host: ${REDIS_HOST}
             password: ${REDIS_PASSWORD}
             port: ${REDIS_PORT}
     datasource:
