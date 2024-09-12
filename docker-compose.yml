@@ -38,6 +38,7 @@ services:
       DOCKER_USERNAME: ${DOCKER_USERNAME}
       SPRING_REDIS_HOST: ${REDIS_HOST}
     restart: always
-
+    depends_on:
+      - redis
 volumes:
   redis-data:
