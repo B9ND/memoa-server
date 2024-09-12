@@ -83,7 +83,7 @@ jobs:
             docker-compose build redis
             docker-compose build springboot
             
-            docker-compose up --build redis -d --env-file .env
-            docker-compose up --build springboot -d --env-file .env
-            
+            docker-compose up --env-file .env -d --build redis
+            docker-compose up --env-file .env -d --build springboot
+
 #            docker-compose --env-file .env up -d
