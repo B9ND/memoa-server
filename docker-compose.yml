@@ -31,7 +31,7 @@ services:
     environment:
       MAIL_USER: ${MAIL_USER}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
-      REDIS_HOST: redis
+      REDIS_HOST: ${REDIS_HOST}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_PORT: 6379
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}

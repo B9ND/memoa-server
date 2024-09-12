@@ -63,20 +63,27 @@ jobs:
           envs: DOCKER_USERNAME, MAIL_USER, MAIL_PASSWORD, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_USER, ACCESS_END, REFRESH_END, JWT_KEY
           script: |
             cd .
-            docker pull $DOCKER_USERNAME/memoa-server-app:latest
             
-            echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
-            echo "MAIL_USER=$MAIL_USER" >> .env
-            echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
-            echo "REDIS_HOST=$REDIS_HOST" >> .env
-            echo "REDIS_PASSWORD=$REDIS_PASSWORD" >> .env
-            echo "REDIS_PORT=$REDIS_PORT" >> .env
-            echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
-            echo "MYSQL_HOST=$MYSQL_HOST" >> .env
-            echo "MYSQL_USER=$MYSQL_USER" >> .env
-            echo "ACCESS_END=$ACCESS_END" >> .env
-            echo "REFRESH_END=$REFRESH_END" >> .env
-            echo "JWT_KEY=$JWT_KEY" >> .env
-
-            docker-compose down
-            docker-compose --env-file .env up -d
+            docker stop memoa-server
+            docker rm qvick
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
+            docker run -d -p 80:8080 --name memoa-server ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
+#
+#            docker pull $DOCKER_USERNAME/memoa-server-app:latest
+#
+#            echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
+#            echo "MAIL_USER=$MAIL_USER" >> .env
+#            echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
+#            echo "REDIS_HOST=$REDIS_HOST" >> .env
+#            echo "REDIS_PASSWORD=$REDIS_PASSWORD" >> .env
+#            echo "REDIS_PORT=$REDIS_PORT" >> .env
+#            echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
+#            echo "MYSQL_HOST=$MYSQL_HOST" >> .env
+#            echo "MYSQL_USER=$MYSQL_USER" >> .env
+#            echo "ACCESS_END=$ACCESS_END" >> .env
+#            echo "REFRESH_END=$REFRESH_END" >> .env
+#            echo "JWT_KEY=$JWT_KEY" >> .env
+#
+#            docker-compose down
+#            docker-compose --env-file .env up -d
