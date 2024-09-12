@@ -57,7 +57,6 @@ jobs:
 
       - name: SSH into EC2 and Deploy
         uses: appleboy/ssh-action@v1.0.3
-        envs: GITHUB_SHA
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
