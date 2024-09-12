@@ -17,6 +17,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: set yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: src/main/resources/application.yml
+        env:
+          spring.datasource.url: ${{ secrets.MYSQL_HOST }}
+          spring.datasource.username: ${{ secrets.MYSQL_USER }}
+          spring.datasource.password: ${{ secrets.MYSQL_PASSWORD }}
+          spring.jwt.secret: ${{ secrets.JWT_KEY }}
+          spring.jwt.access.expiration: ${{ secrets.ACCESS_END }}
+          spring.jwt.refresh.expiration: ${{ secrets.REFRESH_END }}
+          spring.data.redis.host: ${{ secrets.REDIS_HOST }}
+          spring.data.redis.password: ${{ secrets.REDIS_PASSWORD }}
+          spring.data.redis.port: ${{ secrets.REDIS_PORT }}
+          spring.mail.username: ${{ secrets.MAIL_USER }}
+          spring.mail.password: ${{ secrets.MAIL_PASSWORD }}
+
       - name: Checkout code
         uses: actions/checkout@v2
 
