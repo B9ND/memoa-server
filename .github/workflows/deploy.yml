@@ -79,10 +79,10 @@ jobs:
             echo "JWT_KEY=$JWT_KEY" >> .env
 
             docker-compose down
-
-            docker-compose build redis
-            docker-compose build springboot
-##
+#
+#            docker-compose build redis
+#            docker-compose build springboot
+#
 #            docker-compose up --env-file .env -d --build redis
 #            docker-compose up --env-file .env -d --build springboot
 
