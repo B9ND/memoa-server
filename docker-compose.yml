@@ -15,10 +15,10 @@ services:
         limits:
           memory: 512M
     volumes:
-      - redis-data:/var/lib/redis/data
+      - redis-data:/data
     restart: on-failure
 
-  app:
+  springboot:
     image: ${DOCKER_USERNAME}/memoa-server-app:latest
     container_name: memoa_server
     ports:
@@ -26,9 +26,9 @@ services:
     environment:
       MAIL_USER: ${MAIL_USER}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
-      REDIS_HOST: ${REDIS_HOST}
+      REDIS_HOST: redis
       REDIS_PASSWORD: ${REDIS_PASSWORD}
-      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PORT: 6379
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_USER: ${MYSQL_USER}
@@ -36,6 +36,7 @@ services:
       REFRESH_END: ${REFRESH_END}
       JWT_KEY: ${JWT_KEY}
       DOCKER_USERNAME: ${DOCKER_USERNAME}
+      SPRING_REDIS_HOST: ${REDIS_HOST}
     restart: always
 
 volumes:
