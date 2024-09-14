@@ -43,6 +43,7 @@ public class AuthController {
         try {
             authCodeService.sendAuthCode(email);
         } catch (IOException e) {
+            log.error(e.getMessage());
             return "send auth code failed";
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
