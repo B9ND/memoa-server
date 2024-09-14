@@ -50,29 +50,37 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate1() {
-        LettuceConnectionFactory factory = new LettuceConnectionFactory();
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(redisHost);
+        redisStandaloneConfiguration.setPort(redisPort);
+        redisStandaloneConfiguration.setPassword(redisPassword);
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisStandaloneConfiguration);
         factory.setDatabase(1);
         factory.afterPropertiesSet();
+
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
 
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         return redisTemplate;
     }
-    
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate2() {
-        LettuceConnectionFactory factory = new LettuceConnectionFactory();
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(redisHost);
+        redisStandaloneConfiguration.setPort(redisPort);
+        redisStandaloneConfiguration.setPassword(redisPassword);
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisStandaloneConfiguration);
         factory.setDatabase(2);
         factory.afterPropertiesSet();
+
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
 
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         return redisTemplate;
