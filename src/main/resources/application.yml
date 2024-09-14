@@ -5,11 +5,11 @@ spring:
         username: ${MAIL_USER}
         password: ${MAIL_PASSWORD}
         properties:
-          mail:
-              smtp:
-                  auth: true
-                  starttls:
-                      enable: true
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
 
     application:
         name: memoa-server
@@ -36,3 +36,7 @@ spring:
         refresh:
             expiration: ${REFRESH_END}
         secret: ${JWT_KEY}
+
+server:
+    port: 80
+    address: 0.0.0.0
