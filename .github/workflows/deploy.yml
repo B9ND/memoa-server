@@ -65,18 +65,18 @@ jobs:
           script: |
             cd /
             
-            echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
-            echo "MAIL_USER=$MAIL_USER" >> .env
-            echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
-            echo "REDIS_HOST=$REDIS_HOST" >> .env
-            echo "REDIS_PASSWORD=$REDIS_PASSWORD" >> .env
-            echo "REDIS_PORT=$REDIS_PORT" >> .env
-            echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
-            echo "MYSQL_HOST=$MYSQL_HOST" >> .env
-            echo "MYSQL_USER=$MYSQL_USER" >> .env
-            echo "ACCESS_END=$ACCESS_END" >> .env
-            echo "REFRESH_END=$REFRESH_END" >> .env
-            echo "JWT_KEY=$JWT_KEY" >> .env
+            sudo echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
+            sudo echo "MAIL_USER=$MAIL_USER" >> .env
+            sudo echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
+            sudo echo "REDIS_HOST=$REDIS_HOST" >> .env
+            sudo echo "REDIS_PASSWORD=$REDIS_PASSWORD" >> .env
+            sudo echo "REDIS_PORT=$REDIS_PORT" >> .env
+            sudo echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
+            sudo echo "MYSQL_HOST=$MYSQL_HOST" >> .env
+            sudo echo "MYSQL_USER=$MYSQL_USER" >> .env
+            sudo echo "ACCESS_END=$ACCESS_END" >> .env
+            sudo echo "REFRESH_END=$REFRESH_END" >> .env
+            sudo echo "JWT_KEY=$JWT_KEY" >> .env
             
             docker pull $DOCKER_USERNAME/memoa-server-app:latest
             
