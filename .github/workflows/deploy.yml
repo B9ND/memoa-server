@@ -83,10 +83,8 @@ jobs:
             echo "REFRESH_END=$REFRESH_END" >> .env
             echo "JWT_KEY=$JWT_KEY" >> .env
             
-            docker run -d -p 80:80 --network="host" --env-file .env --name memoa-server ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
-#
-#            docker pull $DOCKER_USERNAME/memoa-server-app:latest
-#
-#
-#            docker-compose down
-#            docker-compose --env-file .env up -d
+            docker pull $DOCKER_USERNAME/memoa-server-app:latest
+            
+            
+            docker-compose down
+            docker-compose --env-file .env up -d
