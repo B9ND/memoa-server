@@ -65,7 +65,7 @@ jobs:
           script: |
             cd /
             
-            sudo echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
+            sudo echo "DOCKER_USERNAME=$DOCKER_USERNAME" >> .env
             sudo echo "MAIL_USER=$MAIL_USER" >> .env
             sudo echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
             sudo echo "REDIS_HOST=$REDIS_HOST" >> .env
