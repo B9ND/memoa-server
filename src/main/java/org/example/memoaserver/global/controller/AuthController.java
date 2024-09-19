@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.user.dto.UpdateUserDTO;
 import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.service.AuthCodeService;
@@ -63,5 +64,15 @@ public class AuthController {
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return refreshTokenService.reissue(request, response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me() {
+        return ResponseEntity.ok(userService.me());
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<?> updateMe(@RequestBody UpdateUserDTO user) {
+        return ResponseEntity.ok(userService.updateMe(user));
     }
 }
