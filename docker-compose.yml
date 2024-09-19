@@ -27,7 +27,7 @@ services:
     image: ${DOCKER_USERNAME}/memoa-server-app:latest
     container_name: memoa_server
     ports:
-      - "8080:8080"
+      - "80:8080"
     environment:
       MAIL_USER: ${MAIL_USER}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
