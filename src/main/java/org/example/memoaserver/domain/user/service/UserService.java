@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +39,7 @@ public class UserService {
 
     public UserDTO me() {
         UserEntity userEntity = userAuthHolder.current();
-        return UserDTO.of(userEntity);
+        return UserDTO.of(Optional.ofNullable(userEntity));
     }
 
     public UserDTO updateMe(UpdateUserDTO updateUser) {
@@ -55,7 +56,7 @@ public class UserService {
 
         userRepository.save(userEntity);
 
-        return UserDTO.of(userEntity);
+        return UserDTO.of(Optional.of(userEntity));
     }
 
     public UserEntity register(UserDTO userDTO) {

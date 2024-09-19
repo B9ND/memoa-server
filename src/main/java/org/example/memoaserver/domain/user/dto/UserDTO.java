@@ -23,10 +23,10 @@ public class UserDTO {
         this.password = password;
     }
 
-    public static UserDTO of(UserEntity userEntity) {
+    public static UserDTO of(Optional<UserEntity> userEntity) {
         return UserDTO.builder()
-                .email(userEntity.getEmail())
-                .nickname(userEntity.getNickname())
+                .email(userEntity.get().getEmail())
+                .nickname(userEntity.get().getNickname())
                 .build();
     }
 }

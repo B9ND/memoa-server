@@ -1,5 +1,9 @@
 package org.example.memoaserver.global.controller;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import java.security.NoSuchAlgorithmException;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Tag(name = "auth", description = "유저 인증/인가 정보 API")
 public class AuthController {
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
@@ -39,7 +44,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/send-code")
+    @GetMapping("/send-code")
     public String sendAuthCode(@RequestParam(name = "email") String email) {
         try {
             authCodeService.sendAuthCode(email);
@@ -61,11 +66,19 @@ public class AuthController {
         return isVerified;
     }
 
+    @Operation(
+            summary = "access 토큰 만료시 다시 발급받는 주소입니다.",
+            description = "베리어를 포함해서 주세요"
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "JWT access token", required = true, dataType = "string", paramType = "header")
+    })
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return refreshTokenService.reissue(request, response);
     }
 
+    @Operation()
     @GetMapping("/me")
     public ResponseEntity<?> me() {
         return ResponseEntity.ok(userService.me());
