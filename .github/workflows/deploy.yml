@@ -65,11 +65,6 @@ jobs:
           script: |
             cd .
             
-            docker stop memoa-server
-            docker rm memoa-server
-            docker rmi ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/memoa-server-app:latest
-            
             echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
             echo "MAIL_USER=$MAIL_USER" >> .env
             echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
