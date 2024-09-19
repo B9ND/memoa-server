@@ -80,6 +80,5 @@ jobs:
             
             docker pull $DOCKER_USERNAME/memoa-server-app:latest
             
-            
             docker-compose down
             docker-compose --env-file .env up -d
