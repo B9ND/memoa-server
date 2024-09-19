@@ -36,7 +36,3 @@ spring:
         refresh:
             expiration: ${REFRESH_END}
         secret: ${JWT_KEY}
-
-server:
-    port: 80
-    address: 0.0.0.0
