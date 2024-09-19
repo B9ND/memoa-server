@@ -63,7 +63,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: DOCKER_USERNAME, MAIL_USER, MAIL_PASSWORD, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_USER, ACCESS_END, REFRESH_END, JWT_KEY
           script: |
-            cd /
+            cd .
             
             sudo echo "DOCKER_USERNAME=$DOCKER_USERNAME" >> .env
             sudo echo "MAIL_USER=$MAIL_USER" >> .env
@@ -80,5 +80,5 @@ jobs:
             
             docker pull $DOCKER_USERNAME/memoa-server-app:latest
             
-            docker-compose down
-            docker-compose --env-file .env up -d
+            sudo docker-compose -p memoa down
+            sudo docker-compose -p memoa --env-file .env up -d

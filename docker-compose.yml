@@ -43,9 +43,5 @@ services:
       DOCKER_USERNAME: ${DOCKER_USERNAME}
       SPRING_REDIS_HOST: ${REDIS_HOST}
     restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      - redis
 volumes:
   redis-data:
