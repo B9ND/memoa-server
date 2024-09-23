@@ -18,7 +18,7 @@ public class FollowController {
 
     // 친구 맺기(팔로우)
     @PostMapping("/follow/{follower}")
-    public ResponseEntitfy<?> follow(@PathVariable String follower) {
+    public ResponseEntity<?> follow(@PathVariable String follower) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         followService.addFollower(email, follower);
