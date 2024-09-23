@@ -5,14 +5,15 @@ spring:
         username: ${MAIL_USER}
         password: ${MAIL_PASSWORD}
         properties:
-          mail:
-              smtp:
-                  auth: true
-                  starttls:
-                      enable: true
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
 
     application:
         name: memoa-server
+
     data:
         redis:
             host: ${REDIS_HOST}

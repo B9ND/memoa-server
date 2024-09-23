@@ -4,10 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.global.security.encode.SHA256;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -45,13 +49,16 @@ public class AuthCodeService {
         String hashedAuthCode = sha256.encode(authCode);
         redisTemplate1.opsForValue().set(email, hashedAuthCode, EXPIRATION_TIME, TimeUnit.MINUTES);
 
-        ClassPathResource resource = new ClassPathResource("templates/mail.html");
-        String htmlBody = new String(Files.readAllBytes(resource.getFile().toPath()));
+        // 클래스패스에서 자원 로드
+        Resource resource = new ClassPathResource("templates/mail.html");
+        try (InputStream inputStream = resource.getInputStream()) {
+            String htmlBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
 
-        htmlBody = htmlBody.replace("${authCode}", authCode);
-        htmlBody = htmlBody.replace("${expirationTime}", String.valueOf(EXPIRATION_TIME));
+            htmlBody = htmlBody.replace("${authCode}", authCode);
+            htmlBody = htmlBody.replace("${expirationTime}", String.valueOf(EXPIRATION_TIME));
 
-        emailService.sendMail(email, "Your Authentication Code", htmlBody);
+            emailService.sendMail(email, "Your Authentication Code", htmlBody);
+        }
     }
 
     public void saveVerifiedEmail(String email) {
