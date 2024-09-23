@@ -2,7 +2,6 @@ package org.example.memoaserver.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.User;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -33,6 +32,10 @@ public class BookmarkEntity {
 
     @Column
     private LocalDateTime createDate;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private BookmarkEntity bookmark;
 
 //    public static BookmarkEntity createBookmark(User user, PostEntity post) {
 //        return new BookmarkEntity(
