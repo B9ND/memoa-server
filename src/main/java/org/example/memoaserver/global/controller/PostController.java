@@ -1,5 +1,7 @@
 package org.example.memoaserver.global.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.post.dto.PostDTO;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "post", description = "게시물 관련 API")
 @Slf4j
 @RestController
 @RequestMapping("/post")
@@ -20,11 +23,19 @@ public class PostController {
     private final UserService userService;
     private final UserAuthHolder userAuthHolder;
 
-    @GetMapping("/")
+    @Operation(
+            summary = "모든 게시물을 반환하는 코드입니다.",
+            description = "추후에 삭제 예정"
+    )
+    @GetMapping("/get")
     public List<PostDTO> getPosts() {
         return postService.getAllPosts();
     }
 
+    @Operation(
+            summary = "게시물 작성 코드입니다.",
+            description = "작성 방식은 수정할 예정"
+    )
     @PostMapping("/write")
     public void write(@RequestBody PostDTO postDTO) {
         UserEntity user = userAuthHolder.current();

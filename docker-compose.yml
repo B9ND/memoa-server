@@ -2,11 +2,6 @@ version: '3.8'
 
 services:
   redis:
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     image: redis:latest
     container_name: redis
     hostname: redis
