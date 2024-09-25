@@ -16,6 +16,7 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
 
+    // 팔로우
     public void addFollower(String user, String follower) {
         Long userId = userRepository.findByEmail(user).getId();
         Long followId = userRepository.findByEmail(follower).getId();
@@ -27,6 +28,7 @@ public class FollowService {
         followRepository.save(followEntity);
     }
 
+    // 언팔로우
     public void removeFollower(String user, String follower) {
         Long userId = userRepository.findByEmail(user).getId();
         Long followId = userRepository.findByEmail(follower).getId();
@@ -34,8 +36,8 @@ public class FollowService {
     }
 
     // 팔로우 조회 (현재 목록 보내주기)
-    public List<UserDTO> getFollowers(String user, ResponseEntity<?> followers) {
-        return followRepository.findAllByFollowing(userRepository.findByEmail(user).getId()).stream()
+    public List<UserDTO> getFollowers(String user) {
+        return followRepository.findAllByFollower(userRepository.findByEmail(user).getId()).stream()
                 .map(followEntity -> UserDTO.of(userRepository.findById(followEntity.getId())))
                 .toList();
     }

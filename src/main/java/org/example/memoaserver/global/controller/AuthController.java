@@ -100,7 +100,7 @@ public class AuthController {
             description = "베리어를 포함해서 주세요"
     )
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "JWT access token", required = true, dataType = "string", paramType = "header")
+            @ApiImplicitParam(name = "Refresh", value = "JWT access token", required = true, dataType = "string", paramType = "header")
     })
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
