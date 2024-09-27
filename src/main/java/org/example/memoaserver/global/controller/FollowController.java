@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/friend")
+@RequestMapping("/follow")
 @RequiredArgsConstructor
 @Tag(name = "follow", description = "팔로우 관련 API")
 public class FollowController {
@@ -23,11 +23,13 @@ public class FollowController {
     private final UserService userService;
 
     // 친구 맺기(팔로우)
+
+    @PostMapping("/{follower}")
+
     @Operation(
             summary = "특정 유저를 팔로우합니다",
             description = "팔로워의 이메일을 Path 파라미터로 전달합니다"
     )
-    @PostMapping("/follow/{follower}")
     public ResponseEntity<?> follow(@PathVariable String follower) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -36,11 +38,11 @@ public class FollowController {
     }
 
     // 언팔로우
+    @DeleteMapping("/{follower}")
     @Operation(
             summary = "특정 유저를 언팔로우합니다",
             description = "팔로워의 이메일을 Path 파라미터로 전달합니다"
     )
-    @PostMapping("/unfollow/{follower}")
     public ResponseEntity<?> unfollow(@PathVariable String follower) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -53,7 +55,7 @@ public class FollowController {
             summary = "팔로워 목록을 조회합니다",
             description = "목록에 있는 유저의 이메일을 Path 파라미터로 전달합니다"
     )
-    @GetMapping("/follow/view/{user}")
+    @GetMapping
     public ResponseEntity<?> getFollowers(@PathVariable String user) {
         List<UserDTO> followings = followService.getFollowers(user);
         return ResponseEntity.ok(followings);
