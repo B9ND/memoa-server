@@ -18,6 +18,9 @@ env:
   ACCESS_END: ${{ secrets.ACCESS_END }}
   REFRESH_END: ${{ secrets.REFRESH_END }}
   JWT_KEY: ${{ secrets.JWT_KEY }}
+  BUCKET_SECRET: ${{ secrets.BUCKET_SECRET }}
+  BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+  BUCKET_ACCESS: ${{ secrets.BUCKET_ACCESS }}
 
 jobs:
   deploy:
@@ -61,7 +64,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: DOCKER_USERNAME, MAIL_USER, MAIL_PASSWORD, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_USER, ACCESS_END, REFRESH_END, JWT_KEY
+          envs: DOCKER_USERNAME, MAIL_USER, MAIL_PASSWORD, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_USER, ACCESS_END, REFRESH_END, JWT_KEY, BUCKET_ACCESS, BUCKET_NAME, BUCKET_SECRET
           script: |
             cd .
             
@@ -77,6 +80,9 @@ jobs:
             sudo echo "ACCESS_END=$ACCESS_END" >> .env
             sudo echo "REFRESH_END=$REFRESH_END" >> .env
             sudo echo "JWT_KEY=$JWT_KEY" >> .env
+            sudo echo "BUCKET_ACCESS=$BUCKET_ACCESS" >> .env
+            sudo echo "BUCKET_NAME=$BUCKET_NAME" >> .env
+            sudo echo "BUCKET_SECRET=$BUCKET_SECRET" >> .env
             
             docker-compose down
             docker-compose --env-file .env up -d
