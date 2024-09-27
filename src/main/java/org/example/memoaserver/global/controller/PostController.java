@@ -27,7 +27,7 @@ public class PostController {
             summary = "모든 게시물을 반환하는 코드입니다.",
             description = "추후에 삭제 예정"
     )
-    @GetMapping("/get")
+    @GetMapping
     public List<PostDTO> getPosts() {
         return postService.getAllPosts();
     }
@@ -36,7 +36,7 @@ public class PostController {
             summary = "게시물 작성 코드입니다.",
             description = "작성 방식은 수정할 예정"
     )
-    @PostMapping("/write")
+    @PostMapping
     public void write(@RequestBody PostDTO postDTO) {
         UserEntity user = userAuthHolder.current();
         postDTO.setUser(userService.getUserByEmail(user.getEmail()));

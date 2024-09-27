@@ -83,6 +83,6 @@ jobs:
             sudo echo "BUCKET_ACCESS=$BUCKET_ACCESS" >> .env
             sudo echo "BUCKET_NAME=$BUCKET_NAME" >> .env
             sudo echo "BUCKET_SECRET=$BUCKET_SECRET" >> .env
-            
+
             docker-compose down
             docker-compose --env-file .env up -d
