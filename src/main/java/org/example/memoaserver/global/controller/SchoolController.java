@@ -23,7 +23,7 @@ public class SchoolController {
             summary = "학교를 추가합니다",
             description = "db에 학교를 추가함"
     )
-    @PostMapping("/add-school")
+    @PostMapping
     public void addSchool(@RequestBody SchoolDTO school) {
 
         schoolService.addSchool(school);
