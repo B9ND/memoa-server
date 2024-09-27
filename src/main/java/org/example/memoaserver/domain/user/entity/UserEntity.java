@@ -17,6 +17,7 @@ public class UserEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(unique = true)
     private String nickname;
 
     @JsonIgnore
