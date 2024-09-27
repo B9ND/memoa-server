@@ -37,6 +37,9 @@ services:
       JWT_KEY: ${JWT_KEY}
       DOCKER_USERNAME: ${DOCKER_USERNAME}
       SPRING_REDIS_HOST: ${REDIS_HOST}
+      BUCKET_SECRET: ${ BUCKET_SECRET }
+      BUCKET_NAME: ${ BUCKET_NAME }
+      BUCKET_ACCESS: ${ BUCKET_ACCESS }
     restart: always
 volumes:
   redis_data:
