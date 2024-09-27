@@ -25,7 +25,7 @@ spring:
         username: ${MYSQL_USER}
     jpa:
         hibernate:
-            ddl-auto: none
+            ddl-auto: create
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MySQL8Dialect
@@ -36,3 +36,16 @@ spring:
         refresh:
             expiration: ${REFRESH_END}
         secret: ${JWT_KEY}
+
+cloud:
+    aws:
+        s3:
+            bucket: ${BUCKET_NAME}
+        credentials:
+            access-key: ${BUCKET_ACCESS}
+            secret-key: ${BUCKET_SECRET}
+        region:
+            static: ap-northeast-2
+            auto: false
+        stack:
+            auto: false

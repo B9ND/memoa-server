@@ -25,10 +25,13 @@ import java.util.concurrent.TimeUnit;
 public class RefreshTokenService {
     @Qualifier("redisTemplate0")
     private final RedisTemplate<String, Object> redisTemplate;
-    private static final String TOKEN_PREFIX = "refresh_token:";
-    private static final String INVERSE_INDEX_PREFIX = "refresh_to_email:";
+
+
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
+
+    private static final String TOKEN_PREFIX = "refresh_token:";
+    private static final String INVERSE_INDEX_PREFIX = "refresh_to_email:";
 
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String refresh = request.getHeader("Refresh");

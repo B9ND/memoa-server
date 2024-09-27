@@ -79,6 +79,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/test").permitAll()
                         .requestMatchers("/post/*", "friend/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/image/*").permitAll()
+                        // permit -> 인증으로 변경 해야함
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new CustomLogoutFilter(refreshTokenService), LogoutFilter.class)
