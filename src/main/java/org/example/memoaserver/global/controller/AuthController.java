@@ -71,7 +71,7 @@ public class AuthController {
             authCodeService.sendAuthCode(email);
         } catch (IOException e) {
             log.error(e.getMessage());
-            return "send auth code failed";
+            return "Send auth code failed";
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
