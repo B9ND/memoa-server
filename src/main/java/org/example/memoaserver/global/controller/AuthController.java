@@ -108,7 +108,7 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "내정보를 받는 주소입니다.",
+            summary = "내 정보를 받는 주소입니다.",
             description = "인자는 없습니다."
     )
     @GetMapping("/me")
