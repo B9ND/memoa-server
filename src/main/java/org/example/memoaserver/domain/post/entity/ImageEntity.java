@@ -4,18 +4,15 @@
 //import jakarta.persistence.GeneratedValue;
 //import jakarta.persistence.GenerationType;
 //import jakarta.persistence.Id;
-//import lombok.Builder;
-//import lombok.Getter;
 //import lombok.NoArgsConstructor;
 //import lombok.experimental.SuperBuilder;
 //
-//@Getter
 //@SuperBuilder
 //@NoArgsConstructor
 //@Entity
-//public class TagEntity {
+//public class ImageEntity {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long tag_id;
-//    private String tagName;
+//    private Long image_id;
+//    private String url;
 //}
