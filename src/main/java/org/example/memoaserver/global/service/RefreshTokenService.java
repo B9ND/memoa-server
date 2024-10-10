@@ -26,7 +26,6 @@ public class RefreshTokenService {
     @Qualifier("redisTemplate0")
     private final RedisTemplate<String, Object> redisTemplate;
 
-
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
 
