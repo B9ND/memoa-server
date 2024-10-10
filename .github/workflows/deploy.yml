@@ -85,4 +85,5 @@ jobs:
             sudo echo "BUCKET_SECRET=$BUCKET_SECRET" >> .env
 
             docker-compose down
+            docker-compose pull
             docker-compose --env-file .env up -d
