@@ -1,45 +1,45 @@
-//package org.example.memoaserver.global.controller;
-//
-//import io.swagger.v3.oas.annotations.Operation;
-//import io.swagger.v3.oas.annotations.tags.Tag;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.example.memoaserver.domain.post.dto.PostDTO;
-//import org.example.memoaserver.domain.post.service.PostService;
-//import org.example.memoaserver.domain.user.entity.UserEntity;
-//import org.example.memoaserver.domain.user.repository.UserAuthHolder;
-//import org.example.memoaserver.domain.user.service.UserService;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@Tag(name = "post", description = "게시물 관련 API")
-//@Slf4j
-//@RestController
-//@RequestMapping("/post")
-//@RequiredArgsConstructor
-//public class PostController {
-//    private final PostService postService;
-//    private final UserService userService;
-//    private final UserAuthHolder userAuthHolder;
-//
-//    @Operation(
-//            summary = "모든 게시물을 반환하는 코드입니다.",
-//            description = "추후에 삭제 예정"
-//    )
-//    @GetMapping
-//    public List<PostDTO> getPosts() {
-//        return postService.getAllPosts();
-//    }
-//
-//    @Operation(
-//            summary = "게시물 작성 코드입니다.",
-//            description = "작성 방식은 수정할 예정"
-//    )
-//    @PostMapping
-//    public void write(@RequestBody PostDTO postDTO) {
-//        UserEntity user = userAuthHolder.current();
-//        postDTO.setUser(userService.getUserByEmail(user.getEmail()));
-//        postService.writePost(postDTO);
-//    }
-//}
+package org.example.memoaserver.global.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.post.dto.res.PostResponse;
+import org.example.memoaserver.domain.post.dto.req.PostRequest;
+import org.example.memoaserver.domain.post.service.PostService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Tag(name = "post", description = "게시물 관련 API")
+@Slf4j
+@RestController
+@RequestMapping("/post")
+@RequiredArgsConstructor
+public class PostController {
+    private final PostService postService;
+
+    @GetMapping
+    public ResponseEntity<List<PostResponse>> getSearchedPosts(@RequestParam(required = false) String search) {
+        return ResponseEntity.ok().body(postService.getPostsByTitleOrContent(search));
+    }
+
+    @Operation(
+            summary = "게시물을 아이디로 받을 수 있습니다."
+    )
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponse> getPostById(@PathVariable long id) {
+        return ResponseEntity.ok().body(postService.getPostById(id));
+    }
+
+    @Operation(
+            summary = "게시물을 생성합니다.",
+            description = "postReq 형식으로 데이터를 받고 상태만을 반환합니다."
+    )
+    @PostMapping
+    public ResponseEntity<?> createPost(@RequestBody PostRequest postRequest) {
+        postService.save(postRequest);
+        return ResponseEntity.ok().build();
+    }
+}

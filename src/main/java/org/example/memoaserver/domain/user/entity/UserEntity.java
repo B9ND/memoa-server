@@ -3,12 +3,15 @@ package org.example.memoaserver.domain.user.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.example.memoaserver.domain.user.entity.enums.Role;
 
 import java.util.Date;
 
-@Getter @Setter
+@Getter @SuperBuilder(toBuilder = true)
 @Entity(name = "user")
+@NoArgsConstructor
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +24,8 @@ public class UserEntity {
     private String nickname;
 
     @JsonIgnore
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @JsonIgnore
     private String password;

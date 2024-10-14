@@ -78,11 +78,13 @@ public class SecurityConfig {
                         .requestMatchers("/school/*").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/test").permitAll()
-                        .requestMatchers("/post/*", "friend/*").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/image/*").permitAll()
-                        // permit -> 인증으로 변경 해야함
+                        // permit -> 인증 되도록 변경해야함
+//                        .requestMatchers("/post/*", "friend/*").authenticated()
+//                        .requestMatchers("/image/*").authenticated()
                         .anyRequest().authenticated()
-                )
+                );
+
+        http
                 .addFilterBefore(new CustomLogoutFilter(refreshTokenService), LogoutFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
