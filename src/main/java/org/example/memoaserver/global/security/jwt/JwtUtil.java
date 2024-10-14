@@ -28,6 +28,10 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
     }
 
+    public String getDevice(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("device", String.class);
+    }
+
     public String getCategory(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
@@ -36,12 +40,13 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String category, String email, Role role, Long expiredTime) {
+    public String createJwt(String category, String email, Role role, String deviceIdentifier, Long expiredTime) {
         try {
             return Jwts.builder()
                     .claim("category", category)
                     .claim("email", email)
                     .claim("role", role.value())
+                    .claim("device", deviceIdentifier)
                     .issuedAt(new Date(System.currentTimeMillis()))
                     .expiration(new Date(System.currentTimeMillis() + expiredTime))
                     .signWith(secretKey)
