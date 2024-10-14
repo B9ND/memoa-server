@@ -35,11 +35,4 @@ public class PostReq {
 
         return post;
     }
-
-//    private List<ImageEntity> toImageEntity() {
-//        return images.stream()
-//                .map(imageUrl -> ImageEntity.builder()
-//                        .url(imageUrl).build())
-//                .collect(Collectors.toList());
-//    }
 }
