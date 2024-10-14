@@ -14,7 +14,7 @@ import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.service.AuthCodeService;
 import org.example.memoaserver.domain.user.service.UserService;
 import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
-import org.example.memoaserver.global.service.RefreshTokenService;
+import org.example.memoaserver.domain.user.service.RefreshTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

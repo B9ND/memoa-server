@@ -7,7 +7,7 @@ import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.filter.JwtFilter;
 import org.example.memoaserver.global.security.jwt.filter.LoginFilter;
 import org.example.memoaserver.global.security.properties.JwtProperties;
-import org.example.memoaserver.global.service.RefreshTokenService;
+import org.example.memoaserver.domain.user.service.RefreshTokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

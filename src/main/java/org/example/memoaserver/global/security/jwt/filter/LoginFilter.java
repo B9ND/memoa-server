@@ -7,12 +7,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.domain.user.entity.enums.Role;
-import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
 import org.example.memoaserver.global.security.properties.JwtProperties;
-import org.example.memoaserver.global.service.RefreshTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -78,7 +76,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String access = jwtUtil.createJwt("access", email, role, device, jwtProperties.getAccess().getExpiration());
         String refresh = jwtUtil.createJwt("refresh", email, role, device, jwtProperties.getRefresh().getExpiration());
 
-        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO((access), refresh);
+        JwtTokenDTO jwtTokenDTO = JwtTokenDTO.builder()
+                .access(access)
+                .refresh(refresh)
+                .build();
 
         response.setContentType("application/json");
         ObjectMapper objectMapper = new ObjectMapper();
