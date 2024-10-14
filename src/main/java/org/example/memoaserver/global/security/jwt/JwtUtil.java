@@ -1,6 +1,7 @@
 package org.example.memoaserver.global.security.jwt;
 
 import io.jsonwebtoken.Jwts;
+import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.global.exception.JwtSignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,12 +36,12 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String category, String email, String role, Long expiredTime) {
+    public String createJwt(String category, String email, Role role, Long expiredTime) {
         try {
             return Jwts.builder()
                     .claim("category", category)
                     .claim("email", email)
-                    .claim("role", role)
+                    .claim("role", role.value())
                     .issuedAt(new Date(System.currentTimeMillis()))
                     .expiration(new Date(System.currentTimeMillis() + expiredTime))
                     .signWith(secretKey)

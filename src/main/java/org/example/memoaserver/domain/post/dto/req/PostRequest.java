@@ -13,7 +13,7 @@ import java.util.Set;
 
 @ApiModel(description = "게시물 저장 모델")
 @Getter
-public class PostReq {
+public class PostRequest {
     @ApiModelProperty(value = "제목", example = "메모아")
     private String title;
     @ApiModelProperty(value = "내용", example = "메모아 상세 사용법")

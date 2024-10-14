@@ -30,7 +30,7 @@ public class FollowController {
             summary = "특정 유저를 팔로우합니다",
             description = "팔로워의 이메일을 Path 파라미터로 전달합니다"
     )
-    public ResponseEntity<?> follow(@PathVariable String follower) {
+    public ResponseEntity<?> follow(@PathVariable(name = "follower") String follower) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         followService.addFollower(email, follower);

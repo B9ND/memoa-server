@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
 import org.example.memoaserver.global.security.properties.JwtProperties;
@@ -64,7 +65,7 @@ public class RefreshTokenService {
         }
 
         String email = jwtUtil.getEmail(refresh);
-        String role = jwtUtil.getRole(refresh);
+        Role role = Role.valueOf(jwtUtil.getRole(refresh));
 
         String newAccess = jwtUtil.createJwt("access", email, role, jwtProperties.getAccess().getExpiration());
         String newRefresh = jwtUtil.createJwt("refresh", email, role, jwtProperties.getRefresh().getExpiration());
@@ -72,7 +73,7 @@ public class RefreshTokenService {
         deleteByRefreshToken(refresh);
         addRefreshEntity(email, newRefresh, jwtProperties.getRefresh().getExpiration());
 
-        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(("Bearer " + newAccess), newRefresh);
+        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO((newAccess), newRefresh);
 
         response.setContentType("application/json");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -143,16 +144,6 @@ public class RefreshTokenService {
     public Boolean existsByRefreshToken(String refresh) {
         String key = INVERSE_INDEX_PREFIX + refresh;
         return redisTemplate.hasKey(key);
-    }
-
-    public Cookie createCookie(String key, String value, Long maxAge) {
-        Cookie cookie = new Cookie(key, value);
-        int maxAgeInt = maxAge.intValue();
-        cookie.setMaxAge(maxAgeInt);
-//        cookie.setSecure(true);
-//        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        return cookie;
     }
 }
 
