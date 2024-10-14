@@ -1,10 +1,14 @@
 package org.example.memoaserver.domain.user.service;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.example.memoaserver.domain.user.dto.UpdateUserDTO;
 import org.example.memoaserver.domain.user.dto.UserDTO;
+import org.example.memoaserver.domain.user.dto.res.UserRes;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
+import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.exception.CustomConflictException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,33 +20,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
-    private final RedisTemplate<String, Object> redisTemplate2;
     private final UserAuthHolder userAuthHolder;
-
-    public UserService(@Qualifier("redisTemplate2")
-                           RedisTemplate<String, Object> redisTemplate2,
-                       BCryptPasswordEncoder bCryptPasswordEncoder,
-                       UserRepository userRepository, UserAuthHolder userAuthHolder) {
-        this.redisTemplate2 = redisTemplate2;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.userRepository = userRepository;
-        this.userAuthHolder = userAuthHolder;
-    }
+    private final RedisService redisService;
 
     private static final String EMAIL_PATTERN =
             "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
-    public UserDTO me() {
-        UserEntity userEntity = userAuthHolder.current();
-        return UserDTO.of(Optional.ofNullable(userEntity));
+    public UserRes me() {
+        return UserRes.fromUserEntity(userAuthHolder.current());
     }
 
-    public UserDTO updateMe(UpdateUserDTO updateUser) {
+    public UserRes updateMe(UpdateUserDTO updateUser) {
         UserEntity userEntity = userAuthHolder.current();
 
         UserEntity.UserEntityBuilder toBuilder = userRepository.findByEmail(userEntity.getEmail()).toBuilder();
@@ -55,15 +49,13 @@ public class UserService {
                 toBuilder.password(bCryptPasswordEncoder.encode(updateUser.getPassword()));
             }
         }
-
         UserEntity updatedUser = toBuilder.build();
-
         userRepository.save(updatedUser);
 
-        return UserDTO.of(Optional.of(updatedUser));
+        return UserRes.fromUserEntity(updatedUser);
     }
 
-    public UserEntity register(UserDTO userDTO) {
+    public UserRes register(UserDTO userDTO) {
         String email = userDTO.getEmail();
         String hashedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
 
@@ -79,7 +71,7 @@ public class UserService {
             throw new CustomConflictException("this email does not verify");
         }
 
-        redisTemplate2.delete(email);
+        redisService.deleteOnRedisForAuthenticEmail(email);
 
         UserEntity userEntity = UserEntity.builder()
                 .email(email)
@@ -88,7 +80,7 @@ public class UserService {
                 .role("ROLE_USER")
                 .build();
 
-        return userRepository.save(userEntity);
+        return UserRes.fromUserEntity(userRepository.save(userEntity));
     }
 
     public UserEntity getUserByEmail(String email) {
@@ -96,7 +88,7 @@ public class UserService {
     }
 
     private Boolean checkVerification(String email) {
-        return redisTemplate2.hasKey(email);
+        return redisService.findOnRedisForAuthenticEmail(email);
     }
 
     private Boolean checkEmailVerification(String email) {

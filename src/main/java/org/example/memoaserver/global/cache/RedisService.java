@@ -20,12 +20,20 @@ public class RedisService {
         this.authenticEmailredisTemplate = authenticEmailredisTemplate;
     }
 
-    public void setOnARedisForAuthCode(String email, String authCode, long ttl) {
+    public void setOnRedisForAuthCode(String email, String authCode, long ttl) {
         authCodeRedisTemplate.opsForValue().set(email, authCode, ttl, TimeUnit.MINUTES);
     }
 
-    public String getOnARedisForAuthCode(String email) {
+    public String getOnRedisForAuthCode(String email) {
         return (String) authCodeRedisTemplate.opsForValue().get(email);
+    }
+
+    public String getOnRedisForAuthenticEmail(String email) {
+        return (String) authenticEmailredisTemplate.opsForValue().get(email);
+    }
+
+    public Boolean findOnRedisForAuthenticEmail(String email) {
+        return authenticEmailredisTemplate.hasKey(email);
     }
 
     public void setOnRedisForAuthenticEmail(String email, long ttl) {

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.dto.UpdateUserDTO;
 import org.example.memoaserver.domain.user.dto.UserDTO;
+import org.example.memoaserver.domain.user.dto.res.UserRes;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.service.AuthCodeService;
 import org.example.memoaserver.domain.user.service.UserService;
@@ -36,17 +37,8 @@ public class AuthController {
             description = "인증된 이메일만 회원가입이 가능합니다."
     )
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDTO user) {
-        try {
-            UserEntity userEntity = userService.register(user);
-
-            return ResponseEntity
-                    .ok(userEntity);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
+    public ResponseEntity<UserRes> register(@RequestBody UserDTO user) {
+            return ResponseEntity.ok().body(userService.register(user));
     }
 
     @Operation(
@@ -55,7 +47,7 @@ public class AuthController {
     )
     @PostMapping("/login")
     public void login(@RequestBody UserDTO user) {
-        throw new IllegalStateException("This method is handled by a filter.");
+        throw new IllegalStateException("필터단...,,,");
     }
 
     @Operation(
