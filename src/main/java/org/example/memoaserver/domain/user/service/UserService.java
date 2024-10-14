@@ -81,6 +81,7 @@ public class UserService {
 
         userEntity.setEmail(email);
         userEntity.setPassword(hashedPassword);
+        userEntity.setNickname(userDTO.getNickname());
         userEntity.setRole("ROLE_USER");
 
         return userRepository.save(userEntity);

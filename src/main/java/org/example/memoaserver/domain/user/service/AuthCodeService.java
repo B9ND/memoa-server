@@ -1,6 +1,10 @@
 package org.example.memoaserver.domain.user.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.user.support.RandomCodeGenerator;
+import org.example.memoaserver.domain.user.support.ResourceLoader;
+import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.encode.SHA256;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
@@ -19,66 +23,29 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthCodeService {
-    private static final int EXPIRATION_TIME = 5;
 
     private final EmailService emailService;
-    private final RedisTemplate<String, Object> redisTemplate1;
-    private final RedisTemplate<String, Object> redisTemplate2;
-    private final SHA256 sha256 = new SHA256();
+    private final SHA256 sha256;
+    private final RedisService redisService;
 
-    public AuthCodeService(@Qualifier("redisTemplate1")
-                           RedisTemplate<String, Object> redisTemplate1,
-                           @Qualifier("redisTemplate2")
-                           RedisTemplate<String, Object> redisTemplate2,
-                           EmailService emailService) {
-        this.redisTemplate1 = redisTemplate1;
-        this.emailService = emailService;
-        this.redisTemplate2 = redisTemplate2;
-    }
-
-    public String generateAuthCode() {
-        Random random = new Random();
-        int code = 100000 + random.nextInt(900000);
-        return String.valueOf(code);
-    }
+    private static final int EXPIRATION_TIME = 5;
 
     public void sendAuthCode(String email)
             throws IOException, NoSuchAlgorithmException {
-        String authCode = generateAuthCode();
-        String hashedAuthCode = sha256.encode(authCode);
-        redisTemplate1.opsForValue().set(email, hashedAuthCode, EXPIRATION_TIME, TimeUnit.MINUTES);
-
-        // 클래스패스에서 자원 로드
-        Resource resource = new ClassPathResource("templates/mail.html");
-        try (InputStream inputStream = resource.getInputStream()) {
-            String htmlBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-
-            htmlBody = htmlBody.replace("${authCode}", authCode);
-            htmlBody = htmlBody.replace("${expirationTime}", String.valueOf(EXPIRATION_TIME));
-
-            emailService.sendMail(email, "Your Authentication Code", htmlBody);
-        }
+        String authCode = RandomCodeGenerator.generateAuthCode();
+        redisService.setOnARedisForAuthCode(email, sha256.encode(authCode), EXPIRATION_TIME);
+        emailService.sendMail(email, ResourceLoader.loadEmailHtml(email, authCode, EXPIRATION_TIME));
     }
 
-    public void saveVerifiedEmail(String email) {
-        redisTemplate2.opsForValue().set(email, email, EXPIRATION_TIME, TimeUnit.MINUTES);
-    }
+    public void verifyAuthCode(String email, String authCode) throws NoSuchAlgorithmException {
+        String storedCode = redisService.getOnARedisForAuthCode(email);
 
-    public boolean verifyAuthCode(String email, String authCode) throws NoSuchAlgorithmException {
-        String storedCode = (String) redisTemplate1.opsForValue().get(email);
-//        System.out.println(storedCode);
-        if (storedCode == null) {
-            return false;
+        if (storedCode == null || !sha256.matches(authCode, storedCode)) {
+            throw new RuntimeException("코드가 일치하지 않습니다.");
         }
-
-        log.info(String.valueOf(sha256.matches(authCode, storedCode)));
-
-        if (!sha256.matches(authCode, storedCode)) {
-            return false;
-        }
-
-        redisTemplate1.delete(email);
-        return true;
+        redisService.deleteOnRedisForAuthenticEmail(email);
+        redisService.setOnRedisForAuthenticEmail(email, EXPIRATION_TIME);
     }
 }
