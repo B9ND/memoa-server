@@ -1,5 +1,6 @@
 package org.example.memoaserver.global.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +25,18 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getPostsByTitleOrContent(search));
     }
 
+    @Operation(
+            summary = "게시물을 아이디로 받을 수 있습니다."
+    )
     @GetMapping("/{id}")
     public ResponseEntity<PostRes> getPostById(@PathVariable long id) {
         return ResponseEntity.ok().body(postService.getPostById(id));
     }
 
+    @Operation(
+            summary = "게시물을 생성합니다.",
+            description = "postReq 형식으로 데이터를 받고 상태만을 반환합니다."
+    )
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody PostReq postReq) {
         postService.save(postReq);
