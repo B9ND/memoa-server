@@ -32,36 +32,16 @@ public class RefreshTokenService {
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
 
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public JwtTokenDTO reissue(HttpServletRequest request) {
         String refresh = request.getHeader("Refresh");
         String device = request.getHeader("User-Agent") + "_" + request.getRemoteAddr();
 
-        if (refresh == null) {
-            return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            jwtUtil.getEmail(refresh);
-        } catch (Exception e) {
-            return new ResponseEntity<>("unknown token", HttpStatus.UNAUTHORIZED);
-        }
-
-        try {
-            jwtUtil.isExpired(refresh);
-        } catch (ExpiredJwtException e) {
-
-            return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
-        }
-
-        if (!jwtUtil.getCategory(refresh).equals("refresh")) {
-
-            return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
-        }
+        checkRefreshToken(device, refresh);
 
         String email = jwtUtil.getEmail(refresh);
 
         if (!refresh.equals(findByEmail(device, email))) {
-             return new ResponseEntity<>("invalid refresh token2", HttpStatus.BAD_REQUEST);
+            throw new RuntimeException("Refresh token expired");
         }
 
         Role role = Role.valueOf(jwtUtil.getRole(refresh));
@@ -69,48 +49,49 @@ public class RefreshTokenService {
         String newAccess = jwtUtil.createJwt("access", email, role, device, jwtProperties.getAccess().getExpiration());
         String newRefresh = jwtUtil.createJwt("refresh", email, role, device, jwtProperties.getRefresh().getExpiration());
 
-        deleteTokenByEmail(email, device);
-
         redisService.saveToken(device + "::" + email, newRefresh, jwtProperties.getRefresh().getExpiration());
 
-        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO((newAccess), newRefresh);
-
-        response.setContentType("application/json");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getWriter(), jwtTokenDTO);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return JwtTokenDTO.builder()
+                .access(newAccess)
+                .refresh(newRefresh)
+                .build();
     }
 
-    public void logout(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    public void logout(HttpServletRequest request) {
         String refresh = request.getHeader("Refresh");
         String device = request.getHeader("User-Agent") + "_" + request.getRemoteAddr();
 
+        checkRefreshToken(device, refresh);
+
+        deleteTokenByEmail(device, jwtUtil.getEmail(refresh));
+    }
+
+    private void checkRefreshToken(String device, String refresh) {
         if (refresh == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+            throw new RuntimeException("Refresh header is missing");
+        }
+
+        try {
+            jwtUtil.getEmail(refresh);
+        } catch (Exception e) {
+            throw new RuntimeException("Refresh header is invalid");
         }
 
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            throw new RuntimeException("Refresh header is expired");
         }
 
-        String category = jwtUtil.getCategory(refresh);
-        if (!category.equals("refresh")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+        if (!jwtUtil.getCategory(refresh).equals("refresh")) {
+            throw new RuntimeException("Refresh header is missing");
         }
 
-        if (jwtUtil.isExpired(refresh)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
+        String email = jwtUtil.getEmail(refresh);
 
-        deleteTokenByEmail(device, jwtUtil.getEmail(refresh));
-        response.setStatus(HttpServletResponse.SC_OK);
+        if (!refresh.equals(findByEmail(device, email))) {
+            throw new RuntimeException("Refresh header is missing");
+        }
     }
 
     private String findByEmail(String device, String email) {

@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
-import org.example.memoaserver.global.security.jwt.filter.CustomLogoutFilter;
 import org.example.memoaserver.global.security.jwt.filter.JwtFilter;
 import org.example.memoaserver.global.security.jwt.filter.LoginFilter;
 import org.example.memoaserver.global.security.properties.JwtProperties;
@@ -20,11 +19,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -88,7 +85,6 @@ public class SecurityConfig {
 
         http
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(refreshTokenService), LogoutFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
         http
