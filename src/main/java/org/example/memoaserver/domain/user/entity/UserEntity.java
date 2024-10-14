@@ -3,12 +3,14 @@ package org.example.memoaserver.domain.user.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 
-@Getter @Setter
+@Getter @SuperBuilder(toBuilder = true)
 @Entity(name = "user")
+@NoArgsConstructor
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

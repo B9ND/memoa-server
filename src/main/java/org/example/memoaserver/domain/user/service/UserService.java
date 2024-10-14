@@ -44,19 +44,23 @@ public class UserService {
 
     public UserDTO updateMe(UpdateUserDTO updateUser) {
         UserEntity userEntity = userAuthHolder.current();
+
+        UserEntity.UserEntityBuilder toBuilder = userRepository.findByEmail(userEntity.getEmail()).toBuilder();
         if (updateUser.getNickname() != null) {
-            userEntity.setNickname(updateUser.getNickname());
+            toBuilder.nickname(updateUser.getNickname());
         }
 
         if (updateUser.getPassword() != null && updateUser.getPastPassword() != null) {
             if (bCryptPasswordEncoder.matches(updateUser.getPastPassword(), userEntity.getPassword())) {
-                userEntity.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
+                toBuilder.password(bCryptPasswordEncoder.encode(updateUser.getPassword()));
             }
         }
 
-        userRepository.save(userEntity);
+        UserEntity updatedUser = toBuilder.build();
 
-        return UserDTO.of(Optional.of(userEntity));
+        userRepository.save(updatedUser);
+
+        return UserDTO.of(Optional.of(updatedUser));
     }
 
     public UserEntity register(UserDTO userDTO) {
@@ -77,12 +81,12 @@ public class UserService {
 
         redisTemplate2.delete(email);
 
-        UserEntity userEntity = new UserEntity();
-
-        userEntity.setEmail(email);
-        userEntity.setPassword(hashedPassword);
-        userEntity.setNickname(userDTO.getNickname());
-        userEntity.setRole("ROLE_USER");
+        UserEntity userEntity = UserEntity.builder()
+                .email(email)
+                .password(hashedPassword)
+                .nickname(userDTO.getNickname())
+                .role("ROLE_USER")
+                .build();
 
         return userRepository.save(userEntity);
     }
