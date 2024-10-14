@@ -23,7 +23,21 @@ public class RedisService {
         this.authenticEmailredisTemplate = authenticEmailredisTemplate;
     }
 
-//    public void
+    public void deleteOnRedisForToken(String key) {
+        tokenRedisTemplate.delete(key);
+    }
+
+    public void setOnRedisForToken(String key, String value, Long expired, TimeUnit timeUnit) {
+        tokenRedisTemplate.opsForValue().set(key, value, expired, timeUnit);
+    }
+
+    public String getOnRedisForToken(String key) {
+        return (String) tokenRedisTemplate.opsForValue().get(key);
+    }
+
+    public Boolean findOnRedisForToken(String key) {
+        return tokenRedisTemplate.hasKey(key);
+    }
 
     public void setOnRedisForAuthCode(String email, String authCode, long ttl) {
         authCodeRedisTemplate.opsForValue().set(email, authCode, ttl, TimeUnit.MINUTES);

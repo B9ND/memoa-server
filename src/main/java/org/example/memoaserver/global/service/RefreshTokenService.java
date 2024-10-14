@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.entity.enums.Role;
+import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
 import org.example.memoaserver.global.security.properties.JwtProperties;
@@ -24,9 +25,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
-    @Qualifier("redisTemplate0")
-    private final RedisTemplate<String, Object> redisTemplate;
-
+    private final RedisService redisService;
 
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
@@ -114,37 +113,36 @@ public class RefreshTokenService {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    public void deleteByRefreshToken(String refresh) {
+    private void deleteByRefreshToken(String refresh) {
         String email = findByRefreshToken(refresh.replaceFirst(INVERSE_INDEX_PREFIX, ""));
-        redisTemplate.delete(TOKEN_PREFIX + email);
-        redisTemplate.delete(INVERSE_INDEX_PREFIX + refresh.replaceFirst(INVERSE_INDEX_PREFIX, ""));
+        redisService.deleteOnRedisForToken(TOKEN_PREFIX + email);
+        redisService.deleteOnRedisForToken(INVERSE_INDEX_PREFIX + refresh.replaceFirst(INVERSE_INDEX_PREFIX, ""));
     }
 
-    public void addRefreshEntity(String phoneNumber, String refresh, Long expiredMs) {
-        String key = TOKEN_PREFIX + phoneNumber;
+    public void addRefreshEntity(String email, String refresh, Long expiredMs) {
+        String key = TOKEN_PREFIX + email;
         String refreshKey = INVERSE_INDEX_PREFIX + refresh;
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
-            deleteByRefreshToken(INVERSE_INDEX_PREFIX + findByEmail(phoneNumber));
+        if (redisService.findOnRedisForToken(key)) {
+            deleteByRefreshToken(INVERSE_INDEX_PREFIX + findByEmail(email));
         }
 
-        redisTemplate.opsForValue().set(key, refresh, expiredMs, TimeUnit.MILLISECONDS);
-        redisTemplate.opsForValue().set(refreshKey, phoneNumber, expiredMs, TimeUnit.MILLISECONDS);
+        redisService.setOnRedisForToken(key, refresh, expiredMs, TimeUnit.MILLISECONDS);
+        redisService.setOnRedisForToken(refreshKey, email, expiredMs, TimeUnit.MILLISECONDS);
     }
 
-    public String findByEmail(String email) {
+    private String findByEmail(String email) {
         String key = TOKEN_PREFIX + email;
-        return (String) redisTemplate.opsForValue().get(key);
+        return redisService.getOnRedisForToken(key);
     }
 
-    public String findByRefreshToken(String refresh) {
+    private String findByRefreshToken(String refresh) {
         String key = INVERSE_INDEX_PREFIX + refresh;
-        return (String) redisTemplate.opsForValue().get(key);
+        return redisService.getOnRedisForToken(key);
     }
 
-    public Boolean existsByRefreshToken(String refresh) {
+    private Boolean existsByRefreshToken(String refresh) {
         String key = INVERSE_INDEX_PREFIX + refresh;
-        return redisTemplate.hasKey(key);
+        return redisService.findOnRedisForToken(key);
     }
 }
-
