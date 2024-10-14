@@ -73,7 +73,7 @@ public class RefreshTokenService {
         deleteByRefreshToken(refresh);
         addRefreshEntity(email, newRefresh, jwtProperties.getRefresh().getExpiration());
 
-        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO(("Bearer " + newAccess), newRefresh);
+        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO((newAccess), newRefresh);
 
         response.setContentType("application/json");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -144,16 +144,6 @@ public class RefreshTokenService {
     public Boolean existsByRefreshToken(String refresh) {
         String key = INVERSE_INDEX_PREFIX + refresh;
         return redisTemplate.hasKey(key);
-    }
-
-    public Cookie createCookie(String key, String value, Long maxAge) {
-        Cookie cookie = new Cookie(key, value);
-        int maxAgeInt = maxAge.intValue();
-        cookie.setMaxAge(maxAgeInt);
-//        cookie.setSecure(true);
-//        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        return cookie;
     }
 }
 
