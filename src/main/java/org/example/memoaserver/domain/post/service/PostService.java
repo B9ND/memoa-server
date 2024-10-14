@@ -1,10 +1,9 @@
 package org.example.memoaserver.domain.post.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.post.dto.req.PostReq;
-import org.example.memoaserver.domain.post.dto.res.PostRes;
+import org.example.memoaserver.domain.post.dto.req.PostRequest;
+import org.example.memoaserver.domain.post.dto.res.PostResponse;
 import org.example.memoaserver.domain.post.entity.ImageEntity;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
@@ -29,26 +28,26 @@ public class PostService {
     private final TagRepository tagRepository;
 
 //    @Transactional
-    public void save(PostReq postReq) {
+    public void save(PostRequest postRequest) {
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
-        Set<TagEntity> tags = postReq.getTags().stream().map(this::findOrCreateTag).collect(Collectors.toSet());
-        PostEntity post = postReq.toPostEntity(user, tags);
-        List<ImageEntity> images = postReq.getImages().stream().map(imageUrl -> ImageEntity.builder().url(imageUrl).post(post).build()).collect(Collectors.toList());
+        Set<TagEntity> tags = postRequest.getTags().stream().map(this::findOrCreateTag).collect(Collectors.toSet());
+        PostEntity post = postRequest.toPostEntity(user, tags);
+        List<ImageEntity> images = postRequest.getImages().stream().map(imageUrl -> ImageEntity.builder().url(imageUrl).post(post).build()).collect(Collectors.toList());
 
         post.setImages(images);
 
         postRepository.save(post);
     }
 
-    public List<PostRes> getPostsByTitleOrContent(String name) {
+    public List<PostResponse> getPostsByTitleOrContent(String name) {
         return postRepository.findByTitleContainingOrContentContaining(name, name)
                 .stream()
-                .map(PostRes::fromPostEntity)
+                .map(PostResponse::fromPostEntity)
                 .toList();
     }
 
-    public PostRes getPostById(Long id) {
-        return PostRes.fromPostEntity(postRepository.findById(id)
+    public PostResponse getPostById(Long id) {
+        return PostResponse.fromPostEntity(postRepository.findById(id)
                 .orElseThrow(RuntimeException::new));
     }
 
