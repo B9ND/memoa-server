@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Builder
-public class PostRes {
+public class PostResponse {
     private Long id;
 
     private String title;
@@ -26,7 +26,7 @@ public class PostRes {
 
     private List<String> images;
 
-    public static PostEntity of(PostRes postDTO, UserEntity user, Set<TagEntity> tags, List<ImageEntity> images) {
+    public static PostEntity of(PostResponse postDTO, UserEntity user, Set<TagEntity> tags, List<ImageEntity> images) {
         return PostEntity.builder()
                 .user(user)
                 .title(postDTO.getTitle())
@@ -36,8 +36,8 @@ public class PostRes {
                 .build();
     }
 
-    public static PostRes fromPostEntity(PostEntity postEntity) {
-        return PostRes.builder()
+    public static PostResponse fromPostEntity(PostEntity postEntity) {
+        return PostResponse.builder()
                 .id(postEntity.getPost_id())
                 .title(postEntity.getTitle())
                 .content(postEntity.getContent())

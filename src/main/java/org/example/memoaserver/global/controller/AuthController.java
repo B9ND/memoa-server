@@ -2,17 +2,16 @@ package org.example.memoaserver.global.controller;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.user.dto.UpdateUserDTO;
-import org.example.memoaserver.domain.user.dto.UserDTO;
-import org.example.memoaserver.domain.user.dto.res.UserRes;
-import org.example.memoaserver.domain.user.entity.UserEntity;
+import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
+import org.example.memoaserver.domain.user.dto.req.LoginRequest;
+import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
+import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.service.AuthCodeService;
 import org.example.memoaserver.domain.user.service.UserService;
 import org.example.memoaserver.global.service.RefreshTokenService;
@@ -37,16 +36,16 @@ public class AuthController {
             description = "인증된 이메일만 회원가입이 가능합니다."
     )
     @PostMapping("/register")
-    public ResponseEntity<UserRes> register(@RequestBody UserDTO user) {
+    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest user) {
             return ResponseEntity.ok().body(userService.register(user));
     }
 
     @Operation(
             summary = "로그인하는 주소입니다.",
-            description = "access token 은 bearer 를 포함합니다."
+            description = "access token 을 포함합니다."
     )
     @PostMapping("/login")
-    public void login(@RequestBody UserDTO user) {
+    public void login(@RequestBody LoginRequest user) {
         throw new IllegalStateException("필터단...,,,");
     }
 
@@ -100,7 +99,7 @@ public class AuthController {
             description = "인자는 없습니다."
     )
     @GetMapping("/me")
-    public ResponseEntity<?> me() {
+    public ResponseEntity<UserResponse> me() {
         return ResponseEntity.ok(userService.me());
     }
 
@@ -109,7 +108,7 @@ public class AuthController {
             description = "학교 변경은 제외합니다."
     )
     @PatchMapping("/me")
-    public ResponseEntity<?> updateMe(@RequestBody UpdateUserDTO user) {
+    public ResponseEntity<UserResponse> updateMe(@RequestBody UpdateUserRequest user) {
         return ResponseEntity.ok(userService.updateMe(user));
     }
 }

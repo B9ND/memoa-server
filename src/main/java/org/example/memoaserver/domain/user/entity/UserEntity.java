@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.example.memoaserver.domain.user.entity.enums.Role;
 
 import java.util.Date;
 
@@ -23,7 +24,8 @@ public class UserEntity {
     private String nickname;
 
     @JsonIgnore
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @JsonIgnore
     private String password;

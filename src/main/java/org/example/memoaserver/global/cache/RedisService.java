@@ -9,16 +9,21 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisService {
+    private final RedisTemplate<String, Object> tokenRedisTemplate;
     private final RedisTemplate<String, Object> authCodeRedisTemplate;
     private final RedisTemplate<String, Object> authenticEmailredisTemplate;
 
 
     public RedisService(
+            @Qualifier("redisTemplate0") RedisTemplate<String, Object> tokenRedisTemplate,
             @Qualifier("redisTemplate1") RedisTemplate<String, Object> authCodeRedisTemplate,
             @Qualifier("redisTemplate2") RedisTemplate<String, Object> authenticEmailredisTemplate) {
+        this.tokenRedisTemplate = tokenRedisTemplate;
         this.authCodeRedisTemplate = authCodeRedisTemplate;
         this.authenticEmailredisTemplate = authenticEmailredisTemplate;
     }
+
+//    public void
 
     public void setOnRedisForAuthCode(String email, String authCode, long ttl) {
         authCodeRedisTemplate.opsForValue().set(email, authCode, ttl, TimeUnit.MINUTES);

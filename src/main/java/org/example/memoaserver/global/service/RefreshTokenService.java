@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
 import org.example.memoaserver.global.security.properties.JwtProperties;
@@ -65,7 +66,7 @@ public class RefreshTokenService {
         }
 
         String email = jwtUtil.getEmail(refresh);
-        String role = jwtUtil.getRole(refresh);
+        Role role = Role.valueOf(jwtUtil.getRole(refresh));
 
         String newAccess = jwtUtil.createJwt("access", email, role, jwtProperties.getAccess().getExpiration());
         String newRefresh = jwtUtil.createJwt("refresh", email, role, jwtProperties.getRefresh().getExpiration());

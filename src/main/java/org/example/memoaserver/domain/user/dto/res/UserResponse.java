@@ -6,12 +6,12 @@ import org.example.memoaserver.domain.user.entity.UserEntity;
 
 @Getter
 @Builder
-public class UserRes {
+public class UserResponse {
     private String email;
     private String nickname;
 
-    public static UserRes fromUserEntity(UserEntity userEntity) {
-        return UserRes.builder()
+    public static UserResponse fromUserEntity(UserEntity userEntity) {
+        return UserResponse.builder()
                 .email(userEntity.getEmail())
                 .nickname(userEntity.getNickname())
                 .build();

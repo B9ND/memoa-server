@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.UserDTO;
+import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
 import org.example.memoaserver.global.security.properties.JwtProperties;
@@ -68,7 +69,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+
+        Role role = Role.valueOf(auth.getAuthority());
 
         String access = jwtUtil.createJwt("access", email, role, jwtProperties.getAccess().getExpiration());
         String refresh = jwtUtil.createJwt("refresh", email, role, jwtProperties.getRefresh().getExpiration());
