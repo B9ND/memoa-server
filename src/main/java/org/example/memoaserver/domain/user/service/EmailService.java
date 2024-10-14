@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     private final JavaMailSender javaMailSender;
 
-    public void sendMail(String to, String subject, String htmlBody) {
+    public void sendMail(String to, String htmlBody) {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(htmlBody, true); // true to enable HTML
+            helper.setSubject("Memoa 인증코드");
+            helper.setText(htmlBody, true);
 
             javaMailSender.send(message);
         } catch (MessagingException e) {

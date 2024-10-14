@@ -87,12 +87,8 @@ public class AuthController {
             @ApiImplicitParam(name = "code", value = "인증 코드", required = true, dataType = "string", paramType = "parameter")
     })
     @PostMapping("/verify-code")
-    public Boolean verifyAuthCode(@RequestParam(name = "email") String email, @RequestParam(name = "code") String code) throws NoSuchAlgorithmException {
-        boolean isVerified = authCodeService.verifyAuthCode(email, code);
-        if (isVerified) {
-            authCodeService.saveVerifiedEmail(email);
-        }
-        return isVerified;
+    public void verifyAuthCode(@RequestParam(name = "email") String email, @RequestParam(name = "code") String code) throws NoSuchAlgorithmException {
+        authCodeService.verifyAuthCode(email, code);
     }
 
     @Operation(
