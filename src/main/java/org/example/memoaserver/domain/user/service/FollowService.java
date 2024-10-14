@@ -21,9 +21,10 @@ public class FollowService {
         Long userId = userRepository.findByEmail(user).getId();
         Long followId = userRepository.findByEmail(follower).getId();
 
-        FollowEntity followEntity = new FollowEntity();
-        followEntity.setFollowing(userId);
-        followEntity.setFollower(followId);
+        FollowEntity followEntity = FollowEntity.builder()
+                .following(userId)
+                .follower(followId)
+                .build();
 
         followRepository.save(followEntity);
     }
@@ -32,6 +33,7 @@ public class FollowService {
     public void removeFollower(String user, String follower) {
         Long userId = userRepository.findByEmail(user).getId();
         Long followId = userRepository.findByEmail(follower).getId();
+
         followRepository.deleteByFollowingAndFollower(userId, followId);
     }
 
