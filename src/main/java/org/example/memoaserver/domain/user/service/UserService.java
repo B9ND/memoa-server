@@ -6,6 +6,7 @@ import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.entity.enums.Role;
+import org.example.memoaserver.domain.user.exception.RegisterFormException;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.cache.RedisService;
@@ -24,8 +25,7 @@ public class UserService {
     private final UserAuthHolder userAuthHolder;
     private final RedisService redisService;
 
-    private static final String EMAIL_PATTERN =
-            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
@@ -54,19 +54,10 @@ public class UserService {
 
     public UserResponse register(RegisterRequest user) {
         String email = user.getEmail();
+
+        emailCheck(email);
+
         String hashedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-
-        if (!checkEmailVerification(email)) {
-            throw new CustomConflictException("you need to use email [xxx@xxx.com]");
-        }
-
-        if (userRepository.existsByEmail(email)) {
-            throw new CustomConflictException("your email already exists");
-        }
-
-        if (!checkVerification(email)) {
-            throw new CustomConflictException("this email does not verify");
-        }
 
         redisService.deleteOnRedisForAuthenticEmail(email);
 
@@ -80,8 +71,16 @@ public class UserService {
         return UserResponse.fromUserEntity(userRepository.save(userEntity));
     }
 
-    public UserEntity getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    private void emailCheck(String email) {
+        if (!checkEmailVerification(email)) {
+            throw new RegisterFormException("you need to use email [xxx@xxx.com]");
+        }
+        if (userRepository.existsByEmail(email)) {
+            throw new RegisterFormException("your email already exists");
+        }
+        if (!checkVerification(email)) {
+            throw new RegisterFormException("this email does not verify");
+        }
     }
 
     private Boolean checkVerification(String email) {

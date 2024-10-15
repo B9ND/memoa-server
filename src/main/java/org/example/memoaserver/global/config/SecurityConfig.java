@@ -77,9 +77,6 @@ public class SecurityConfig {
                         .requestMatchers("/school/*").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/test").permitAll()
-                        // permit -> 인증 되도록 변경해야함
-//                        .requestMatchers("/post/*", "friend/*").authenticated()
-//                        .requestMatchers("/image/*").authenticated()
                         .anyRequest().authenticated()
                 );
 
