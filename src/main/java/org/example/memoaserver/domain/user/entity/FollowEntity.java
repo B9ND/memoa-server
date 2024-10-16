@@ -19,11 +19,13 @@ public class FollowEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long following;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "following", nullable = false)
+    private UserEntity following;
 
-    @Column(nullable = false)
-    private Long follower;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "follower", nullable = false)
+    private UserEntity follower;
 
     @CreatedDate
     private LocalDate createdAt;
