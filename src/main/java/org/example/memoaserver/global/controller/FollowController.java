@@ -2,6 +2,7 @@ package org.example.memoaserver.global.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.domain.user.service.FollowService;
@@ -43,21 +44,28 @@ public class FollowController {
             description = "언팔로워를 원하는 유저의 이메일을 파라미터로 전달합니다"
     )
     public ResponseEntity<?> unfollow(@RequestParam(name = "follower") String follower) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        followService.removeFollower(email, follower);
+        followService.removeFollower(follower);
         return ResponseEntity.ok().build();
     }
 
     // 조회
     @Operation(
-            summary = "팔로워 목록을 조회합니다",
-            description = "팔로워 조회를 원하는 유저의 이메일을 파라미터로 전달합니다"
+            summary = "팔로잉 목록을 조회합니다",
+            description = "팔로잉 조회를 원하는 유저의 이메일을 파라미터로 전달합니다"
     )
     @GetMapping
     public ResponseEntity<?> getFollowers(@RequestParam(name = "follower") String follower) {
         List<UserDTO> followings = followService.getFollowers(follower);
-        return ResponseEntity.ok(followings);
+        return ResponseEntity.ok().body(followings);
     }
 
+    @Operation(
+            summary = "팔로워 목록을 조회합니다",
+            description = "팔로워 조회를 원하는 유저의 이메일을 파라미터로 전달합니다"
+    )
+    @GetMapping
+    public ResponseEntity<?> getFollowings(@RequestParam(name = "following") String following) {
+        List<UserDTO> followers = followService.getFollowers(following);
+        return ResponseEntity.ok().body(followers);
+    }
 }
