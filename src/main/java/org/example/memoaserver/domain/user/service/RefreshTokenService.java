@@ -2,6 +2,7 @@ package org.example.memoaserver.domain.user.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.user.dto.req.RefreshTokenRequest;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.domain.user.exception.RefreshTokenValidator;
 import org.example.memoaserver.global.cache.RedisService;
@@ -18,10 +19,9 @@ public class RefreshTokenService {
     private final JwtProperties jwtProperties;
     private final RefreshTokenValidator refreshTokenValidator;
 
-    public JwtTokenDTO reissue(HttpServletRequest request) {
-        String refresh = request.getHeader("Refresh");
+    public JwtTokenDTO reissue(HttpServletRequest request, RefreshTokenRequest tokenRequest) {
         String device = request.getHeader("User-Agent") + "_" + request.getRemoteAddr();
-
+        String refresh = tokenRequest.getRefresh();
 
         refreshTokenValidator.validate(device, refresh);
 
