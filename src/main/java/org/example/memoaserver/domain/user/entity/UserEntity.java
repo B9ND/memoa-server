@@ -23,6 +23,8 @@ public class UserEntity {
     @Column(unique = true)
     private String nickname;
 
+    private String description;
+
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Role role;

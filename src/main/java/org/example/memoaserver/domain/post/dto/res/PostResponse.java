@@ -5,8 +5,9 @@ import lombok.Getter;
 import org.example.memoaserver.domain.post.entity.ImageEntity;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
-import org.example.memoaserver.domain.user.entity.UserEntity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,17 +25,9 @@ public class PostResponse {
 
     private Set<String> tags;
 
-    private List<String> images;
+    private LocalDate createdAt;
 
-    public static PostEntity of(PostResponse postDTO, UserEntity user, Set<TagEntity> tags, List<ImageEntity> images) {
-        return PostEntity.builder()
-                .user(user)
-                .title(postDTO.getTitle())
-                .content(postDTO.getContent())
-                .tags(tags)
-                .images(images)
-                .build();
-    }
+    private List<String> images;
 
     public static PostResponse fromPostEntity(PostEntity postEntity) {
         return PostResponse.builder()
@@ -43,6 +36,7 @@ public class PostResponse {
                 .content(postEntity.getContent())
                 .author(postEntity.getUser().getNickname())
                 .tags(postEntity.getTags().stream().map(TagEntity::getTagName).collect(Collectors.toSet()))
+                .createdAt(postEntity.getCreatedAt())
                 .images(postEntity.getImages().stream().map(ImageEntity::getUrl).collect(Collectors.toList()))
                 .build();
     }
