@@ -16,7 +16,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     @Query("SELECT p FROM post p " +
             "LEFT JOIN p.tags t " +
             "WHERE (:tags IS NULL OR t.tagName IN :tags) " +
-            "AND (:search IS NULL OR p.title LIKE %:search% OR p.content LIKE %:search%) " +
+            "AND (:search IS NULL OR p.title LIKE CONCAT('%', :search, '%') OR p.content LIKE CONCAT('%', :search, '%')) " +
             "AND (p.isReleased = true OR p.user.id = :userId) " +
             "AND (:userId IS NULL OR p.user.id IN " +
             "(SELECT f.follower.id FROM follow f WHERE f.following.id = :userId))")
