@@ -9,12 +9,14 @@ import org.example.memoaserver.domain.user.entity.UserEntity;
 public class UserResponse {
     private String email;
     private String nickname;
+    private String description;
     private String profileImage;
 
     public static UserResponse fromUserEntity(UserEntity userEntity) {
         return UserResponse.builder()
                 .email(userEntity.getEmail())
                 .profileImage(userEntity.getProfileImage())
+                .description(userEntity.getDescription())
                 .nickname(userEntity.getNickname())
                 .build();
     }
