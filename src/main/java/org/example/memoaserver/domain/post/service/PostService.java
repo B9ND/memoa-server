@@ -1,5 +1,6 @@
 package org.example.memoaserver.domain.post.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.post.dto.req.PostRequest;
@@ -12,6 +13,9 @@ import org.example.memoaserver.domain.post.repository.TagRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,4 +60,12 @@ public class PostService {
                 .orElseGet(() -> TagEntity.builder().tagName(tagName).build());
     }
 
+    @Transactional
+    public List<PostResponse> getPostsByTag(List<String> tagName, String search, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
+
+        return postRepository.findPostsByFilters(tagName, search, user.getId(), pageable).stream()
+                .map(PostResponse::fromPostEntity).toList();
+    }
 }

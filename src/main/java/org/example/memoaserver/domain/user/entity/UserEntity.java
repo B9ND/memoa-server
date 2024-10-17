@@ -30,6 +30,9 @@ public class UserEntity {
     @JsonIgnore
     private String password;
 
+    @Column(columnDefinition = "TEXT")
+    private String profileImage = "https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg";
+
     private String school;
 
     private Date birth;

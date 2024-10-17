@@ -7,10 +7,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.UserDTO;
 import org.example.memoaserver.domain.user.entity.enums.Role;
+import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
 import org.example.memoaserver.global.security.properties.JwtProperties;
-import org.example.memoaserver.global.service.RefreshTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,7 +31,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
-    private final RefreshTokenService refreshTokenService;
+    private final RedisService redisService;
 
     private static final String EMAIL_PATTERN =
             "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
@@ -63,8 +63,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
-
         String email = authentication.getName();
+
+        String device = request.getHeader("User-Agent") + "_" + request.getRemoteAddr();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -72,16 +73,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Role role = Role.valueOf(auth.getAuthority());
 
-        String access = jwtUtil.createJwt("access", email, role, jwtProperties.getAccess().getExpiration());
-        String refresh = jwtUtil.createJwt("refresh", email, role, jwtProperties.getRefresh().getExpiration());
+        String access = jwtUtil.createJwt("access", email, role, device, jwtProperties.getAccess().getExpiration());
+        String refresh = jwtUtil.createJwt("refresh", email, role, device, jwtProperties.getRefresh().getExpiration());
 
-        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO((access), refresh);
+        JwtTokenDTO jwtTokenDTO = JwtTokenDTO.builder()
+                .access(access)
+                .refresh(refresh)
+                .build();
 
         response.setContentType("application/json");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getWriter(), jwtTokenDTO);
 
-        refreshTokenService.addRefreshEntity(email, refresh, jwtProperties.getRefresh().getExpiration());
+        redisService.saveToken(device + "::" + email, refresh, jwtProperties.getRefresh().getExpiration());
 
         response.setStatus(HttpStatus.OK.value());
     }
