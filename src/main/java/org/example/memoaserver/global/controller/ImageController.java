@@ -25,7 +25,8 @@ public class ImageController {
             description = "이미지를 form 방식으로 전송하면 이미지를 받을 수 있음 (application/json X) \n 이후 이미지 url 을 반환해준다."
     )
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestPart(value = "image", required = true) MultipartFile image) throws IOException {
+    public ResponseEntity<String> uploadImage(
+            @RequestPart(value = "image") MultipartFile image) throws IOException {
         return ResponseEntity.ok().body(uploadService.upload(image));
     }
 }

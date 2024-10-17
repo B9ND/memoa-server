@@ -1,7 +1,6 @@
 package org.example.memoaserver.domain.post.dto.req;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 import java.util.List;
@@ -13,7 +12,7 @@ public class SearchPostRequest {
 
     private List<String> tags;
 
-    private int page;
+    private Integer page = 0;
 
-    private int size;
+    private Integer size = 10;
 }
