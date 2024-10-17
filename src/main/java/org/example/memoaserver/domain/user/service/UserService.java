@@ -38,7 +38,6 @@ public class UserService {
     public UserResponse updateMe(UpdateUserRequest updateUser) {
         UserEntity userEntity = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
-
         var toBuilder = userEntity.toBuilder();
         if (updateUser.getNickname() != null) {
             toBuilder.nickname(updateUser.getNickname());
@@ -46,6 +45,10 @@ public class UserService {
 
         if (updateUser.getProfileImage() != null) {
             toBuilder.profileImage(updateUser.getProfileImage());
+        }
+
+        if (updateUser.getDescription() != null) {
+            toBuilder.description(updateUser.getDescription());
         }
 
         if (updateUser.getPassword() != null && updateUser.getPastPassword() != null) {

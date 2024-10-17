@@ -7,13 +7,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.example.memoaserver.domain.user.entity.UserEntity;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 @Getter
 @SuperBuilder
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Entity(name = "post")
 public class PostEntity {
     @Id
@@ -42,4 +46,7 @@ public class PostEntity {
     @Setter
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<ImageEntity> images;
+
+    @CreatedDate
+    private LocalDate createdAt;
 }
