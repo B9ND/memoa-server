@@ -2,12 +2,12 @@ package org.example.memoaserver.global.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
-import org.example.memoaserver.global.security.jwt.filter.CustomLogoutFilter;
 import org.example.memoaserver.global.security.jwt.filter.JwtFilter;
 import org.example.memoaserver.global.security.jwt.filter.LoginFilter;
 import org.example.memoaserver.global.security.properties.JwtProperties;
-import org.example.memoaserver.global.service.RefreshTokenService;
+import org.example.memoaserver.domain.user.service.RefreshTokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,11 +19,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -35,6 +33,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
     private final RefreshTokenService refreshTokenService;
+    private final RedisService redisService;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -43,7 +42,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtProperties, refreshTokenService);
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtProperties, redisService);
         loginFilter.setFilterProcessesUrl("/auth/login");
 
         http
@@ -78,14 +77,10 @@ public class SecurityConfig {
                         .requestMatchers("/school/*").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/test").permitAll()
-                        // permit -> 인증 되도록 변경해야함
-//                        .requestMatchers("/post/*", "friend/*").authenticated()
-//                        .requestMatchers("/image/*").authenticated()
                         .anyRequest().authenticated()
                 );
 
         http
-                .addFilterBefore(new CustomLogoutFilter(refreshTokenService), LogoutFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 

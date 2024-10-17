@@ -5,16 +5,16 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.req.LoginRequest;
 import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
+import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.service.AuthCodeService;
 import org.example.memoaserver.domain.user.service.UserService;
-import org.example.memoaserver.global.service.RefreshTokenService;
+import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
+import org.example.memoaserver.domain.user.service.RefreshTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +50,15 @@ public class AuthController {
     }
 
     @Operation(
+            summary = "로그아웃하는 주소입니다.",
+            description = "refresh token 을 헤더로 받습니다."
+    )
+    @DeleteMapping("/logout")
+    public void logout(HttpServletRequest request) {
+        refreshTokenService.logout(request);
+    }
+
+    @Operation(
             summary = "인증코드를 전송하는 주소입니다.",
             description = "인증코드는 이메일과 1:1 로 됩니다."
     )
@@ -61,7 +70,6 @@ public class AuthController {
         try {
             authCodeService.sendAuthCode(email);
         } catch (IOException e) {
-            log.error(e.getMessage());
             return "send auth code failed";
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
@@ -90,8 +98,8 @@ public class AuthController {
             @ApiImplicitParam(name = "Refresh", value = "JWT access token", required = true, dataType = "string", paramType = "header")
     })
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        return refreshTokenService.reissue(request, response);
+    public ResponseEntity<JwtTokenDTO> reissue(HttpServletRequest request) throws IOException {
+        return ResponseEntity.ok().body(refreshTokenService.reissue(request));
     }
 
     @Operation(
