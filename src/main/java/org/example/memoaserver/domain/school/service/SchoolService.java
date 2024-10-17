@@ -22,6 +22,8 @@ public class SchoolService {
             throw new SchoolAlreadyExistsException("School name '" + schoolDTO.getName() + "' is already exists");
         }
 
+        log.info("Adding school '" + schoolDTO.getName() + "'");
+
         SchoolEntity schoolEntity = new SchoolEntity();
         schoolEntity.setName(schoolDTO.getName());
 

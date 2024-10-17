@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.post.dto.req.SearchPostRequest;
 import org.example.memoaserver.domain.post.dto.res.PostResponse;
 import org.example.memoaserver.domain.post.dto.req.PostRequest;
 import org.example.memoaserver.domain.post.service.PostService;
@@ -20,10 +21,10 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping
-    public ResponseEntity<List<PostResponse>> getSearchedPosts(@RequestParam(required = false) String search) {
-        return ResponseEntity.ok().body(postService.getPostsByTitleOrContent(search));
-    }
+//    @GetMapping
+//    public ResponseEntity<List<PostResponse>> getSearchedPosts(@RequestBody SearchPostRequest searchPostRequest) {
+//        return ResponseEntity.ok().body(postService.);
+//    }
 
     @Operation(
             summary = "게시물을 아이디로 받을 수 있습니다."
