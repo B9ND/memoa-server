@@ -11,6 +11,8 @@ import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.exception.CustomConflictException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +32,20 @@ public class UserService {
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
     public UserResponse me() {
-        return UserResponse.fromUserEntity(userAuthHolder.current());
+        return UserResponse.fromUserEntity(userRepository.findByEmail(userAuthHolder.current().getEmail()));
     }
 
     public UserResponse updateMe(UpdateUserRequest updateUser) {
-        UserEntity userEntity = userAuthHolder.current();
+        UserEntity userEntity = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
-        var toBuilder = userRepository.findByEmail(userEntity.getEmail()).toBuilder();
+
+        var toBuilder = userEntity.toBuilder();
         if (updateUser.getNickname() != null) {
             toBuilder.nickname(updateUser.getNickname());
+        }
+
+        if (updateUser.getProfileImage() != null) {
+            toBuilder.profileImage(updateUser.getProfileImage());
         }
 
         if (updateUser.getPassword() != null && updateUser.getPastPassword() != null) {
