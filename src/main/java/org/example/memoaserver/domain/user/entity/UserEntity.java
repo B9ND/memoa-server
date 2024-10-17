@@ -23,12 +23,17 @@ public class UserEntity {
     @Column(unique = true)
     private String nickname;
 
+    private String description;
+
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @JsonIgnore
     private String password;
+
+    @Column(columnDefinition = "TEXT")
+    private String profileImage = "https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg";
 
     private String school;
 

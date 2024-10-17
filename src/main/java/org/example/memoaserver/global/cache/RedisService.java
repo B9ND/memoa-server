@@ -1,5 +1,6 @@
 package org.example.memoaserver.global.cache;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,25 @@ public class RedisService {
         this.authenticEmailredisTemplate = authenticEmailredisTemplate;
     }
 
-//    public void
+    public void deleteOnRedisForToken(String key) {
+        tokenRedisTemplate.delete(key);
+    }
+
+    @Transactional
+    public void saveToken(String key, String value, Long expired) {
+        if (findOnRedisForToken(key)) {
+            deleteOnRedisForToken(key);
+        }
+        tokenRedisTemplate.opsForValue().set(key, value, expired, TimeUnit.MILLISECONDS);
+    }
+
+    public String getOnRedisForToken(String key) {
+        return (String) tokenRedisTemplate.opsForValue().get(key);
+    }
+
+    public Boolean findOnRedisForToken(String key) {
+        return tokenRedisTemplate.hasKey(key);
+    }
 
     public void setOnRedisForAuthCode(String email, String authCode, long ttl) {
         authCodeRedisTemplate.opsForValue().set(email, authCode, ttl, TimeUnit.MINUTES);
