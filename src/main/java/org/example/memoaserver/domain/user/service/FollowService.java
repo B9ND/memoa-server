@@ -2,6 +2,7 @@ package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.UserDTO;
+import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.entity.FollowEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.repository.FollowRepository;
@@ -19,8 +20,8 @@ public class FollowService {
     private final UserRepository userRepository;
     private final UserAuthHolder userAuthHolder;
 
-    public void addFollower(String user, String follower) {
-        UserEntity userEntity = userRepository.findByEmail(user);
+    public void addFollower(String follower) {
+        UserEntity userEntity = userRepository.findByEmail(userAuthHolder.current().getEmail());
         UserEntity followerEntity = userRepository.findByEmail(follower);
 
         followRepository.save(FollowEntity.builder()
@@ -35,9 +36,12 @@ public class FollowService {
         followRepository.deleteByFollowingAndFollower(userId, followId);
     }
 
-    public List<UserDTO> getFollowers(String user) {
-        return followRepository.findAllByFollower(userRepository.findByEmail(user)).stream()
-                .map(followEntity -> UserDTO.of(userRepository.findById(followEntity.getId())))
+    public List<UserResponse> getFollowers(String user) {
+        List<UserEntity> users =  followRepository.findAllByFollower(userRepository.findByEmail(user))
+                .stream()
+                .map(FollowEntity::getFollowing)
                 .toList();
+
+        return users.stream().map(UserResponse::fromUserEntity).toList();
     }
 }
