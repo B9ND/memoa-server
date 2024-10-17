@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.post.dto.req.PostRequest;
+import org.example.memoaserver.domain.post.dto.req.SearchPostRequest;
 import org.example.memoaserver.domain.post.dto.res.PostResponse;
 import org.example.memoaserver.domain.post.entity.ImageEntity;
 import org.example.memoaserver.domain.post.entity.PostEntity;
@@ -61,11 +62,11 @@ public class PostService {
     }
 
     @Transactional
-    public List<PostResponse> getPostsByTag(List<String> tagName, String search, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public List<PostResponse> getPostsByTag(SearchPostRequest searchPostRequest) {
+        Pageable pageable = PageRequest.of(searchPostRequest.getPage(), searchPostRequest.getSize());
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
-        return postRepository.findPostsByFilters(tagName, search, user.getId(), pageable).stream()
+        return postRepository.findPostsByFilters(searchPostRequest.getTags(), searchPostRequest.getSearch(), user.getId(), pageable).stream()
                 .map(PostResponse::fromPostEntity).toList();
     }
 }
