@@ -22,41 +22,34 @@ public class FollowController {
     private final FollowService followService;
     private final UserService userService;
 
-    // 친구 맺기(팔로우)
-
-    @PostMapping("/{follower}")
-
+    @PostMapping
     @Operation(
             summary = "특정 유저를 팔로우합니다",
             description = "팔로워의 이메일을 Path 파라미터로 전달합니다"
     )
-    public ResponseEntity<?> follow(@PathVariable String follower) {
+    public ResponseEntity<?> follow(@RequestParam("follower") String follower) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         followService.addFollower(email, follower);
         return ResponseEntity.ok().build();
     }
 
-    // 언팔로우
-    @DeleteMapping("/{follower}")
+    @DeleteMapping
     @Operation(
             summary = "특정 유저를 언팔로우합니다",
             description = "팔로워의 이메일을 Path 파라미터로 전달합니다"
     )
-    public ResponseEntity<?> unfollow(@PathVariable String follower) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        followService.removeFollower(email, follower);
+    public ResponseEntity<?> unfollow(@RequestParam(name = "follower") String follower) {
+        followService.removeFollower(follower);
         return ResponseEntity.ok().build();
     }
 
-    // 조회
     @Operation(
             summary = "팔로워 목록을 조회합니다",
             description = "목록에 있는 유저의 이메일을 Path 파라미터로 전달합니다"
     )
     @GetMapping
-    public ResponseEntity<?> getFollowers(@PathVariable String user) {
+    public ResponseEntity<?> getFollowers(@RequestParam(name = "user") String user) {
         List<UserDTO> followings = followService.getFollowers(user);
         return ResponseEntity.ok(followings);
     }
