@@ -34,7 +34,7 @@ public class PostService {
     private final TagRepository tagRepository;
 
 //    @Transactional
-    public void save(PostRequest postRequest) {
+    public PostResponse save(PostRequest postRequest) {
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
         Set<TagEntity> tags = postRequest.getTags().stream().map(this::findOrCreateTag).collect(Collectors.toSet());
         PostEntity post = postRequest.toPostEntity(user, tags);
@@ -42,7 +42,7 @@ public class PostService {
 
         post.setImages(images);
 
-        postRepository.save(post);
+        return PostResponse.fromPostEntity(postRepository.save(post));
     }
 
     public List<PostResponse> getPostsByTitleOrContent(String name) {
