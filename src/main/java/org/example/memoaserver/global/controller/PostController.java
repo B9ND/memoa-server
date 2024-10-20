@@ -39,8 +39,7 @@ public class PostController {
             description = "postReq 형식으로 데이터를 받고 상태만을 반환합니다."
     )
     @PostMapping
-    public ResponseEntity<?> createPost(@RequestBody PostRequest postRequest) {
-        postService.save(postRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<PostResponse> createPost(@RequestBody PostRequest postRequest) {
+        return ResponseEntity.ok().body(postService.save(postRequest));
     }
 }
