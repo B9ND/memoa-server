@@ -1,8 +1,7 @@
 package org.example.memoaserver.global.controller;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -63,11 +62,10 @@ public class AuthController {
             summary = "인증코드를 전송하는 주소입니다.",
             description = "인증코드는 이메일과 1:1 로 됩니다."
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "email", value = "이메일", required = true, dataType = "string", paramType = "parameter")
-    })
     @GetMapping("/send-code")
-    public String sendAuthCode(@RequestParam(name = "email") String email) {
+    public String sendAuthCode(
+            @Parameter(name = "email", required = true)
+            @RequestParam(name = "email") String email) {
         try {
             authCodeService.sendAuthCode(email);
         } catch (IOException e) {
@@ -82,12 +80,12 @@ public class AuthController {
             summary = "이메일 인증 확인하는 주소입니다.",
             description = "인증코드 유효기간은 5분 입니다."
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "email", value = "이메일", required = true, dataType = "string", paramType = "parameter"),
-            @ApiImplicitParam(name = "code", value = "인증 코드", required = true, dataType = "string", paramType = "parameter")
-    })
     @PostMapping("/verify-code")
-    public void verifyAuthCode(@RequestParam(name = "email") String email, @RequestParam(name = "code") String code) throws NoSuchAlgorithmException {
+    public void verifyAuthCode(
+            @Parameter(name = "email", required = true)
+            @RequestParam(name = "email") String email,
+            @Parameter(name = "code", required = true)
+            @RequestParam(name = "code") String code) throws NoSuchAlgorithmException {
         authCodeService.verifyAuthCode(email, code);
     }
 
