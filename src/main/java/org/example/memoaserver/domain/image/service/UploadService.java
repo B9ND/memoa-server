@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.image.dto.res.ImageResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,11 +73,14 @@ public class UploadService {
         return amazonS3.getUrl(bucket, s3FileName).toString();
     }
 
-    public String upload(MultipartFile image) throws IOException {
+    public ImageResponse upload(MultipartFile image) throws IOException {
         validateImageFileExtension(image.getOriginalFilename());
         if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
             throw new RuntimeException("null image");
         }
-        return uploadImageToS3(image);
+
+        return ImageResponse.builder()
+                .url(uploadImageToS3(image))
+                .build();
     }
 }
