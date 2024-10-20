@@ -38,11 +38,21 @@ public class FollowController {
     }
 
     @Operation(
-            summary = "팔로워 목록을 조회합니다",
-            description = "목록에 있는 유저의 닉네임을 파라미터로 전달합니다"
+            summary = "팔로잉 목록을 조회합니다",
+            description = "유저의 닉네임을 파라미터로 전달합니다"
     )
-    @GetMapping
+    @GetMapping("/followings")
     public ResponseEntity<List<UserResponse>> getFollowers(@RequestParam(name = "user") String user) {
+        return ResponseEntity.ok().body(followService.getFollowings(user));
+    }
+
+    @Operation(
+            summary = "팔로우 목록을 조회합니다",
+            description = "유저의 닉네임을 파라미터로 전달합니다"
+    )
+    @GetMapping("/followers")
+    public ResponseEntity<List<UserResponse>> getFollowings(@RequestParam(name = "user") String user) {
         return ResponseEntity.ok().body(followService.getFollowers(user));
     }
+
 }

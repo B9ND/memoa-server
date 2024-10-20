@@ -1,19 +1,18 @@
 package org.example.memoaserver.domain.post.dto.req;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
-@ApiModel(description = "게시물 검색 모델")
+@Schema(description = "게시물 검색 모델")
 public class SearchPostRequest {
     private String search;
 
     private List<String> tags;
 
-    private int page;
+    private Integer page = 0;
 
-    private int size;
+    private Integer size = 10;
 }
