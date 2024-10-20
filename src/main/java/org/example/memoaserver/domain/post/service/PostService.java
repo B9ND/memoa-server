@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,6 +66,11 @@ public class PostService {
     public List<PostResponse> getPostsByTag(SearchPostRequest searchPostRequest) {
         Pageable pageable = PageRequest.of(searchPostRequest.getPage(), searchPostRequest.getSize());
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
+
+        if (searchPostRequest.getSearch().isEmpty() && searchPostRequest.getTags().isEmpty()) {
+            return postRepository.findPostsByFollower(user.getId(), pageable).stream()
+                    .map(PostResponse::fromPostEntity).toList();
+        }
 
         return postRepository.findPostsByFilters(searchPostRequest.getTags(), searchPostRequest.getSearch(), user.getId(), pageable).stream()
                 .map(PostResponse::fromPostEntity).toList();
