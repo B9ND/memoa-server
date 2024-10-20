@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.post.dto.req.PostRequest;
+import org.example.memoaserver.domain.post.dto.req.SearchPostRequest;
 import org.example.memoaserver.domain.post.dto.res.PostResponse;
 import org.example.memoaserver.domain.post.entity.ImageEntity;
 import org.example.memoaserver.domain.post.entity.PostEntity;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -61,11 +63,16 @@ public class PostService {
     }
 
     @Transactional
-    public List<PostResponse> getPostsByTag(List<String> tagName, String search, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public List<PostResponse> getPostsByTag(SearchPostRequest searchPostRequest) {
+        Pageable pageable = PageRequest.of(searchPostRequest.getPage(), searchPostRequest.getSize());
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
-        return postRepository.findPostsByFilters(tagName, search, user.getId(), pageable).stream()
+        if (searchPostRequest.getSearch().isEmpty() && searchPostRequest.getTags().isEmpty()) {
+            return postRepository.findPostsByFollower(user.getId(), pageable).stream()
+                    .map(PostResponse::fromPostEntity).toList();
+        }
+
+        return postRepository.findPostsByFilters(searchPostRequest.getTags(), searchPostRequest.getSearch(), user.getId(), pageable).stream()
                 .map(PostResponse::fromPostEntity).toList();
     }
 }

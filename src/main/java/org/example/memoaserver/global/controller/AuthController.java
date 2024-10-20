@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.dto.req.LoginRequest;
+import org.example.memoaserver.domain.user.dto.req.RefreshTokenRequest;
 import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
 import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
@@ -92,14 +93,11 @@ public class AuthController {
 
     @Operation(
             summary = "access 토큰 만료시 다시 발급받는 주소입니다.",
-            description = "Refresh 헤더에 값을 넣어 주세요."
+            description = "refreshToken 에 값을 넣어 주세요."
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Refresh", value = "JWT access token", required = true, dataType = "string", paramType = "header")
-    })
     @PostMapping("/reissue")
-    public ResponseEntity<JwtTokenDTO> reissue(HttpServletRequest request) throws IOException {
-        return ResponseEntity.ok().body(refreshTokenService.reissue(request));
+    public ResponseEntity<JwtTokenDTO> reissue(HttpServletRequest request, @RequestBody RefreshTokenRequest token) throws IOException {
+        return ResponseEntity.ok().body(refreshTokenService.reissue(request, token));
     }
 
     @Operation(
