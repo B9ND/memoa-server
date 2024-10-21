@@ -2,8 +2,8 @@ package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.school.repository.DepartmentRepository;
-import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
+import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.entity.enums.Role;
@@ -11,9 +11,6 @@ import org.example.memoaserver.domain.user.exception.RegisterFormException;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.cache.RedisService;
-import org.example.memoaserver.global.exception.CustomConflictException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

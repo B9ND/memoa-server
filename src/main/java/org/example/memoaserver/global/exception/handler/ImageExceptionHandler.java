@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ImageExceptionHandler {
     @ExceptionHandler(ImageFormException.class)
     public ResponseEntity<ErrorResponse> handleImageFormException(ImageFormException ex) {
-        return new ResponseEntity<>(new ErrorResponse("이미지 폼 형식에 맞지 않습니다.", ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponse("이미지 폼 형식에 맞지 않습니다.", ex.getMessage()), ex.getStatus());
     }
 
     @ExceptionHandler(ImageUploadException.class)
     public ResponseEntity<ErrorResponse> handleImageUploadException(ImageUploadException ex) {
-        return new ResponseEntity<>(new ErrorResponse("이미지 업로드에 실패했습니다.", ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ErrorResponse("이미지 업로드에 실패했습니다.", ex.getMessage()), ex.getStatus());
     }
 }

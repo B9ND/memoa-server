@@ -9,6 +9,7 @@ import org.example.memoaserver.domain.image.dto.res.ImageResponse;
 import org.example.memoaserver.domain.image.exception.ImageFormException;
 import org.example.memoaserver.domain.image.exception.ImageUploadException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,14 +31,14 @@ public class UploadService {
     private void validateImageFileExtension(String filename) {
         int lastDotIndex = filename.lastIndexOf(".");
         if (lastDotIndex == -1) {
-            throw new ImageFormException("파일확장자가 표시되어야함");
+            throw new ImageFormException("파일확장자가 표시되어야함", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
         }
 
         String extension = filename.substring(lastDotIndex + 1).toLowerCase();
         List<String> allowedExtensionList = Arrays.asList("jpg", "jpeg", "png", "gif");
 
         if (!allowedExtensionList.contains(extension)) {
-            throw new ImageFormException("jpg, jpeg, png, gif 만 허용됩니다.");
+            throw new ImageFormException("jpg, jpeg, png, gif 만 허용됩니다.", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
         }
     }
 
@@ -76,7 +77,7 @@ public class UploadService {
     }
 
     public ImageResponse upload(MultipartFile image) throws IOException {
-        validateImageFileExtension(image.getOriginalFilename());
+        validateImageFileExtension(Objects.requireNonNull(image.getOriginalFilename()));
         if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
             throw new ImageFormException("받은 이미지가 없습니다...");
         }

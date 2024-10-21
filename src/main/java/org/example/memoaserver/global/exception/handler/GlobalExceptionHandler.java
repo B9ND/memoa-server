@@ -2,8 +2,6 @@ package org.example.memoaserver.global.exception.handler;
 
 import io.jsonwebtoken.io.IOException;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.user.exception.RegisterFormException;
-import org.example.memoaserver.global.exception.JwtSignatureException;
 import org.example.memoaserver.global.exception.dto.ErrorResponse;
 import org.hibernate.PropertyValueException;
 import org.springframework.dao.DataIntegrityViolationException;

@@ -1,20 +1,10 @@
 package org.example.memoaserver.domain.image.exception;
 
-public class ImageUploadException extends RuntimeException {
-    public ImageUploadException(String message) {
-        super(message);
-    }
+import org.example.memoaserver.global.exception.StatusException;
+import org.springframework.http.HttpStatus;
 
+public class ImageUploadException extends StatusException {
     public ImageUploadException(String message, Throwable cause) {
-        super(message, cause);
+        super(HttpStatus.INTERNAL_SERVER_ERROR, message, cause);
     }
-
-    public ImageUploadException(Throwable cause) {
-        super(cause);
-    }
-
-    public ImageUploadException() {
-        super();
-    }
-
 }

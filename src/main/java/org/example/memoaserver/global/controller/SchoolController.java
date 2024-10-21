@@ -3,6 +3,7 @@ package org.example.memoaserver.global.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.school.dto.req.SchoolRequest;
 import org.example.memoaserver.domain.school.dto.res.DepartmentResponse;
 import org.example.memoaserver.domain.school.entity.SchoolEntity;
 import org.example.memoaserver.domain.school.service.SchoolService;
