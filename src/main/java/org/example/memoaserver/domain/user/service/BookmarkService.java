@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class BookmarkService {
-    private final PostService postService;
+
     private final PostRepository postRepository;
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
@@ -58,5 +58,6 @@ public class BookmarkService {
         Optional<BookmarkEntity> bookmark = bookmarkRepository.findByUserAndPost(user, post);
 
         bookmarkRepository.delete(bookmark.get());
+
     }
 }
