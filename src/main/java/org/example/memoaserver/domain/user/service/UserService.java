@@ -1,6 +1,7 @@
 package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.school.repository.DepartmentRepository;
 import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
@@ -23,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserAuthHolder userAuthHolder;
     private final RedisService redisService;
+    private final DepartmentRepository departmentRepository;
 
     private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
@@ -72,6 +74,7 @@ public class UserService {
                 .email(email)
                 .password(hashedPassword)
                 .nickname(user.getNickname())
+                .department(departmentRepository.findById(user.getDepartmentId()).orElse(null))
                 .role(Role.ROLE_USER)
                 .build();
 
