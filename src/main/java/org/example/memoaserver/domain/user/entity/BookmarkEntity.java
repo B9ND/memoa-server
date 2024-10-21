@@ -3,18 +3,23 @@ package org.example.memoaserver.domain.user.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import org.example.memoaserver.domain.post.entity.PostEntity;
 
 @Getter
-@SuperBuilder
 @NoArgsConstructor
-@Entity(name = "bookmark")
+@Entity
+@Table(name = "bookmark")
 public class BookmarkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bookmark_id", nullable = false)
     private Long bookmark_id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_entity_id", nullable = false)
-    private UserEntity userEntity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private PostEntity post;
 }
