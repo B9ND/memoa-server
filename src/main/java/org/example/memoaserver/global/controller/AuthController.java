@@ -13,7 +13,7 @@ import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.service.AuthCodeService;
 import org.example.memoaserver.domain.user.service.UserService;
-import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
+import org.example.memoaserver.global.security.jwt.dto.res.JwtTokenResponse;
 import org.example.memoaserver.domain.user.service.RefreshTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -88,7 +88,7 @@ public class AuthController {
             description = "refreshToken 에 값을 넣어 주세요."
     )
     @PostMapping("/reissue")
-    public ResponseEntity<JwtTokenDTO> reissue(HttpServletRequest request, @RequestBody RefreshTokenRequest token) throws IOException {
+    public ResponseEntity<JwtTokenResponse> reissue(HttpServletRequest request, @RequestBody RefreshTokenRequest token) throws IOException {
         return ResponseEntity.ok().body(refreshTokenService.reissue(request, token));
     }
 

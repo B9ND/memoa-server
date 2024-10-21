@@ -50,6 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
             writer.print("access token expired");
 
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
             return;
         }
 
@@ -67,11 +68,10 @@ public class JwtFilter extends OncePerRequestFilter {
         String email = jwtUtil.getEmail(accessToken);
         Role role = Role.valueOf(jwtUtil.getRole(accessToken));
 
-        UserEntity userEntity = UserEntity.builder()
+        CustomUserDetails customUserDetails = new CustomUserDetails(UserEntity.builder()
                 .email(email)
                 .role(role)
-                .build();
-        CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+                .build());
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);

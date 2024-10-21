@@ -1,13 +1,12 @@
-package org.example.memoaserver.global.security.jwt.dto;
+package org.example.memoaserver.global.security.jwt.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter @Builder
 @AllArgsConstructor
-public class JwtTokenDTO {
+public class JwtTokenResponse {
     private String access;
     private String refresh;
 }

@@ -2,8 +2,7 @@ package org.example.memoaserver.global.exception.handler;
 
 import org.example.memoaserver.domain.image.exception.ImageFormException;
 import org.example.memoaserver.domain.image.exception.ImageUploadException;
-import org.example.memoaserver.global.exception.dto.ErrorResponse;
-import org.springframework.http.HttpStatus;
+import org.example.memoaserver.global.exception.dto.res.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
