@@ -65,14 +65,8 @@ public class AuthController {
     @GetMapping("/send-code")
     public String sendAuthCode(
             @Parameter(name = "email", required = true)
-            @RequestParam(name = "email") String email) {
-        try {
-            authCodeService.sendAuthCode(email);
-        } catch (IOException e) {
-            return "send auth code failed";
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+            @RequestParam(name = "email") String email) throws NoSuchAlgorithmException, IOException {
+        authCodeService.sendAuthCode(email);
         return "Authentication code sent to " + email;
     }
 

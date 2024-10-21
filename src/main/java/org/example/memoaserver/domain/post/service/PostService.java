@@ -33,7 +33,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
 
-//    @Transactional
+    @Transactional
     public PostResponse save(PostRequest postRequest) {
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
         Set<TagEntity> tags = postRequest.getTags().stream().map(this::findOrCreateTag).collect(Collectors.toSet());

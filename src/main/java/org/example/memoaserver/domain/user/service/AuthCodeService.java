@@ -2,6 +2,7 @@ package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.user.exception.VerifyCodeException;
 import org.example.memoaserver.domain.user.support.RandomCodeGenerator;
 import org.example.memoaserver.domain.user.support.ResourceLoader;
 import org.example.memoaserver.global.cache.RedisService;
@@ -33,7 +34,7 @@ public class AuthCodeService {
         String storedCode = redisService.getOnRedisForAuthCode(email);
 
         if (storedCode == null || !sha256.matches(authCode, storedCode)) {
-            throw new RuntimeException("코드가 일치하지 않습니다.");
+            throw new VerifyCodeException("코드가 일치하지 않습니다.");
         }
         redisService.deleteOnRedisForAuthenticEmail(email);
         redisService.setOnRedisForAuthenticEmail(email, EXPIRATION_TIME);

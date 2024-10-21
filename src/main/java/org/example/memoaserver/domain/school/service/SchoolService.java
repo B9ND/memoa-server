@@ -2,7 +2,7 @@ package org.example.memoaserver.domain.school.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.school.dto.SchoolDTO;
+import org.example.memoaserver.domain.school.dto.req.SchoolRequest;
 import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.school.entity.SchoolEntity;
 import org.example.memoaserver.domain.school.repository.SchoolRepository;
@@ -10,24 +10,22 @@ import org.example.memoaserver.global.exception.SchoolAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SchoolService {
     private final SchoolRepository schoolRepository;
 
-    public void addSchool(SchoolDTO schoolDTO) {
-        if (schoolRepository.existsByName(schoolDTO.getName())) {
-            throw new SchoolAlreadyExistsException("School name '" + schoolDTO.getName() + "' is already exists");
+    public void addSchool(SchoolRequest schoolRequest) {
+        if (schoolRepository.existsByName(schoolRequest.getName())) {
+            throw new SchoolAlreadyExistsException("School name '" + schoolRequest.getName() + "' is already exists");
         }
 
-        log.info("Adding school '" + schoolDTO.getName() + "'");
-
         SchoolEntity schoolEntity = new SchoolEntity();
-        schoolEntity.setName(schoolDTO.getName());
+        schoolEntity.setName(schoolRequest.getName());
 
-        List<DepartmentEntity> departmentEntities = schoolDTO.getDepartments().stream()
+        List<DepartmentEntity> departmentEntities = schoolRequest.getDepartments().stream()
                 .map(departmentDTO -> {
                     DepartmentEntity departmentEntity = new DepartmentEntity();
                     departmentEntity.setName(departmentDTO.getName());
