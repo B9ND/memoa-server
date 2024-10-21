@@ -10,7 +10,7 @@ import org.example.memoaserver.domain.user.entity.UserEntity;
 import java.util.List;
 import java.util.Set;
 
-@Schema(description = "게시물 저장 모델")
+@Schema(name = "게시물 저장 모델")
 @Getter
 public class PostRequest {
     @Schema(description = "제목", example = "바인드")
@@ -18,7 +18,7 @@ public class PostRequest {
     @Schema(description = "내용", example = "메모아 상세 사용법")
     private String content;
 
-    @Schema(description = "태그", example = "국어, 사회, 수학, 영어")
+    @Schema(description = "태그")
     @Setter
     private Set<String> tags;
 
