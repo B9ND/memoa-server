@@ -30,7 +30,7 @@ public class DepartmentResponse {
     private static SchoolResponse getSchool(SchoolEntity schoolEntity) {
         return SchoolResponse.builder()
                 .name(schoolEntity.getName())
-                .name(schoolEntity.getName())
+                .school_id(schoolEntity.getId())
                 .build();
     }
 }
