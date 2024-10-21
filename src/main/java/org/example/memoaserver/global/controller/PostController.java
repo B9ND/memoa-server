@@ -22,7 +22,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<List<PostResponse>> getSearchedPosts(@RequestBody(required = false) SearchPostRequest searchPostRequest) {
+    public ResponseEntity<List<PostResponse>> getSearchedPosts(@RequestBody SearchPostRequest searchPostRequest) {
         return ResponseEntity.ok().body(postService.getPostsByTag(searchPostRequest));
     }
 

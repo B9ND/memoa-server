@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 
 import java.util.Date;
@@ -35,7 +36,9 @@ public class UserEntity {
     @Column(columnDefinition = "TEXT")
     private String profileImage = "https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg";
 
-    private String school;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id", nullable = true)
+    private DepartmentEntity department;
 
     private Date birth;
 

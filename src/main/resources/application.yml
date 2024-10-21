@@ -25,10 +25,10 @@ spring:
         username: ${MYSQL_USER}
     jpa:
         hibernate:
-            ddl-auto: none
+            ddl-auto: update
         properties:
             hibernate:
-                dialect: org.hibernate.dialect.MySQL8Dialect
+                dialect: org.hibernate.dialect.MySQLDialect
         show-sql: true
     jwt:
         access:
