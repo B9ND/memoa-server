@@ -11,6 +11,7 @@ import org.example.memoaserver.domain.user.exception.RegisterFormException;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.cache.RedisService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -89,7 +90,7 @@ public class UserService {
             throw new RegisterFormException("your email already exists");
         }
         if (!checkVerification(email)) {
-            throw new RegisterFormException("this email does not verify");
+            throw new RegisterFormException("this email does not verify", HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 

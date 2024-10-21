@@ -30,7 +30,7 @@ public class SchoolService {
 
     public void addSchool(SchoolRequest schoolRequest) {
         if (schoolRepository.existsByName(schoolRequest.getName())) {
-            throw new SchoolAlreadyExistsException("" + schoolRequest.getName() + "은/는 이미 존재합니다.");
+            throw new SchoolAlreadyExistsException(schoolRequest.getName() + "은/는 이미 존재합니다.");
         }
 
         SchoolEntity schoolEntity = new SchoolEntity();
