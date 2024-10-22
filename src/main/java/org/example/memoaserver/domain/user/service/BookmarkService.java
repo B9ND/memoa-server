@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.repository.PostRepository;
-import org.example.memoaserver.domain.post.service.PostService;
 import org.example.memoaserver.domain.user.dto.req.BookmarkRequest;
 import org.example.memoaserver.domain.user.entity.BookmarkEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
@@ -25,7 +24,7 @@ public class BookmarkService {
     private final UserAuthHolder userAuthHolder;
 
     @Transactional
-    public void insert(BookmarkRequest bookmarkRequest) throws Exception {
+    public void addBookmark(BookmarkRequest bookmarkRequest) throws Exception {
 
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
         // null 시 에러 반환 필요
