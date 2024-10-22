@@ -7,7 +7,7 @@ import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.domain.user.exception.RefreshTokenValidator;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
-import org.example.memoaserver.global.security.jwt.dto.JwtTokenDTO;
+import org.example.memoaserver.global.security.jwt.dto.res.JwtTokenResponse;
 import org.example.memoaserver.global.security.properties.JwtProperties;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class RefreshTokenService {
     private final JwtProperties jwtProperties;
     private final RefreshTokenValidator refreshTokenValidator;
 
-    public JwtTokenDTO reissue(HttpServletRequest request, RefreshTokenRequest tokenRequest) {
+    public JwtTokenResponse reissue(HttpServletRequest request, RefreshTokenRequest tokenRequest) {
         String device = request.getHeader("User-Agent") + "_" + request.getRemoteAddr();
         String refresh = tokenRequest.getRefresh();
 
@@ -33,7 +33,7 @@ public class RefreshTokenService {
 
         redisService.saveToken(device + "::" + email, newRefresh, jwtProperties.getRefresh().getExpiration());
 
-        return JwtTokenDTO.builder().access(newAccess).refresh(newRefresh).build();
+        return JwtTokenResponse.builder().access(newAccess).refresh(newRefresh).build();
     }
 
     public void logout(HttpServletRequest request) {

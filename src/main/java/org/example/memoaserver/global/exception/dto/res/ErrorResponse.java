@@ -1,9 +1,7 @@
-package org.example.memoaserver.global.exception.dto;
+package org.example.memoaserver.global.exception.dto.res;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @AllArgsConstructor

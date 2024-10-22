@@ -1,23 +1,28 @@
 package org.example.memoaserver.global.exception;
 
-public class FormException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class FormException extends StatusException {
     public FormException(String message) {
-        super(message);
+        super(HttpStatus.BAD_REQUEST, message);
+    }
+    public FormException(String message, HttpStatus status) {
+        super(HttpStatus.BAD_REQUEST, message);
+    }
+
+    public FormException(String message, Throwable cause, HttpStatus status) {
+        super(status, message, cause);
     }
 
     public FormException(String message, Throwable cause) {
-        super(message, cause);
+        super(HttpStatus.BAD_REQUEST, message, cause);
     }
 
     public FormException(Throwable cause) {
-        super(cause);
-    }
-
-    public FormException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+        super(HttpStatus.BAD_REQUEST, cause);
     }
 
     public FormException() {
-        super();
+        super(HttpStatus.BAD_REQUEST);
     }
 }
