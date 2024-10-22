@@ -1,10 +1,11 @@
-package org.example.memoaserver.domain.user.entity;
+package org.example.memoaserver.domain.bookmark.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.memoaserver.domain.post.entity.PostEntity;
+import org.example.memoaserver.domain.user.entity.UserEntity;
 
 @Getter
 @NoArgsConstructor

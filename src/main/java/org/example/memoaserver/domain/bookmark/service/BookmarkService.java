@@ -1,13 +1,13 @@
-package org.example.memoaserver.domain.user.service;
+package org.example.memoaserver.domain.bookmark.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.repository.PostRepository;
-import org.example.memoaserver.domain.user.dto.req.BookmarkRequest;
-import org.example.memoaserver.domain.user.entity.BookmarkEntity;
+import org.example.memoaserver.domain.bookmark.dto.req.BookmarkRequest;
+import org.example.memoaserver.domain.bookmark.entity.BookmarkEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
-import org.example.memoaserver.domain.user.repository.BookmarkRepository;
+import org.example.memoaserver.domain.bookmark.repository.BookmarkRepository;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -43,12 +43,12 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void deleteBookmark(BookmarkRequest bookmarkRequest) {
+    public void deleteBookmark(Long bookmarkRequest) {
 
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
         // null 시 에러 반환 필요
 
-        PostEntity post = postRepository.findById(bookmarkRequest.getPostId()).orElse(null);
+        PostEntity post = postRepository.findById(bookmarkRequest).orElse(null);
         // null 시 에러 반환 필요
 
         Optional<BookmarkEntity> bookmark = bookmarkRepository.findByUserAndPost(user, post);

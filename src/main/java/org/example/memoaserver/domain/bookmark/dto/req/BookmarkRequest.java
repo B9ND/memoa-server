@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.user.dto.req;
+package org.example.memoaserver.domain.bookmark.dto.req;
 
 import lombok.AccessLevel;
 import lombok.Getter;

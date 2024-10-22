@@ -1,7 +1,7 @@
-package org.example.memoaserver.domain.user.repository;
+package org.example.memoaserver.domain.bookmark.repository;
 
 import org.example.memoaserver.domain.post.entity.PostEntity;
-import org.example.memoaserver.domain.user.entity.BookmarkEntity;
+import org.example.memoaserver.domain.bookmark.entity.BookmarkEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
