@@ -24,15 +24,12 @@ public class BookmarkService {
     private final UserAuthHolder userAuthHolder;
 
     @Transactional
-    public void addBookmark(BookmarkRequest bookmarkRequest) throws Exception {
+    public void addBookmark(Long bookmarkRequest) throws Exception {
 
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
-        // null 시 에러 반환 필요
 
-        PostEntity post = postRepository.findById(bookmarkRequest.getPostId()).orElse(null);
-        // null 시 에러 반환 필요
+        PostEntity post = postRepository.findById(bookmarkRequest).orElse(null);
 
-        // 이미 북마크 되어있으면 에러 반환
         if (bookmarkRepository.findByUserAndPost(user, post).isPresent()) {
             throw new Exception("Bookmark already exists");
         }

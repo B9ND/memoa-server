@@ -23,13 +23,13 @@ public class BookmarkController {
             summary = "특정 게시물을 북마크합니다",
             description = "북마크하고자 하는 게시물의 아이디를 파라미터로 전달합니다"
     )
-    public ResponseEntity<?> addBookmark(@RequestParam(name = "bookmark") BookmarkRequest bookmarkRequest) throws Exception {
-        bookmarkService.addBookmark(bookmarkRequest);
+    public ResponseEntity<?> addBookmark(@RequestParam(name = "postId") Long postId) throws Exception {
+        bookmarkService.addBookmark(postId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteBookmark(@RequestParam(name = "bookmark") BookmarkRequest bookmarkRequest) {
+    public ResponseEntity<?> deleteBookmark(@RequestParam(name = "postId") BookmarkRequest bookmarkRequest) {
         bookmarkService.deleteBookmark(bookmarkRequest);
         return ResponseEntity.ok().build();
     }
