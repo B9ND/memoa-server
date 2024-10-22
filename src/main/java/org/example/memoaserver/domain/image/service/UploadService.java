@@ -6,7 +6,10 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.image.dto.res.ImageResponse;
+import org.example.memoaserver.domain.image.exception.ImageFormException;
+import org.example.memoaserver.domain.image.exception.ImageUploadException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,14 +31,14 @@ public class UploadService {
     private void validateImageFileExtension(String filename) {
         int lastDotIndex = filename.lastIndexOf(".");
         if (lastDotIndex == -1) {
-            throw new RuntimeException("Invalid image format");
+            throw new ImageFormException("파일확장자가 표시되어야함", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
         }
 
         String extension = filename.substring(lastDotIndex + 1).toLowerCase();
         List<String> allowedExtensionList = Arrays.asList("jpg", "jpeg", "png", "gif");
 
         if (!allowedExtensionList.contains(extension)) {
-            throw new RuntimeException("Invalid image format");
+            throw new ImageFormException("jpg, jpeg, png, gif 만 허용됩니다.", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
         }
     }
 
@@ -67,16 +70,16 @@ public class UploadService {
 
             amazonS3.putObject(putObjectRequest);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to upload image to S3", e);
+            throw new ImageUploadException("s3 업로드에 실패하였습니다.", e);
         }
 
         return amazonS3.getUrl(bucket, s3FileName).toString();
     }
 
     public ImageResponse upload(MultipartFile image) throws IOException {
-        validateImageFileExtension(image.getOriginalFilename());
+        validateImageFileExtension(Objects.requireNonNull(image.getOriginalFilename()));
         if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
-            throw new RuntimeException("null image");
+            throw new ImageFormException("받은 이미지가 없습니다...");
         }
 
         return ImageResponse.builder()
