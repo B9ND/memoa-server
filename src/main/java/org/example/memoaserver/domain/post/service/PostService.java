@@ -9,6 +9,7 @@ import org.example.memoaserver.domain.post.dto.res.PostResponse;
 import org.example.memoaserver.domain.post.entity.ImageEntity;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
+import org.example.memoaserver.domain.post.exception.PostException;
 import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.post.repository.TagRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
@@ -16,6 +17,7 @@ import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +34,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
 
-//    @Transactional
+    @Transactional
     public PostResponse save(PostRequest postRequest) {
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
         Set<TagEntity> tags = postRequest.getTags().stream().map(this::findOrCreateTag).collect(Collectors.toSet());
@@ -53,7 +55,7 @@ public class PostService {
 
     public PostResponse getPostById(Long id) {
         return PostResponse.fromPostEntity(postRepository.findById(id)
-                .orElseThrow(RuntimeException::new));
+                .orElseThrow(() -> new PostException("존재하지 않는 게시물입니다.", HttpStatus.NOT_FOUND)));
     }
 
     private TagEntity findOrCreateTag(String tagName) {
