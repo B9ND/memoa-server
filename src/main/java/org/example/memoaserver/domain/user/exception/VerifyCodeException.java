@@ -12,6 +12,10 @@ public class VerifyCodeException extends StatusException {
         super(httpStatus, message, cause);
     }
 
+    public VerifyCodeException(String message, HttpStatus httpStatus) {
+        super(httpStatus, message);
+    }
+
     public VerifyCodeException(String message, Throwable cause) {
         super(HttpStatus.UNPROCESSABLE_ENTITY, message, cause);
     }

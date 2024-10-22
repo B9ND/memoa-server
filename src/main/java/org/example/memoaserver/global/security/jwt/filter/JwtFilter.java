@@ -1,6 +1,7 @@
 package org.example.memoaserver.global.security.jwt.filter;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,9 +36,20 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (accessToken == null) {
+        if (accessToken.isEmpty()) {
 
             filterChain.doFilter(req, res);
+
+            return;
+        }
+
+        try {
+            jwtUtil.getDevice(accessToken);
+        } catch (SignatureException e) {
+            PrintWriter writer = res.getWriter();
+            writer.print("jwt is not vail");
+
+            res.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
             return;
         }
