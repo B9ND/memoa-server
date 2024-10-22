@@ -16,8 +16,8 @@ import java.util.List;
 @Tag(name = "post", description = "게시물 관련 API")
 @Slf4j
 @RestController
-@RequestMapping("/post")
 @RequiredArgsConstructor
+@RequestMapping("/post")
 public class PostController {
     private final PostService postService;
 
@@ -27,7 +27,7 @@ public class PostController {
     }
 
     @Operation(
-            summary = "게시물을 아이디로 받을 수 있습니다."
+            summary = "상세 페이지로 이동합니다."
     )
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPostById(@PathVariable long id) {
