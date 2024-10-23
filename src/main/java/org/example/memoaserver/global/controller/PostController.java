@@ -21,9 +21,20 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+    @Operation(summary = "Search API", description = "쿼리 파라미터로 검색 기능 수행")
     @GetMapping
-    public ResponseEntity<List<PostResponse>> getSearchedPosts(@RequestBody SearchPostRequest searchPostRequest) {
-        return ResponseEntity.ok().body(postService.getPostsByTag(searchPostRequest));
+    public ResponseEntity<List<PostResponse>> getSearchedPosts(
+            @RequestParam(name = "search") String search,
+            @RequestParam(name = "tags") List<String> tags,
+            @RequestParam(name = "page") int page,
+            @RequestParam(name = "size") int size
+            ) {
+        return ResponseEntity.ok().body(postService.getPostsByTag(SearchPostRequest.builder()
+                        .search(search)
+                        .tags(tags)
+                        .page(page)
+                        .size(size)
+                .build()));
     }
 
     @Operation(
