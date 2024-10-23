@@ -23,16 +23,19 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             "    WHEN (:search IS NOT NULL AND (p.title LIKE CONCAT('%', :search, '%') OR p.content LIKE CONCAT('%', :search, '%'))) THEN 1 " +
             "    WHEN (:tags IS NOT NULL AND t.tagName IN :tags) THEN 2 " +
             "    ELSE 3 " +
-            "END")
+            "END, " +
+            "p.createdAt DESC")
     Page<PostEntity> findPostsByFilters(@Param("tags") List<String> tags,
                                         @Param("search") String search,
                                         @Param("userId") Long userId,
                                         Pageable pageable);
 
 
+
     @Query( "SELECT DISTINCT p FROM post p " +
             "LEFT JOIN p.tags t " +
             "WHERE (:userId IS NULL OR p.user.id IN " +
-            "(SELECT f.follower.id FROM follow f WHERE f.following.id = :userId))")
+            "(SELECT f.follower.id FROM follow f WHERE f.following.id = :userId))" +
+            "ORDER BY p.createdAt ASC")
     Page<PostEntity> findPostsByFollower(@Param("userId") Long userId, Pageable pageable);
 }

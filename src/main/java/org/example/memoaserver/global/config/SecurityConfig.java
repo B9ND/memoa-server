@@ -3,6 +3,7 @@ package org.example.memoaserver.global.config;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.global.cache.RedisService;
+import org.example.memoaserver.global.exception.handler.JwtExceptionHandlerFilter;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.filter.JwtFilter;
 import org.example.memoaserver.global.security.jwt.filter.LoginFilter;
@@ -81,6 +82,7 @@ public class SecurityConfig {
                 );
 
         http
+                .addFilterBefore(new JwtExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
