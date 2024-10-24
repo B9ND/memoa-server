@@ -15,7 +15,6 @@ import org.example.memoaserver.domain.post.repository.TagRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
