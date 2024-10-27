@@ -56,7 +56,7 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void getBookmark(Long bookmarkRequest) {
-
+    public void getBookmark(Long bookmarkRequest) throws Exception {
+        // 북마크 목록 조회 개발
     }
 }
