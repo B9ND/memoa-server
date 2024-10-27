@@ -12,7 +12,6 @@ import org.example.memoaserver.domain.user.entity.UserEntity;
 @Entity
 @Table(name = "bookmark")
 public class BookmarkEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bookmark_id", nullable = false)
