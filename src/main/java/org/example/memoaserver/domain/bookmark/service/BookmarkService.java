@@ -2,6 +2,7 @@ package org.example.memoaserver.domain.bookmark.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.bookmark.dto.res.BookmarkResponse;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.bookmark.entity.BookmarkEntity;
@@ -11,7 +12,8 @@ import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -23,15 +25,11 @@ public class BookmarkService {
     private final UserAuthHolder userAuthHolder;
 
     @Transactional
-    public void addBookmark(Long bookmarkRequest) throws Exception {
+    public void addBookmark(Long bookmarkRequest) {
 
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
         PostEntity post = postRepository.findById(bookmarkRequest).orElse(null);
-
-        if (bookmarkRepository.findByUserAndPost(user, post).isPresent()) {
-            throw new Exception("Bookmark already exists");
-        }
 
         BookmarkEntity bookmark = BookmarkEntity.builder()
                 .post(post)
@@ -42,21 +40,20 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void removeBookmark(Long bookmarkRequest) throws Exception {
+    public void removeBookmark(Long bookmarkRequest) {
 
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
-        // null 시 에러 반환 필요
 
-        PostEntity post = postRepository.findById(bookmarkRequest).orElse(null);
-        // null 시 에러 반환 필요
+        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(RuntimeException::new);
 
-        Optional<BookmarkEntity> bookmark = bookmarkRepository.findByUserAndPost(user, post);
-
-        bookmarkRepository.delete(bookmark.get());
+        bookmarkRepository.deleteByUserAndPost(user, post);
     }
 
-    @Transactional
-    public void getBookmark(Long bookmarkRequest) throws Exception {
-        // 북마크 목록 조회 개발
+    public List<BookmarkResponse> getBookmarkedPostsByUser() {
+        UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
+
+        return Objects.requireNonNull(bookmarkRepository.findByUser(user).orElse(null)).stream()
+                .map(BookmarkResponse::fromBookmarkEntity)
+                .toList();
     }
 }

@@ -6,10 +6,11 @@ import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface BookmarkRepository extends JpaRepository<BookmarkEntity, Long> {
-    Optional<BookmarkEntity> findByUserAndPost(UserEntity user, PostEntity post);
-//    Optional<BookmarkEntity> findByPostId(Long postId);
+    Optional<List<BookmarkEntity>> findByUser(UserEntity user);
+    void deleteByUserAndPost(UserEntity user, PostEntity post);
 }
