@@ -7,6 +7,7 @@ import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.entity.enums.Role;
+import org.example.memoaserver.domain.user.exception.NullUserException;
 import org.example.memoaserver.domain.user.exception.RegisterFormException;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
@@ -33,6 +34,10 @@ public class UserService {
 
     public UserResponse me() {
         return UserResponse.fromUserEntity(userRepository.findByEmail(userAuthHolder.current().getEmail()));
+    }
+
+    public UserResponse findUserByNickname(String nickname) {
+        return UserResponse.fromUserEntity(userRepository.findByNickname(nickname).orElseThrow(NullUserException::new));
     }
 
     public UserResponse updateMe(UpdateUserRequest updateUser) {
