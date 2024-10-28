@@ -81,10 +81,13 @@ public class UserService {
                 .password(hashedPassword)
                 .nickname(user.getNickname())
                 .department(departmentRepository.findById(user.getDepartmentId()).orElse(null))
+                .profileImage("https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg")
                 .role(Role.ROLE_USER)
                 .build();
 
-        return UserResponse.fromUserEntity(userRepository.save(userEntity));
+        userRepository.save(userEntity);
+
+        return UserResponse.fromUserEntity(userEntity);
     }
 
     private void emailCheck(String email) {
