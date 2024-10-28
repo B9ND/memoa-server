@@ -24,10 +24,10 @@ public class PostController {
     @Operation(summary = "Search API", description = "쿼리 파라미터로 검색 기능 수행")
     @GetMapping
     public ResponseEntity<List<PostResponse>> getSearchedPosts(
-            @RequestParam(name = "search") String search,
+            @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "tags") List<String> tags,
-            @RequestParam(name = "page") int page,
-            @RequestParam(name = "size") int size
+            @RequestParam(name = "page", required = false) int page,
+            @RequestParam(name = "size", required = false) int size
             ) {
         return ResponseEntity.ok().body(postService.getPostsByTag(SearchPostRequest.builder()
                         .search(search)

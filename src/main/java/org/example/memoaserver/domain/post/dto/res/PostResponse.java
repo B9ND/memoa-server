@@ -24,6 +24,8 @@ PostResponse {
 
     private String author;
 
+    private String authorProfileImage;
+
     private Set<String> tags;
 
     private LocalDate createdAt;
@@ -36,6 +38,7 @@ PostResponse {
                 .title(postEntity.getTitle())
                 .content(postEntity.getContent())
                 .author(postEntity.getUser().getNickname())
+                .authorProfileImage(postEntity.getUser().getProfileImage())
                 .tags(postEntity.getTags().stream().map(TagEntity::getTagName).collect(Collectors.toSet()))
                 .createdAt(postEntity.getCreatedAt())
                 .images(postEntity.getImages().stream().map(ImageEntity::getUrl).collect(Collectors.toList()))
