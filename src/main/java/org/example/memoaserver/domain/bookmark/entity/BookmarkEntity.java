@@ -17,7 +17,9 @@ import java.time.LocalDate;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @SuperBuilder
-@Table(name = "bookmark")
+@Table(name = "bookmark", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "post_id"})
+})
 public class BookmarkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
