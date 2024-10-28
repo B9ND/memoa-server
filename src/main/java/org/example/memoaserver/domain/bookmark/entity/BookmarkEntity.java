@@ -8,12 +8,14 @@ import lombok.experimental.SuperBuilder;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @SuperBuilder
 @Table(name = "bookmark")
 public class BookmarkEntity {
