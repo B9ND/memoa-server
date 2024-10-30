@@ -43,7 +43,7 @@ public class SchoolController {
 
     @Operation(
             summary = "내 학교를 찾습니다.",
-            description = "자신의 헉교를 찾습니다."
+            description = "자신의 학교를 찾습니다."
     )
     @GetMapping("/me")
     public ResponseEntity<DepartmentResponse> me() {
