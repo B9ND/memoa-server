@@ -3,6 +3,7 @@ package org.example.memoaserver.domain.bookmark.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.bookmark.dto.res.BookmarkResponse;
+import org.example.memoaserver.domain.bookmark.exception.BookmarkException;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.bookmark.entity.BookmarkEntity;
@@ -29,7 +30,7 @@ public class BookmarkService {
 
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
-        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(null);
+        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(BookmarkException::new);
 
         bookmarkRepository.save(BookmarkEntity.builder().post(post).user(user).build());
     }
@@ -39,7 +40,7 @@ public class BookmarkService {
 
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
-        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(RuntimeException::new);
+        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(BookmarkException::new);
 
         bookmarkRepository.deleteByUserAndPost(user, post);
     }
@@ -47,7 +48,7 @@ public class BookmarkService {
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
-        return Objects.requireNonNull(bookmarkRepository.findByUser(user).orElse(null)).stream()
+        return Objects.requireNonNull(bookmarkRepository.findByUser(user).orElseThrow(BookmarkException::new)).stream()
                 .map(BookmarkResponse::fromBookmarkEntity)
                 .toList();
     }
