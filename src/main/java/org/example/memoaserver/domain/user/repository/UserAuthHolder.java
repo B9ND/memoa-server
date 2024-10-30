@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserAuthHolder {
     public UserEntity current(){
-        return ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserEntity();
+        return ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).userEntity();
     }
 }

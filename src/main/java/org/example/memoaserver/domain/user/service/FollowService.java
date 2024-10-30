@@ -22,7 +22,7 @@ public class FollowService {
     private final UserAuthHolder userAuthHolder;
 
     public void addFollower(String follower) {
-        UserEntity userEntity = userRepository.findByEmail(userAuthHolder.current().getEmail());
+        UserEntity userEntity = userAuthHolder.current();
         UserEntity followerEntity = userRepository.findByNickname(follower).orElseThrow(() -> new FollowerException("팔로우할 유저를 찾을 수 없습니다."));
 
         followRepository.save(FollowEntity.builder()
@@ -32,7 +32,7 @@ public class FollowService {
     }
 
     public void removeFollower(String follower) {
-        UserEntity userId = userRepository.findByEmail(userAuthHolder.current().getEmail());
+        UserEntity userId = userAuthHolder.current();
         UserEntity followId = userRepository.findByNickname(follower).orElseThrow(() -> new FollowerException("삭제할 팔로워를 찾을 수 없습니다."));
         followRepository.deleteByFollowingAndFollower(userId, followId);
     }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.entity.enums.Role;
+import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.details.CustomUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
@@ -78,12 +80,10 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String email = jwtUtil.getEmail(accessToken);
-        Role role = Role.valueOf(jwtUtil.getRole(accessToken));
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(UserEntity.builder()
-                .email(email)
-                .role(role)
-                .build());
+        UserEntity user = userRepository.findByEmail(email);
+
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
