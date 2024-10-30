@@ -29,14 +29,9 @@ public class BookmarkService {
 
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
-        PostEntity post = postRepository.findById(bookmarkRequest).orElse(null);
+        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(null);
 
-        BookmarkEntity bookmark = BookmarkEntity.builder()
-                .post(post)
-                .user(user)
-                .build();
-
-        bookmarkRepository.save(bookmark);
+        bookmarkRepository.save(BookmarkEntity.builder().post(post).user(user).build());
     }
 
     @Transactional

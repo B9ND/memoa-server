@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 @Getter
 @Builder
-public class
-PostResponse {
+public class PostResponse {
+
     private Long id;
 
     private String title;
