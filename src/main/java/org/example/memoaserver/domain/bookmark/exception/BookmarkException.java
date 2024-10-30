@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 
 public class BookmarkException extends StatusException {
     public BookmarkException(String message) {
-        super(HttpStatus.BAD_REQUEST, message);
+        super(HttpStatus.NOT_FOUND, message);
     }
 
-    public BookmarkException() {
-      super(HttpStatus.BAD_REQUEST);
+    public BookmarkException(HttpStatus httpStatus, String message) {
+        super(httpStatus, message);
     }
 }

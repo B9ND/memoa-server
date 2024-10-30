@@ -12,6 +12,7 @@ import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class BookmarkService {
     @Transactional
     public void addBookmark(Long bookmarkRequest) {
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
-        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(BookmarkException::new);
+        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크"));
 
         bookmarkRepository.save(BookmarkEntity.builder().post(post).user(user).build());
     }
@@ -38,11 +39,11 @@ public class BookmarkService {
     @Transactional
     public void removeBookmark(Long bookmarkRequest) {
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
-        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(BookmarkException::new);
+        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크"));
         Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(user, post);
 
         if (!bookmarkExists) {
-            throw new BookmarkException("삭제 할 수 없습니다.");
+            throw new BookmarkException(HttpStatus.BAD_REQUEST, "삭제 할 수 없습니다.");
         }
         bookmarkRepository.deleteByUserAndPost(user, post);
     }
@@ -50,7 +51,7 @@ public class BookmarkService {
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
         UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
 
-        return Objects.requireNonNull(bookmarkRepository.findByUser(user).orElseThrow(BookmarkException::new)).stream()
+        return bookmarkRepository.findByUser(user).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크")).stream()
                 .map(BookmarkResponse::fromBookmarkEntity)
                 .toList();
     }
