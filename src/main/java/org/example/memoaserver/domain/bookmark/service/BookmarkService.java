@@ -30,7 +30,7 @@ public class BookmarkService {
 
     @Transactional
     public void addBookmark(Long bookmarkRequest) {
-        UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
+        UserEntity user = userAuthHolder.current();
         PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크"));
 
         bookmarkRepository.save(BookmarkEntity.builder().post(post).user(user).build());
@@ -38,7 +38,7 @@ public class BookmarkService {
 
     @Transactional
     public void removeBookmark(Long bookmarkRequest) {
-        UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
+        UserEntity user = userAuthHolder.current();
         PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크"));
         Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(user, post);
 
@@ -49,7 +49,7 @@ public class BookmarkService {
     }
 
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
-        UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
+        UserEntity user = userAuthHolder.current();
 
         return bookmarkRepository.findByUser(user).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크")).stream()
                 .map(BookmarkResponse::fromBookmarkEntity)

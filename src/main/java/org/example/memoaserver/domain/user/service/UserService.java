@@ -33,7 +33,7 @@ public class UserService {
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
     public UserResponse me() {
-        return UserResponse.fromUserEntity(userRepository.findByEmail(userAuthHolder.current().getEmail()));
+        return UserResponse.fromUserEntity(userAuthHolder.current());
     }
 
     public UserResponse findUserByNickname(String nickname) {
@@ -41,7 +41,7 @@ public class UserService {
     }
 
     public UserResponse updateMe(UpdateUserRequest updateUser) {
-        UserEntity userEntity = userRepository.findByEmail(userAuthHolder.current().getEmail());
+        UserEntity userEntity = userAuthHolder.current();
 
         var toBuilder = userEntity.toBuilder();
         if (updateUser.getNickname() != null) {
