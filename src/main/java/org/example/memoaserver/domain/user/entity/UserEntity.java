@@ -36,7 +36,7 @@ public class UserEntity {
     @Column(columnDefinition = "TEXT")
     private String profileImage = "https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg";
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id", nullable = true)
     private DepartmentEntity department;
 
