@@ -41,6 +41,4 @@ public class UserEntity {
     private DepartmentEntity department;
 
     private Date birth;
-
-    private Integer grade;
 }
