@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.school.dto.res.DepartmentResponse;
 import org.example.memoaserver.domain.school.dto.req.SchoolRequest;
+import org.example.memoaserver.domain.school.dto.res.SchoolDataResponse;
 import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.school.entity.SchoolEntity;
 import org.example.memoaserver.domain.school.repository.SchoolRepository;
@@ -19,14 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SchoolService {
     private final SchoolRepository schoolRepository;
-    private final UserRepository userRepository;
-    private final UserAuthHolder userAuthHolder;
-
-
-    public DepartmentResponse getMySchool() {
-        DepartmentEntity department = userAuthHolder.current().getDepartment();
-        return DepartmentResponse.fromDepartmentEntity(department);
-    }
 
     public void addSchool(SchoolRequest schoolRequest) {
         if (schoolRepository.existsByName(schoolRequest.getName())) {
@@ -52,8 +45,8 @@ public class SchoolService {
         schoolRepository.save(schoolEntity);
     }
 
-    public List<SchoolEntity> searchSchool(String schoolName) {
+    public List<SchoolDataResponse> searchSchool(String schoolName) {
 
-        return schoolRepository.findByNameContainingIgnoreCase(schoolName);
+        return schoolRepository.findByNameContainingIgnoreCase(schoolName).stream().map(SchoolDataResponse::fromSchoolEntity).toList();
     }
 }
