@@ -2,6 +2,7 @@ package org.example.memoaserver.global.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.exception.handler.JwtExceptionHandlerFilter;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
@@ -33,8 +34,8 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
-    private final RefreshTokenService refreshTokenService;
     private final RedisService redisService;
+    private final UserRepository userRepository;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -83,7 +84,7 @@ public class SecurityConfig {
 
         http
                 .addFilterBefore(new JwtExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtil, userRepository), LoginFilter.class)
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
         http

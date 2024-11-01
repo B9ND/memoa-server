@@ -35,7 +35,7 @@ public class UploadService {
         }
 
         String extension = filename.substring(lastDotIndex + 1).toLowerCase();
-        List<String> allowedExtensionList = Arrays.asList("jpg", "jpeg", "png", "gif");
+        List<String> allowedExtensionList = Arrays.asList("jpg", "jpeg", "png", "gif", "webp");
 
         if (!allowedExtensionList.contains(extension)) {
             throw new ImageFormException("jpg, jpeg, png, gif 만 허용됩니다.", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
@@ -47,6 +47,7 @@ public class UploadService {
             case "jpg", "jpeg" -> "image/jpeg";
             case "png" -> "image/png";
             case "gif" -> "image/gif";
+            case "webp" -> "image/webp";
             default -> "application/octet-stream";
         };
     }

@@ -24,7 +24,7 @@ public class SchoolService {
 
 
     public DepartmentResponse getMySchool() {
-        DepartmentEntity department = userRepository.findByEmail(userAuthHolder.current().getEmail()).getDepartment();
+        DepartmentEntity department = userAuthHolder.current().getDepartment();
         return DepartmentResponse.fromDepartmentEntity(department);
     }
 

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class  PostService {
     private final UserAuthHolder userAuthHolder;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -36,7 +36,7 @@ public class PostService {
 
     @Transactional
     public PostResponse save(PostRequest postRequest) {
-        UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
+        UserEntity user = userAuthHolder.current();
         Set<TagEntity> tags = postRequest.getTags().stream().map(this::findOrCreateTag).collect(Collectors.toSet());
         PostEntity post = postRequest.toPostEntity(user, tags);
         List<ImageEntity> images = postRequest.getImages().stream().map(imageUrl -> ImageEntity.builder().url(imageUrl).post(post).build()).collect(Collectors.toList());
@@ -66,7 +66,7 @@ public class PostService {
     @Transactional
     public List<PostResponse> getPostsByTag(SearchPostRequest searchPostRequest) {
         Pageable pageable = PageRequest.of(searchPostRequest.getPage(), searchPostRequest.getSize());
-        UserEntity user = userRepository.findByEmail(userAuthHolder.current().getEmail());
+        UserEntity user = userAuthHolder.current();
 
         if (searchPostRequest.getSearch().isEmpty() && searchPostRequest.getTags().isEmpty()) {
             return postRepository.findPostsByFollower(user.getId(), pageable).stream()
