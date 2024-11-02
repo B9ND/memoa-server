@@ -11,20 +11,21 @@ import java.util.List;
 @Builder
 public class DepartmentResponse {
     private String name;
-
     private Integer grade;
-
-    private SchoolResponse school;
-
+    private String school;
     private List<String> subjects;
 
     public static DepartmentResponse fromDepartmentEntity(DepartmentEntity departmentEntity) {
-        return DepartmentResponse.builder()
-                .name(departmentEntity.getName())
-                .grade(departmentEntity.getGrade())
-                .school(getSchool(departmentEntity.getSchoolEntity()))
-                .subjects(departmentEntity.getSubjects())
-                .build();
+        if(departmentEntity != null) {
+            return DepartmentResponse.builder()
+                    .name(departmentEntity.getName())
+                    .grade(departmentEntity.getGrade())
+                    .school(getSchool(departmentEntity.getSchoolEntity()).getName())
+                    .subjects(departmentEntity.getSubjects())
+                    .build();
+        }
+
+        return null;
     }
 
     private static SchoolResponse getSchool(SchoolEntity schoolEntity) {

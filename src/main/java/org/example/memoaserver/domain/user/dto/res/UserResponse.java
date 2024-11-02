@@ -2,6 +2,8 @@ package org.example.memoaserver.domain.user.dto.res;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.example.memoaserver.domain.school.dto.res.DepartmentResponse;
+import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 
 @Getter
@@ -11,6 +13,7 @@ public class UserResponse {
     private String nickname;
     private String description;
     private String profileImage;
+    private DepartmentResponse department;
 
     public static UserResponse fromUserEntity(UserEntity userEntity) {
         return UserResponse.builder()
@@ -18,6 +21,7 @@ public class UserResponse {
                 .profileImage(userEntity.getProfileImage())
                 .description(userEntity.getDescription())
                 .nickname(userEntity.getNickname())
+                .department(DepartmentResponse.fromDepartmentEntity(userEntity.getDepartment()))
                 .build();
     }
 }

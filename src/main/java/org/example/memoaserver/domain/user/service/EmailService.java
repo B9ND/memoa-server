@@ -19,7 +19,7 @@ public class EmailService {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(to);
-            helper.setSubject("Memoa 인증코드");
+            helper.setSubject("MEMOA 인증코드");
             helper.setText(htmlBody, true);
 
             javaMailSender.send(message);

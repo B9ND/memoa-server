@@ -10,14 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Slf4j
-@Getter
-public class CustomUserDetails implements UserDetails {
-
-    private final UserEntity userEntity;
-
-    public CustomUserDetails(UserEntity userEntity) {
-        this.userEntity = userEntity;
-    }
+public record CustomUserDetails(UserEntity userEntity) implements UserDetails {
 
 
     @Override
