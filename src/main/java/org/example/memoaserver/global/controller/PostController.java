@@ -45,6 +45,11 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getPostById(id));
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<List<PostResponse>> getUserPosts(@RequestParam(name = "author") String author) {
+        return ResponseEntity.ok().body(postService.getPostsByAuthor(author));
+    }
+
     @Operation(
             summary = "게시물을 생성합니다.",
             description = "postReq 형식으로 데이터를 받고 상태만을 반환합니다."
