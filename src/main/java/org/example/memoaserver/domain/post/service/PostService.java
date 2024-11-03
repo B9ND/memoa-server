@@ -13,6 +13,7 @@ import org.example.memoaserver.domain.post.exception.PostException;
 import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.post.repository.TagRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
+import org.example.memoaserver.domain.user.exception.NullUserException;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +45,11 @@ public class  PostService {
         post.setImages(images);
 
         return PostResponse.fromPostEntity(postRepository.save(post));
+    }
+
+    public List<PostResponse> getPostsByAuthor(String nickname) {
+        UserEntity author = userRepository.findByNickname(nickname).orElseThrow(NullUserException::new);
+        return postRepository.findByUser(author).stream().map(PostResponse::fromPostEntity).toList();
     }
 
     public List<PostResponse> getPostsByTitleOrContent(String name) {
