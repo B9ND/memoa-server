@@ -2,6 +2,7 @@ package org.example.memoaserver.domain.post.repository;
 
 
 import org.example.memoaserver.domain.post.entity.PostEntity;
+import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,8 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> findByTitleContainingOrContentContaining(String title, String content);
+
+    List<PostEntity> findByUser(UserEntity user);
 
     @Query( "SELECT DISTINCT p FROM post p " +
             "LEFT JOIN p.tags t " +
