@@ -22,7 +22,7 @@ public class PostRequest {
     @Setter
     private Set<String> tags;
 
-    @Schema(description = "이미지들(미리보기)", example = "https://lorempicsum.photos/200")
+    @Schema(description = "이미지들(미리보기)", example = "[\"https://lorempicsum.photos/200\"]")
     private List<String> images;
 
     @Schema(description = "공개, 비공개 설정", example = "true")
