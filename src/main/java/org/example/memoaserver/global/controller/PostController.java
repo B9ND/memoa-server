@@ -46,6 +46,15 @@ public class PostController {
     }
 
     @Operation(
+            summary = "유저의 닉네임을 통해 게시물을 가져오기",
+            description = "param 에 닉네임이 필수로 입력되어야 합니다."
+    )
+    @GetMapping("/user")
+    public ResponseEntity<List<PostResponse>> getUserPosts(@RequestParam(name = "author") String author) {
+        return ResponseEntity.ok().body(postService.getPostsByAuthor(author));
+    }
+
+    @Operation(
             summary = "게시물을 생성합니다.",
             description = "postReq 형식으로 데이터를 받고 상태만을 반환합니다."
     )

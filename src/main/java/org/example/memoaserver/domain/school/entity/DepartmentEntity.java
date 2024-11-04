@@ -22,9 +22,8 @@ public class DepartmentEntity {
 
     @ManyToOne
     @JoinColumn(name = "school_entity_id", nullable = false)
-    @JsonIgnore
     private SchoolEntity schoolEntity;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> subjects;
 }
