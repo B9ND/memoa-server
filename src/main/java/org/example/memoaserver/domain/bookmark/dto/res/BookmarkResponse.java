@@ -17,7 +17,7 @@ public class BookmarkResponse {
 
     public static BookmarkResponse fromBookmarkEntity(BookmarkEntity bookmarkEntity) {
         return BookmarkResponse.builder()
-                .nickname(bookmarkEntity.getUser().getNickname())
+                .nickname(bookmarkEntity.getPost().getUser().getNickname())
                 .postId(bookmarkEntity.getPost().getPost_id())
                 .createdAt(bookmarkEntity.getCreatedAt())
                 .build();
