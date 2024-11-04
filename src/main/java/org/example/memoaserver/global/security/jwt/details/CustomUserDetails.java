@@ -27,8 +27,6 @@ public record CustomUserDetails(UserEntity userEntity) implements UserDetails {
             }
         });
 
-        log.info("Authorities : {}", collection);
-
         return collection;
     }
 

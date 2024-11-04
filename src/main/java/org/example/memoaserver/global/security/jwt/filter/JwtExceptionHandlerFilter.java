@@ -1,4 +1,4 @@
-package org.example.memoaserver.global.exception.handler;
+package org.example.memoaserver.global.security.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.memoaserver.domain.user.exception.LoginFormException;
 import org.example.memoaserver.global.exception.dto.res.ErrorResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,8 +20,10 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
         try{
             filterChain.doFilter(request, response);
-        } catch (JwtException | IllegalArgumentException e) {
-            setErrorResponse(response, "토큰 관련 오류", e.getMessage());
+        } catch (JwtException | IllegalArgumentException ex) {
+            setErrorResponse(response, "토큰 관련 오류", ex.getMessage());
+        } catch (LoginFormException ex) {
+            setErrorResponse(response, "로그인 오류", ex.getMessage());
         }
     }
     private void setErrorResponse(
