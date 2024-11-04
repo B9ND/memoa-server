@@ -13,6 +13,8 @@ public class UpdateUserRequest {
     private String description;
     @Schema(description = "사용자 프로필 이미지", example = "http://example.com/200")
     private String profileImage;
+    @Schema(description = "사용자 학과 아이디", example = "1")
+    private Long department;
     @Schema(description = "새 비밀번호", example = "12345")
     private String password;
     @Schema(description = "이전 비밀번호", example = "1234")

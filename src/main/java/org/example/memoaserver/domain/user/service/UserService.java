@@ -1,6 +1,7 @@
 package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.memoaserver.domain.school.exception.NullSchoolException;
 import org.example.memoaserver.domain.school.repository.DepartmentRepository;
 import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
 import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
@@ -15,6 +16,7 @@ import org.example.memoaserver.global.cache.RedisService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +48,10 @@ public class UserService {
         var toBuilder = userEntity.toBuilder();
         if (updateUser.getNickname() != null) {
             toBuilder.nickname(updateUser.getNickname());
+        }
+
+        if (updateUser.getDepartment() != null) {
+            toBuilder.department(departmentRepository.findById(updateUser.getDepartment()).orElseThrow(NullSchoolException::new));
         }
 
         if (updateUser.getProfileImage() != null) {

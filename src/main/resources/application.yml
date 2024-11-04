@@ -28,7 +28,7 @@ spring:
             ddl-auto: update
         properties:
             hibernate:
-        show-sql: true
+        show-sql: false
     jwt:
         access:
             expiration: ${ACCESS_END}
