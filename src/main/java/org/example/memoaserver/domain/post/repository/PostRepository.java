@@ -14,7 +14,7 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> findByTitleContainingOrContentContaining(String title, String content);
 
-    List<PostEntity> findByUser(UserEntity user);
+    List<PostEntity> findByUserOrderByCreatedAtDesc(UserEntity user);
 
     @Query( "SELECT DISTINCT p FROM post p " +
             "LEFT JOIN p.tags t " +

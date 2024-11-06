@@ -49,7 +49,7 @@ public class  PostService {
 
     public List<PostResponse> getPostsByAuthor(String nickname) {
         UserEntity author = userRepository.findByNickname(nickname).orElseThrow(NullUserException::new);
-        return postRepository.findByUser(author).stream().map(PostResponse::fromPostEntity).toList();
+        return postRepository.findByUserOrderByCreatedAtDesc(author).stream().map(PostResponse::fromPostEntity).toList();
     }
 
     public List<PostResponse> getPostsByTitleOrContent(String name) {
