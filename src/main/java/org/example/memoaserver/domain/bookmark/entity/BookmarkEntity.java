@@ -23,7 +23,7 @@ public class BookmarkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bookmark_id", nullable = false)
-    private Long bookmark_id;
+    private Long bookmarkId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -32,6 +32,14 @@ public class BookmarkEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_title", nullable = false)
+    private PostEntity postTitle;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_profile_image", nullable = false)
+    private UserEntity userProfileImage;
 
     @CreatedDate
     private LocalDate createdAt;

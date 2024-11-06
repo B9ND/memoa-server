@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter @SuperBuilder(toBuilder = true)
@@ -37,8 +38,8 @@ public class UserEntity {
     private String profileImage = "https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg";
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "department_id", nullable = true)
+    @JoinColumn(name = "department_id")
     private DepartmentEntity department;
 
-    private Date birth;
+    private LocalDate birth;
 }
