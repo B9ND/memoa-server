@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -51,7 +50,7 @@ public class BookmarkService {
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
         UserEntity user = userAuthHolder.current();
 
-        return bookmarkRepository.findByUser(user).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크")).stream()
+        return bookmarkRepository.findByUserOrderByCreatedAtDesc(user).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크")).stream()
                 .map(BookmarkResponse::fromBookmarkEntity)
                 .toList();
     }
