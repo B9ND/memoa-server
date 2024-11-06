@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface BookmarkRepository extends JpaRepository<BookmarkEntity, Long> {
-    Optional<List<BookmarkEntity>> findByUser(UserEntity user);
+    Optional<List<BookmarkEntity>> findByUserOrderByCreatedAtDesc(UserEntity user);
     void deleteByUserAndPost(UserEntity user, PostEntity post);
     Boolean existsByUserAndPost(UserEntity user, PostEntity post);
 }
