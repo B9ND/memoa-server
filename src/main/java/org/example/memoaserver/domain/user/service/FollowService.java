@@ -34,7 +34,7 @@ public class FollowService {
     public void removeFollower(String follower) {
         UserEntity userId = userAuthHolder.current();
         UserEntity followId = userRepository.findByNickname(follower).orElseThrow(() -> new FollowerException("삭제할 팔로워를 찾을 수 없습니다."));
-        followRepository.deleteByFollowingAndFollower(userId, followId);
+        followRepository.deleteByFollowingAndFollower(followId, userId);
     }
 
     public List<UserResponse> getFollowers(String user) {
