@@ -19,7 +19,6 @@ import java.time.LocalDate;
 @Table(name = "bookmark", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "post_id"})
 })
-
 public class BookmarkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
