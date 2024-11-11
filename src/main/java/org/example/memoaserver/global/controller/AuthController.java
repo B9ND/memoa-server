@@ -146,20 +146,6 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "유저를 닉네임으로 검색하는 기능입니다.",
-            description = "프로필에서 사용하세요."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200"),
-            @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping("/user")
-    public ResponseEntity<UserResponse> user(@RequestParam String username) {
-        return ResponseEntity.ok(userService.findUserByNickname(username));
-    }
-
-    @Operation(
             summary = "내정보를 수정하는 주소입니다.",
             description = "학교 변경은 제외합니다."
     )
