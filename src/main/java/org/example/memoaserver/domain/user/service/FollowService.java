@@ -62,7 +62,7 @@ public class FollowService {
         addFollower(me, nickname);
     }
 
-    private Boolean isExist(UserEntity me, String nickname) {
+    public Boolean isExist(UserEntity me, String nickname) {
         return followRepository.existsByFollowingAndFollower(
             userRepository
                 .findByNickname(nickname)

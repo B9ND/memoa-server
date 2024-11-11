@@ -14,6 +14,7 @@ public class UserResponse {
     private String description;
     private String profileImage;
     private DepartmentResponse department;
+    private boolean isFollowed;
 
     public static UserResponse fromUserEntity(UserEntity userEntity) {
         return UserResponse.builder()
@@ -22,6 +23,17 @@ public class UserResponse {
                 .description(userEntity.getDescription())
                 .nickname(userEntity.getNickname())
                 .department(DepartmentResponse.fromDepartmentEntity(userEntity.getDepartment()))
+                .build();
+    }
+
+    public static UserResponse fromUserEntity(UserEntity userEntity, boolean isFollowed) {
+        return UserResponse.builder()
+                .email(userEntity.getEmail())
+                .profileImage(userEntity.getProfileImage())
+                .description(userEntity.getDescription())
+                .nickname(userEntity.getNickname())
+                .department(DepartmentResponse.fromDepartmentEntity(userEntity.getDepartment()))
+                .isFollowed(isFollowed)
                 .build();
     }
 }

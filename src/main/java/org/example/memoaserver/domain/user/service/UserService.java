@@ -1,6 +1,7 @@
 package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.school.exception.NullSchoolException;
 import org.example.memoaserver.domain.school.repository.DepartmentRepository;
 import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
@@ -22,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -29,6 +31,7 @@ public class UserService {
     private final UserAuthHolder userAuthHolder;
     private final RedisService redisService;
     private final DepartmentRepository departmentRepository;
+    private final FollowService followService;
 
     private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
@@ -39,7 +42,10 @@ public class UserService {
     }
 
     public UserResponse findUserByNickname(String nickname) {
-        return UserResponse.fromUserEntity(userRepository.findByNickname(nickname).orElseThrow(NullUserException::new));
+        return UserResponse.fromUserEntity(
+            userRepository.findByNickname(nickname).orElseThrow(NullUserException::new),
+            followService.isExist(userAuthHolder.current(), nickname)
+        );
     }
 
     public UserResponse updateMe(UpdateUserRequest updateUser) {
