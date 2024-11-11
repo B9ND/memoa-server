@@ -1,11 +1,14 @@
 package org.example.memoaserver.domain.user.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.user.dto.res.FollowUserResponse;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.entity.FollowEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.exception.FollowerException;
+import org.example.memoaserver.domain.user.exception.NullUserException;
 import org.example.memoaserver.domain.user.repository.FollowRepository;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
@@ -21,37 +24,64 @@ public class FollowService {
     private final UserRepository userRepository;
     private final UserAuthHolder userAuthHolder;
 
-    public void addFollower(String follower) {
-        UserEntity userEntity = userAuthHolder.current();
-        UserEntity followerEntity = userRepository.findByNickname(follower).orElseThrow(() -> new FollowerException("팔로우할 유저를 찾을 수 없습니다."));
+    /**
+     * @param nickname -> 팔로잉 되는 사람 -> 팔로우 하는 상태 가 됨
+     *
+     * @String: following -> 팔로우 하는 사람(나)
+     */
+
+    // nickname 을 팔로우 하는 사람들
+    public List<FollowUserResponse> getFollowers(String nickname) {
+        UserEntity user = (nickname != null) ? userRepository.findByNickname(nickname).orElseThrow(NullUserException::new) : userAuthHolder.current();
+
+        return followRepository.findByFollowing(user)
+                .stream()
+                .map(FollowEntity::getFollower)
+                .map(FollowUserResponse::fromUserEntity)
+                .toList();
+    }
+
+    // nickname 이 팔로우 하는 사람들
+    public List<FollowUserResponse> getFollowings(String nickname) {
+        UserEntity user = (nickname != null) ? userRepository.findByNickname(nickname).orElseThrow(NullUserException::new) : userAuthHolder.current();
+
+        return followRepository.findByFollower(user)
+                .stream()
+                .map(FollowEntity::getFollowing)
+                .map(FollowUserResponse::fromUserEntity)
+                .toList();
+    }
+
+    @Transactional
+    public void addOrDeleteFollower(String nickname) {
+        UserEntity me = userAuthHolder.current();
+        if (isExist(me, nickname)) {
+            removeFollower(me, nickname);
+            return;
+        }
+        addFollower(me, nickname);
+    }
+
+    private Boolean isExist(UserEntity me, String nickname) {
+        return followRepository.existsByFollowingAndFollower(
+            userRepository
+                .findByNickname(nickname)
+                .orElseThrow(() -> new FollowerException("팔로우할 유저를 찾을 수 없습니다.")),
+            me
+        );
+    }
+
+    private void addFollower(UserEntity me, String nickname) {
+        UserEntity followerEntity = userRepository.findByNickname(nickname).orElseThrow(() -> new FollowerException("팔로우할 유저를 찾을 수 없습니다."));
 
         followRepository.save(FollowEntity.builder()
-                .following(userEntity)
-                .follower(followerEntity)
+                .following(followerEntity)
+                .follower(me)
                 .build());
     }
 
-    public void removeFollower(String follower) {
-        UserEntity userId = userAuthHolder.current();
-        UserEntity followId = userRepository.findByNickname(follower).orElseThrow(() -> new FollowerException("삭제할 팔로워를 찾을 수 없습니다."));
-        followRepository.deleteByFollowingAndFollower(followId, userId);
-    }
-
-    public List<UserResponse> getFollowers(String user) {
-        List<UserEntity> users =  followRepository.findAllByFollowing(userRepository.findByNickname(user).orElseThrow(() -> new FollowerException("팔로워가 없습니다.")))
-                .stream()
-                .map(FollowEntity::getFollower)
-                .toList();
-
-        return users.stream().map(UserResponse::fromUserEntity).toList();
-    }
-
-    public List<UserResponse> getFollowings(String user) {
-        List<UserEntity> users =  followRepository.findAllByFollower(userRepository.findByNickname(user).orElseThrow(() -> new FollowerException("팔로잉이 없습니다.")))
-                .stream()
-                .map(FollowEntity::getFollowing)
-                .toList();
-
-        return users.stream().map(UserResponse::fromUserEntity).toList();
+    private void removeFollower(UserEntity me, String nickname) {
+        UserEntity follower = userRepository.findByNickname(nickname).orElseThrow(() -> new FollowerException("삭제할 팔로워를 찾을 수 없습니다."));
+        followRepository.deleteByFollowingAndFollower(follower, me);
     }
 }

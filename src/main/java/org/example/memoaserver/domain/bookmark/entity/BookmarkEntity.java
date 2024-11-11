@@ -33,14 +33,6 @@ public class BookmarkEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_title", nullable = false)
-    private PostEntity postTitle;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_profile_image", nullable = false)
-    private UserEntity userProfileImage;
-
     @CreatedDate
     private LocalDate createdAt;
 }
