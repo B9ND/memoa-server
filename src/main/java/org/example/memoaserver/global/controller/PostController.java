@@ -21,7 +21,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    @Operation(summary = "Search API", description = "쿼리 파라미터로 검색 기능 수행")
+    @Operation(summary = "Search API", description = "쿼리 파라미터로 검색 기능 수행, page 는 0부터 시작, 크기는 10부터 시작")
     @GetMapping
     public ResponseEntity<List<PostResponse>> getSearchedPosts(
             @RequestParam(name = "search", required = false) String search,

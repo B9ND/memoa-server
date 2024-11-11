@@ -1,6 +1,5 @@
 package org.example.memoaserver.domain.post.repository;
 
-
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.data.domain.Page;
