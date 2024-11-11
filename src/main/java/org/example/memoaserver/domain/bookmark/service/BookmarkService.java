@@ -17,14 +17,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookmarkService {
 
     private final PostRepository postRepository;
     private final BookmarkRepository bookmarkRepository;
-    private final UserRepository userRepository;
     private final UserAuthHolder userAuthHolder;
 
     @Transactional
