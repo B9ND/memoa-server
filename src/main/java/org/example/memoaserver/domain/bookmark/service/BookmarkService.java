@@ -17,14 +17,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookmarkService {
 
     private final PostRepository postRepository;
     private final BookmarkRepository bookmarkRepository;
-    private final UserRepository userRepository;
     private final UserAuthHolder userAuthHolder;
 
     @Transactional
@@ -42,7 +40,7 @@ public class BookmarkService {
         Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(user, post);
 
         if (!bookmarkExists) {
-            throw new BookmarkException(HttpStatus.BAD_REQUEST, "삭제 할 수 없습니다.");
+            throw new BookmarkException(HttpStatus.BAD_REQUEST, "삭제할 수 없습니다.");
         }
         bookmarkRepository.deleteByUserAndPost(user, post);
     }

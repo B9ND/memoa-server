@@ -13,23 +13,21 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-@Entity
+@Entity(name = "bookmark")
 @EntityListeners(AuditingEntityListener.class)
 @SuperBuilder
+@IdClass(BookmarkId.class)
 @Table(name = "bookmark", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "post_id"})
 })
 public class BookmarkEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bookmark_id", nullable = false)
-    private Long bookmarkId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Id
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
