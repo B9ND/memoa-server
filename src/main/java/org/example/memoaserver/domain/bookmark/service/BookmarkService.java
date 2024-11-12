@@ -40,7 +40,7 @@ public class BookmarkService {
         Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(user, post);
 
         if (!bookmarkExists) {
-            throw new BookmarkException(HttpStatus.BAD_REQUEST, "삭제 할 수 없습니다.");
+            throw new BookmarkException(HttpStatus.BAD_REQUEST, "삭제할 수 없습니다.");
         }
         bookmarkRepository.deleteByUserAndPost(user, post);
     }

@@ -13,9 +13,10 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-@Entity
+@Entity(name = "bookmark")
 @EntityListeners(AuditingEntityListener.class)
 @SuperBuilder
+@IdClass(BookmarkId.class)
 @Table(name = "bookmark", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "post_id"})
 })
