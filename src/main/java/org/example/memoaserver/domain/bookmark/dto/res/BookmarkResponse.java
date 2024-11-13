@@ -3,7 +3,6 @@ package org.example.memoaserver.domain.bookmark.dto.res;
 import lombok.Builder;
 import lombok.Getter;
 import org.example.memoaserver.domain.bookmark.entity.BookmarkEntity;
-import org.example.memoaserver.domain.user.entity.UserEntity;
 
 import java.time.LocalDate;
 
