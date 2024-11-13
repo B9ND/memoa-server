@@ -21,30 +21,40 @@ public class BookmarkController {
 
     private final BookmarkService bookmarkService;
 
-    @PostMapping
+    @PutMapping
     @Operation(
-            summary = "특정 게시물을 북마크합니다",
-            description = "북마크하고자 하는 게시물의 아이디를 파라미터로 전달합니다"
+            summary = "특정 게시물 북마크 상태를 토글합니다.",
+            description = "게시물의 북마크를 추가하거나 삭제합니다. 북마크하고자 하는 게시물의 아이디를 파라미터로 전달합니다."
     )
-    public ResponseEntity<?> addBookmark(@RequestParam(name = "post-id") Long postId) throws Exception {
-        bookmarkService.addBookmark(postId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> toggleBookmark(@RequestParam(name = "post-id") Long postId) throws Exception {
+        Boolean isBookmarked = bookmarkService.toggleBookmark(postId);
+        return ResponseEntity.ok().body(isBookmarked);
     }
 
-    @DeleteMapping
-    @Operation(
-            summary = "특정 게시물의 북마크를 삭제합니다",
-            description = "북마크 삭제하고자 하는 게시물의 아이디를 파라미터로 전달합니다"
-    )
-    public ResponseEntity<?> removeBookmark(@RequestParam(name = "post-id") Long postId) throws Exception {
-        bookmarkService.removeBookmark(postId);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping
+//    @Operation(
+//            summary = "특정 게시물을 북마크합니다",
+//            description = "북마크하고자 하는 게시물의 아이디를 파라미터로 전달합니다"
+//    )
+//    public ResponseEntity<?> addBookmark(@RequestParam(name = "post-id") Long postId) throws Exception {
+//        bookmarkService.addBookmark(postId);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @DeleteMapping
+//    @Operation(
+//            summary = "특정 게시물의 북마크를 삭제합니다",
+//            description = "북마크 삭제하고자 하는 게시물의 아이디를 파라미터로 전달합니다"
+//    )
+//    public ResponseEntity<?> removeBookmark(@RequestParam(name = "post-id") Long postId) throws Exception {
+//        bookmarkService.removeBookmark(postId);
+//        return ResponseEntity.ok().build();
+//    }
 
     @GetMapping
     @Operation(
-            summary = "북마크 목록을 불러옵니다",
-            description = "인자는 없습니다"
+            summary = "북마크 목록을 불러옵니다.",
+            description = "인자는 없습니다."
     )
     public ResponseEntity<List<BookmarkResponse>> getBookmarks() {
         return ResponseEntity.ok(bookmarkService.getBookmarkedPostsByUser());
