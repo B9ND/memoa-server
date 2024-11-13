@@ -24,24 +24,21 @@ public class BookmarkService {
 
     @Transactional
     public void addOrDeleteBookmark(Long bookmarkRequest) {
-        UserEntity user = userAuthHolder.current();
         PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(() -> new BookmarkException("존재하지 않는 게시물"));
-        Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(user, post);
+        Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(userAuthHolder.current(), post);
 
         if (!bookmarkExists) {
             bookmarkRepository.save(BookmarkEntity.builder()
                     .post(post)
-                    .user(user)
+                    .user(userAuthHolder.current())
                     .build());
         } else {
-            bookmarkRepository.deleteByUserAndPost(user, post);
+            bookmarkRepository.deleteByUserAndPost(userAuthHolder.current(), post);
         }
     }
 
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
-        UserEntity user = userAuthHolder.current();
-
-        return bookmarkRepository.findByUserOrderByCreatedAtDesc(user).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크")).stream()
+        return bookmarkRepository.findByUserOrderByCreatedAtDesc(userAuthHolder.current()).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크")).stream()
                 .map(BookmarkResponse::fromBookmarkEntity)
                 .toList();
     }
