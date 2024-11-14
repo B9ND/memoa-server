@@ -9,10 +9,11 @@ import java.util.List;
 
 /**
  * Enum 으로 refresh 타입도 있다면?
+ * 오버라이딩 금지
  */
 
 public final class TokenExtractor {
-    public String extract(HttpServletRequest request, JwtType type) {
+    public static String extract(HttpServletRequest request, JwtType type) {
         Enumeration<String> tokens = request.getHeaders("Authorization");
 
         while (tokens.hasMoreElements()) {
