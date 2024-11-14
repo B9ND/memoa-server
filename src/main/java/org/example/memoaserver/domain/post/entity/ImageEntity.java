@@ -14,6 +14,7 @@ public class ImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long image_id;
+
     private String url;
 
     @Setter

@@ -14,7 +14,6 @@ public class RedisService {
     private final RedisTemplate<String, Object> authCodeRedisTemplate;
     private final RedisTemplate<String, Object> authenticEmailredisTemplate;
 
-
     public RedisService(
             @Qualifier("redisTemplate0") RedisTemplate<String, Object> tokenRedisTemplate,
             @Qualifier("redisTemplate1") RedisTemplate<String, Object> authCodeRedisTemplate,
@@ -50,10 +49,6 @@ public class RedisService {
 
     public String getOnRedisForAuthCode(String email) {
         return (String) authCodeRedisTemplate.opsForValue().get(email);
-    }
-
-    public String getOnRedisForAuthenticEmail(String email) {
-        return (String) authenticEmailredisTemplate.opsForValue().get(email);
     }
 
     public Boolean findOnRedisForAuthenticEmail(String email) {

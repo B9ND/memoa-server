@@ -24,7 +24,6 @@ public class DepartmentResponse {
                     .subjects(departmentEntity.getSubjects())
                     .build();
         }
-
         return null;
     }
 

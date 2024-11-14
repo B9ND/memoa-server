@@ -3,12 +3,14 @@ package org.example.memoaserver.domain.post.dto.req;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.memoaserver.domain.post.entity.ImageEntity;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Schema(name = "게시물 저장 모델")
 @Getter
@@ -29,15 +31,21 @@ public class PostRequest {
     private Boolean isReleased;
 
     public PostEntity toPostEntity(UserEntity user, Set<TagEntity> tags) {
-        PostEntity post = PostEntity.builder()
+        return PostEntity.builder()
                 .title(title)
                 .tags(tags)
                 .content(content)
                 .isReleased(isReleased)
                 .user(user)
                 .build();
+    }
 
-
-        return post;
+    public List<ImageEntity> toImageEntities(PostEntity post) {
+        return images.stream()
+                .map(imageUrl -> ImageEntity.builder()
+                        .url(imageUrl)
+                        .post(post)
+                        .build())
+                .collect(Collectors.toList());
     }
 }

@@ -9,24 +9,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.dto.req.LoginRequest;
 import org.example.memoaserver.domain.user.dto.req.RefreshTokenRequest;
 import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
 import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.service.AuthCodeService;
+import org.example.memoaserver.domain.user.service.RefreshTokenService;
 import org.example.memoaserver.domain.user.service.UserService;
 import org.example.memoaserver.global.exception.dto.res.ErrorResponse;
 import org.example.memoaserver.global.security.jwt.dto.res.JwtTokenResponse;
-import org.example.memoaserver.domain.user.service.RefreshTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
