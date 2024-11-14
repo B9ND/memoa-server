@@ -5,12 +5,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.domain.user.dto.UserDTO;
+import org.example.memoaserver.domain.user.dto.req.UserRequest;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.domain.user.exception.LoginFormException;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.res.JwtTokenResponse;
+import org.example.memoaserver.global.security.jwt.enums.JwtCategory;
 import org.example.memoaserver.global.security.properties.JwtProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,8 +35,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtProperties jwtProperties;
     private final RedisService redisService;
 
-    private static final String EMAIL_PATTERN =
-            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
@@ -43,9 +43,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-
         try {
-            UserDTO loginRequest = objectMapper.readValue(request.getReader(), UserDTO.class);
+            UserRequest loginRequest = objectMapper.readValue(request.getReader(), UserRequest.class);
 
             String email = loginRequest.getEmail();
             String password = loginRequest.getPassword();
@@ -74,19 +73,18 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Role role = Role.valueOf(auth.getAuthority());
 
-        String access = jwtUtil.createJwt("access", email, role, device, jwtProperties.getAccess().getExpiration());
-        String refresh = jwtUtil.createJwt("refresh", email, role, device, jwtProperties.getRefresh().getExpiration());
-
-        JwtTokenResponse jwtTokenResponse = JwtTokenResponse.builder()
-                .access(access)
-                .refresh(refresh)
-                .build();
-
-        response.setContentType("application/json");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getWriter(), jwtTokenResponse);
+        String access = jwtUtil.createJwt(JwtCategory.ACCESS.value(), email, role, device, jwtProperties.getAccess().getExpiration());
+        String refresh = jwtUtil.createJwt(JwtCategory.REFRESH.value(), email, role, device, jwtProperties.getRefresh().getExpiration());
 
         redisService.saveToken(device + "::" + email, refresh, jwtProperties.getRefresh().getExpiration());
+
+        response.setContentType("application/json");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getWriter(), JwtTokenResponse.builder()
+                .access(access)
+                .refresh(refresh)
+                .build());
 
         response.setStatus(HttpStatus.OK.value());
     }

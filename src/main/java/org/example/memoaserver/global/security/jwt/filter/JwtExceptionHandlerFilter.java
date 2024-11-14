@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import org.example.memoaserver.domain.user.exception.LoginFormException;
 import org.example.memoaserver.global.exception.dto.res.ErrorResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -13,11 +14,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
+
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
         try{
             filterChain.doFilter(request, response);
         } catch (JwtException | IllegalArgumentException ex) {
@@ -26,6 +29,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
             setErrorResponse(response, "로그인 오류", ex.getMessage());
         }
     }
+
     private void setErrorResponse(
             HttpServletResponse response,
             String errorMessage,
