@@ -3,6 +3,7 @@ package org.example.memoaserver.global.exception.handler;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.io.IOException;
 import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.global.exception.StatusException;
 import org.example.memoaserver.global.exception.TokenException;
 import org.example.memoaserver.global.exception.dto.res.ErrorResponse;
 import org.hibernate.PropertyValueException;
@@ -69,6 +70,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ClassCastException.class)
     public ResponseEntity<ErrorResponse> handleClassCastException(ClassCastException ex) {
+        return new ResponseEntity<>(new ErrorResponse("클래스 변환이 불가능합니다.", ex.getMessage()), HttpStatus.BAD_GATEWAY);
+    }
+
+    @ExceptionHandler(StatusException.class)
+    public ResponseEntity<ErrorResponse> handleClassCastException(StatusException ex) {
         return new ResponseEntity<>(new ErrorResponse("클래스 변환이 불가능합니다.", ex.getMessage()), HttpStatus.BAD_GATEWAY);
     }
 
