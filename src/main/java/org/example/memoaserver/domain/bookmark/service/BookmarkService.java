@@ -39,9 +39,7 @@ public class BookmarkService {
     }
 
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
-        return bookmarkRepository.findByUserOrderByCreatedAtDesc(userAuthHolder.current())
-                .orElseThrow(() -> new BookmarkException("존재하지 않는 북마크"))
-                .stream()
+        return bookmarkRepository.findByUserOrderByCreatedAtDesc(userAuthHolder.current()).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크")).stream()
                 .map(BookmarkResponse::fromBookmarkEntity)
                 .toList();
     }
