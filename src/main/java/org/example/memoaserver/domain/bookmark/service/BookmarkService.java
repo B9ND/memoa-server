@@ -8,7 +8,6 @@ import org.example.memoaserver.domain.bookmark.exception.BookmarkException;
 import org.example.memoaserver.domain.bookmark.repository.BookmarkRepository;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.repository.PostRepository;
-import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.springframework.stereotype.Service;
 
