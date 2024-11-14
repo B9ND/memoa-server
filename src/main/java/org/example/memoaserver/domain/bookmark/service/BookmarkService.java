@@ -8,6 +8,7 @@ import org.example.memoaserver.domain.bookmark.exception.BookmarkException;
 import org.example.memoaserver.domain.bookmark.repository.BookmarkRepository;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.repository.PostRepository;
+import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.repository.UserAuthHolder;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +24,17 @@ public class BookmarkService {
 
     @Transactional
     public void addOrDeleteBookmark(Long bookmarkRequest) {
+        UserEntity user = userAuthHolder.current();
         PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(() -> new BookmarkException("존재하지 않는 게시물"));
-        Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(userAuthHolder.current(), post);
+        Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(user, post);
 
         if (!bookmarkExists) {
             bookmarkRepository.save(BookmarkEntity.builder()
                     .post(post)
-                    .user(userAuthHolder.current())
+                    .user(user)
                     .build());
         } else {
-            bookmarkRepository.deleteByUserAndPost(userAuthHolder.current(), post);
+            bookmarkRepository.deleteByUserAndPost(user, post);
         }
     }
 
