@@ -4,11 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.EntityGraph;
 
 import java.time.LocalDate;
 
@@ -28,9 +26,9 @@ public class BookmarkEntity {
     private UserEntity user;
 
     @Id
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    private PostEntity post;
+    private org.example.memoaserver.domain.post.entity.PostEntity post;
 
     @CreatedDate
     private LocalDate createdAt;

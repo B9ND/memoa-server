@@ -2,11 +2,10 @@ package org.example.memoaserver.domain.post.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.bookmark.repository.BookmarkRepository;
 import org.example.memoaserver.domain.post.dto.req.PostRequest;
 import org.example.memoaserver.domain.post.dto.req.SearchPostRequest;
 import org.example.memoaserver.domain.post.dto.res.PostResponse;
-import org.example.memoaserver.domain.post.entity.ImageEntity;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
 import org.example.memoaserver.domain.post.exception.PostException;
@@ -22,11 +21,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class  PostService {
@@ -34,6 +31,18 @@ public class  PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
+    private final BookmarkRepository bookmarkRepository;
+
+    @Transactional
+    public List<PostResponse> getPostsByTag(SearchPostRequest searchPostRequest) {
+        Pageable pageable = PageRequest.of(searchPostRequest.getPage(), searchPostRequest.getSize());
+        UserEntity user = userAuthHolder.current();
+
+        return bookMarkedPosts(
+                postRepository.findPostsByFilters(searchPostRequest.getTags(), searchPostRequest.getSearch(), user.getId(), pageable).toList(),
+                user
+        );
+    }
 
     @Transactional
     public PostResponse save(PostRequest postRequest) {
@@ -43,39 +52,38 @@ public class  PostService {
                 .collect(Collectors.toSet());
         PostEntity post = postRequest.toPostEntity(userAuthHolder.current(), tags);
         post.setImages(postRequest.toImageEntities(post));
-        return PostResponse.fromPostEntity(postRepository.save(post));
+
+        return PostResponse.fromPostEntity(postRepository.save(post), false);
     }
 
     public List<PostResponse> getPostsByAuthor(String nickname) {
-        UserEntity author = userRepository.findByNickname(nickname).orElseThrow(NullUserException::new);
-        return PostResponse.fromPostEntities(postRepository.findByUserOrderByCreatedAtDesc(author));
-    }
-
-    public List<PostResponse> getPostsByTitleOrContent(String name) {
-        return PostResponse.fromPostEntities(postRepository.findByTitleContainingOrContentContaining(name, name));
+        return bookMarkedPosts(postRepository.findByUserOrderByCreatedAtDesc(
+            userRepository.findByNickname(nickname).orElseThrow(NullUserException::new)),
+            userAuthHolder.current()
+        );
     }
 
     public PostResponse getPostById(Long id) {
-        return PostResponse.fromPostEntity(postRepository.findById(id)
-                .orElseThrow(() -> new PostException("존재하지 않는 게시물입니다.", HttpStatus.NOT_FOUND)));
+        return bookMarkedPost(
+            postRepository.findById(id)
+                .orElseThrow(() -> new PostException("존재하지 않는 게시물입니다.", HttpStatus.NOT_FOUND)),
+            userAuthHolder.current()
+        );
+    }
+
+    private PostResponse bookMarkedPost(PostEntity post, UserEntity user) {
+        return PostResponse.fromPostEntity(post, bookmarkRepository.existsByUserAndPost(user, post));
+    }
+
+    private List<PostResponse> bookMarkedPosts(List<PostEntity> postEntities, UserEntity user) {
+        return postEntities.stream()
+                .map(
+                        bookmark -> PostResponse.fromPostEntity(bookmark, bookmarkRepository.existsByUserAndPost(user, bookmark)))
+                .toList();
     }
 
     private TagEntity findOrCreateTag(String tagName) {
         return tagRepository.findByTagName(tagName)
                 .orElseGet(() -> TagEntity.builder().tagName(tagName).build());
-    }
-
-    @Transactional
-    public List<PostResponse> getPostsByTag(SearchPostRequest searchPostRequest) {
-        Pageable pageable = PageRequest.of(searchPostRequest.getPage(), searchPostRequest.getSize());
-        UserEntity user = userAuthHolder.current();
-
-        if (searchPostRequest.getSearch().isEmpty() && searchPostRequest.getTags().isEmpty()) {
-            return postRepository.findPostsByFollower(user.getId(), pageable).stream()
-                    .map(PostResponse::fromPostEntity).toList();
-        }
-
-        return postRepository.findPostsByFilters(searchPostRequest.getTags(), searchPostRequest.getSearch(), user.getId(), pageable).stream()
-                .map(PostResponse::fromPostEntity).toList();
     }
 }

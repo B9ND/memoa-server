@@ -32,22 +32,19 @@ public class PostResponse {
 
     private List<String> images;
 
-    public static PostResponse fromPostEntity(PostEntity postEntity) {
+    private Boolean isBookmarked;
+
+    public static PostResponse fromPostEntity(PostEntity postEntity, Boolean isBookmarked) {
         return PostResponse.builder()
                 .id(postEntity.getPost_id())
                 .title(postEntity.getTitle())
                 .content(postEntity.getContent())
                 .author(postEntity.getUser().getNickname())
                 .authorProfileImage(postEntity.getUser().getProfileImage())
+                .isBookmarked(isBookmarked)
                 .tags(postEntity.getTags().stream().map(TagEntity::getTagName).collect(Collectors.toSet()))
                 .createdAt(postEntity.getCreatedAt())
                 .images(postEntity.getImages().stream().map(ImageEntity::getUrl).collect(Collectors.toList()))
                 .build();
-    }
-
-    public static List<PostResponse> fromPostEntities(List<PostEntity> postEntityList) {
-        return postEntityList.stream()
-                .map(PostResponse::fromPostEntity)
-                .toList();
     }
 }

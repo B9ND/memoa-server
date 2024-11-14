@@ -1,18 +1,16 @@
 package org.example.memoaserver.domain.bookmark.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookmarkId implements Serializable {
     private Long user;
     private Long post;
-
-    public BookmarkId() {}
-
-    public BookmarkId(Long user, Long post) {
-        this.user = user;
-        this.post = post;
-    }
 
     @Override
     public boolean equals(Object o) {
