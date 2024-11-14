@@ -44,4 +44,10 @@ public class PostResponse {
                 .images(postEntity.getImages().stream().map(ImageEntity::getUrl).collect(Collectors.toList()))
                 .build();
     }
+
+    public static List<PostResponse> fromPostEntities(List<PostEntity> postEntityList) {
+        return postEntityList.stream()
+                .map(PostResponse::fromPostEntity)
+                .toList();
+    }
 }

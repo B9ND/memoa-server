@@ -37,26 +37,22 @@ public class  PostService {
 
     @Transactional
     public PostResponse save(PostRequest postRequest) {
-        UserEntity user = userAuthHolder.current();
-        Set<TagEntity> tags = postRequest.getTags().stream().map(this::findOrCreateTag).collect(Collectors.toSet());
-        PostEntity post = postRequest.toPostEntity(user, tags);
-        List<ImageEntity> images = postRequest.getImages().stream().map(imageUrl -> ImageEntity.builder().url(imageUrl).post(post).build()).collect(Collectors.toList());
-
-        post.setImages(images);
-
+        Set<TagEntity> tags = postRequest.getTags()
+                .stream()
+                .map(this::findOrCreateTag)
+                .collect(Collectors.toSet());
+        PostEntity post = postRequest.toPostEntity(userAuthHolder.current(), tags);
+        post.setImages(postRequest.toImageEntities(post));
         return PostResponse.fromPostEntity(postRepository.save(post));
     }
 
     public List<PostResponse> getPostsByAuthor(String nickname) {
         UserEntity author = userRepository.findByNickname(nickname).orElseThrow(NullUserException::new);
-        return postRepository.findByUserOrderByCreatedAtDesc(author).stream().map(PostResponse::fromPostEntity).toList();
+        return PostResponse.fromPostEntities(postRepository.findByUserOrderByCreatedAtDesc(author));
     }
 
     public List<PostResponse> getPostsByTitleOrContent(String name) {
-        return postRepository.findByTitleContainingOrContentContaining(name, name)
-                .stream()
-                .map(PostResponse::fromPostEntity)
-                .toList();
+        return PostResponse.fromPostEntities(postRepository.findByTitleContainingOrContentContaining(name, name));
     }
 
     public PostResponse getPostById(Long id) {
