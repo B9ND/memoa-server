@@ -11,7 +11,7 @@ import org.example.memoaserver.domain.user.exception.LoginFormException;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.res.JwtTokenResponse;
-import org.example.memoaserver.global.security.jwt.enums.JwtCategory;
+import org.example.memoaserver.global.security.jwt.enums.JwtType;
 import org.example.memoaserver.global.security.properties.JwtProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -73,8 +73,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Role role = Role.valueOf(auth.getAuthority());
 
-        String access = jwtUtil.createJwt(JwtCategory.ACCESS.value(), email, role, device, jwtProperties.getAccess().getExpiration());
-        String refresh = jwtUtil.createJwt(JwtCategory.REFRESH.value(), email, role, device, jwtProperties.getRefresh().getExpiration());
+        String access = jwtUtil.createJwt(JwtType.ACCESS_TOKEN.category(), email, role, device, jwtProperties.getAccess().getExpiration());
+        String refresh = jwtUtil.createJwt(JwtType.REFRESH_TOKEN.category(), email, role, device, jwtProperties.getRefresh().getExpiration());
 
         redisService.saveToken(device + "::" + email, refresh, jwtProperties.getRefresh().getExpiration());
 

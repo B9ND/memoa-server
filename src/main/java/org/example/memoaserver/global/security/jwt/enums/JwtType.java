@@ -4,12 +4,18 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum JwtType {
-    ACCESS_TOKEN("bearer"),
-    REFRESH_TOKEN("refresh");
+    ACCESS_TOKEN("bearer", "access"),
+    REFRESH_TOKEN("refresh", "refresh");
 
     final String type;
 
-    public String value() {
+    final String category;
+
+    public String type() {
         return type;
+    }
+
+    public String category() {
+        return category;
     }
 }
