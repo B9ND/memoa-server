@@ -11,13 +11,12 @@ import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.domain.user.exception.NullUserException;
 import org.example.memoaserver.domain.user.exception.RegisterFormException;
-import org.example.memoaserver.domain.user.repository.UserAuthHolder;
+import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.cache.RedisService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

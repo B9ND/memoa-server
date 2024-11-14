@@ -4,13 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.dto.res.FollowUserResponse;
-import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.entity.FollowEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.exception.FollowerException;
 import org.example.memoaserver.domain.user.exception.NullUserException;
 import org.example.memoaserver.domain.user.repository.FollowRepository;
-import org.example.memoaserver.domain.user.repository.UserAuthHolder;
+import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 

@@ -2,14 +2,11 @@ package org.example.memoaserver.domain.school.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.school.dto.res.DepartmentResponse;
 import org.example.memoaserver.domain.school.dto.req.SchoolRequest;
 import org.example.memoaserver.domain.school.dto.res.SchoolDataResponse;
 import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.school.entity.SchoolEntity;
 import org.example.memoaserver.domain.school.repository.SchoolRepository;
-import org.example.memoaserver.domain.user.repository.UserAuthHolder;
-import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.domain.school.exception.SchoolAlreadyExistsException;
 import org.springframework.stereotype.Service;
 

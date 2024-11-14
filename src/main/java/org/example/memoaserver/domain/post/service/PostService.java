@@ -13,7 +13,7 @@ import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.post.repository.TagRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.exception.NullUserException;
-import org.example.memoaserver.domain.user.repository.UserAuthHolder;
+import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
