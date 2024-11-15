@@ -1,8 +1,6 @@
 package org.example.memoaserver.global.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,35 +26,33 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(redisHost);
-        redisStandaloneConfiguration.setPort(redisPort);
-        redisStandaloneConfiguration.setPassword(redisPassword);
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-
+        return new LettuceConnectionFactory(setStandaloneConfiguration());
     }
 
     @Bean
     @Primary
-    public RedisTemplate<String, Object> redisTemplate0(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-
-        return redisTemplate;
+    public RedisTemplate<String, Object> tokenRedisTemplate() {
+        return setRedisTemplate(0);
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate1() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(redisHost);
-        redisStandaloneConfiguration.setPort(redisPort);
-        redisStandaloneConfiguration.setPassword(redisPassword);
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisStandaloneConfiguration);
-        factory.setDatabase(1);
+    public RedisTemplate<String, Object> authCodeRedisTemplate() {
+        return setRedisTemplate(1);
+    }
+
+    @Bean
+    public RedisTemplate<String, Object> authenticEmailRedisTemplate() {
+        return setRedisTemplate(2);
+    }
+
+    @Bean
+    public RedisTemplate<String, Object> rateLimiterRedisTemplate() {
+        return setRedisTemplate(3);
+    }
+
+    private RedisTemplate<String, Object> setRedisTemplate(int schema) {
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(setStandaloneConfiguration());
+        factory.setDatabase(schema);
         factory.afterPropertiesSet();
 
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -68,22 +64,11 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate2() {
+    private RedisStandaloneConfiguration setStandaloneConfiguration() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHost);
         redisStandaloneConfiguration.setPort(redisPort);
         redisStandaloneConfiguration.setPassword(redisPassword);
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisStandaloneConfiguration);
-        factory.setDatabase(2);
-        factory.afterPropertiesSet();
-
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(factory);
-
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-
-        return redisTemplate;
+        return redisStandaloneConfiguration;
     }
 }
