@@ -17,7 +17,7 @@ public class RedisService {
     public RedisService(
             @Qualifier("tokenRedisTemplate") RedisTemplate<String, Object> tokenRedis,
             @Qualifier("authCodeRedisTemplate") RedisTemplate<String, Object> codeRedis,
-            @Qualifier("authenticEmailTemplate") RedisTemplate<String, Object> authEmailRedis) {
+            @Qualifier("authenticEmailRedisTemplate") RedisTemplate<String, Object> authEmailRedis) {
         this.tokenRedisTemplate = tokenRedis;
         this.authCodeRedisTemplate = codeRedis;
         this.authenticEmailredisTemplate = authEmailRedis;

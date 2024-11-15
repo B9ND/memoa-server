@@ -26,12 +26,7 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(redisHost);
-        redisStandaloneConfiguration.setPort(redisPort);
-        redisStandaloneConfiguration.setPassword(redisPassword);
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-
+        return new LettuceConnectionFactory(setStandaloneConfiguration());
     }
 
     @Bean
@@ -46,16 +41,17 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> authenticEmailTemplate() {
+    public RedisTemplate<String, Object> authenticEmailRedisTemplate() {
         return setRedisTemplate(2);
     }
 
+    @Bean
+    public RedisTemplate<String, Object> RateLimiterRedisTemplate() {
+        return setRedisTemplate(3);
+    }
+
     private RedisTemplate<String, Object> setRedisTemplate(int schema) {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(redisHost);
-        redisStandaloneConfiguration.setPort(redisPort);
-        redisStandaloneConfiguration.setPassword(redisPassword);
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisStandaloneConfiguration);
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(setStandaloneConfiguration());
         factory.setDatabase(schema);
         factory.afterPropertiesSet();
 
@@ -66,5 +62,13 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         return redisTemplate;
+    }
+
+    private RedisStandaloneConfiguration setStandaloneConfiguration() {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(redisHost);
+        redisStandaloneConfiguration.setPort(redisPort);
+        redisStandaloneConfiguration.setPassword(redisPassword);
+        return redisStandaloneConfiguration;
     }
 }
