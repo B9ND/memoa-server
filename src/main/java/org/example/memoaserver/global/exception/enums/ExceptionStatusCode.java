@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 public enum ExceptionStatusCode implements StatusCode {
     NOT_FOUND(404, "존재하지 않는 데이터"),
     BAD_REQUEST(400, "존재하지 않는 요청"),
+    NOT_ACCEPTABLE(406, "데이터 접근권한 없음"),
     INTERNAL_SERVER(500, "서버 오류");
 
     private final int status;
