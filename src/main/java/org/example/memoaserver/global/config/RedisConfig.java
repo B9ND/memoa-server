@@ -39,43 +39,26 @@ public class RedisConfig {
     @Bean
     @Primary
     public RedisTemplate<String, Object> redisTemplate0(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-
-        return redisTemplate;
+        return setRedisTemplate(0);
     }
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate1() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(redisHost);
-        redisStandaloneConfiguration.setPort(redisPort);
-        redisStandaloneConfiguration.setPassword(redisPassword);
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisStandaloneConfiguration);
-        factory.setDatabase(1);
-        factory.afterPropertiesSet();
-
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(factory);
-
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-
-        return redisTemplate;
+        return setRedisTemplate(1);
     }
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate2() {
+        return setRedisTemplate(2);
+    }
+
+    private RedisTemplate<String, Object> setRedisTemplate(int schema) {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHost);
         redisStandaloneConfiguration.setPort(redisPort);
         redisStandaloneConfiguration.setPassword(redisPassword);
         LettuceConnectionFactory factory = new LettuceConnectionFactory(redisStandaloneConfiguration);
-        factory.setDatabase(2);
+        factory.setDatabase(schema);
         factory.afterPropertiesSet();
 
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
