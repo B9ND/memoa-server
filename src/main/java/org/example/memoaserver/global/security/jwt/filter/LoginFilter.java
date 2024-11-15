@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final AuthenticationManager authenticationManager;
@@ -38,6 +37,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+
+    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, JwtProperties jwtProperties, RedisService redisService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.jwtProperties = jwtProperties;
+        this.redisService = redisService;
+        super.setFilterProcessesUrl("/auth/login");
+    }
 
 
     @Override

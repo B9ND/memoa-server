@@ -10,7 +10,7 @@ public class ErrorResponse extends Response {
     private String message;
 
     @Builder
-    private ErrorResponse(int status, String code, String message) {
+    public ErrorResponse(int status, String code, String message) {
         super(status, code);
         this.message = message;
     }

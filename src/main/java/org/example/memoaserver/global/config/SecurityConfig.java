@@ -34,7 +34,6 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final JwtProperties jwtProperties;
     private final RedisService redisService;
-    private final UserRepository userRepository;
     private final JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
     private final JwtFilter jwtFilter;
 
@@ -45,9 +44,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtProperties, redisService);
-        loginFilter.setFilterProcessesUrl("/auth/login");
-
 //        http
 //                .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 //
@@ -67,7 +63,6 @@ public class SecurityConfig {
 //                        return configuration;
 //                    }
 //                })));
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -75,7 +70,7 @@ public class SecurityConfig {
 
                 .addFilterBefore(jwtExceptionHandlerFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, LoginFilter.class)
-                .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(setLoginFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/*", "/").permitAll()
@@ -84,14 +79,21 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/test").permitAll()
                         .anyRequest().authenticated()
-                );
+                )
 
-        http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowCredentials(true);
+
+
     }
 
     @Bean
@@ -100,5 +102,7 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-
+    private LoginFilter setLoginFilter() throws Exception {
+        return new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtProperties, redisService);
+    }
 }
