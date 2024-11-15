@@ -6,10 +6,16 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RateLimiterService {
+    private static final int MAX_REQUEST = 40;
     private final RedisService redisService;
 
     public boolean isAllowed(String clientIp) {
-        String key;
-        return true;
+        Long requestCount = redisService.incrementRedisForRateLimiter(clientIp);
+
+        if (requestCount == 1) {
+            redisService.ExpiredForRateLimiter(clientIp);
+        }
+
+        return requestCount <= MAX_REQUEST;
     }
 }

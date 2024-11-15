@@ -10,21 +10,24 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisService {
-    private final RedisTemplate<String, Object> tokenRedisTemplate;
-    private final RedisTemplate<String, Object> authCodeRedisTemplate;
-    private final RedisTemplate<String, Object> authenticEmailredisTemplate;
+    private final RedisTemplate<String, Object> tokenRedis;
+    private final RedisTemplate<String, Object> authCodeRedis;
+    private final RedisTemplate<String, Object> authenticEmailRedis;
+    private final RedisTemplate<String, Object> rateLimiterRedis;
 
     public RedisService(
             @Qualifier("tokenRedisTemplate") RedisTemplate<String, Object> tokenRedis,
             @Qualifier("authCodeRedisTemplate") RedisTemplate<String, Object> codeRedis,
-            @Qualifier("authenticEmailRedisTemplate") RedisTemplate<String, Object> authEmailRedis) {
-        this.tokenRedisTemplate = tokenRedis;
-        this.authCodeRedisTemplate = codeRedis;
-        this.authenticEmailredisTemplate = authEmailRedis;
+            @Qualifier("authenticEmailRedisTemplate") RedisTemplate<String, Object> authEmailRedis,
+            @Qualifier("rateLimiterRedisTemplate") RedisTemplate<String, Object> rateLimiterRedis) {
+        this.tokenRedis = tokenRedis;
+        this.authCodeRedis = codeRedis;
+        this.authenticEmailRedis = authEmailRedis;
+        this.rateLimiterRedis = rateLimiterRedis;
     }
 
     public void deleteOnRedisForToken(String key) {
-        tokenRedisTemplate.delete(key);
+        tokenRedis.delete(key);
     }
 
     @Transactional
@@ -32,34 +35,42 @@ public class RedisService {
         if (findOnRedisForToken(key)) {
             deleteOnRedisForToken(key);
         }
-        tokenRedisTemplate.opsForValue().set(key, value, expired, TimeUnit.MILLISECONDS);
+        tokenRedis.opsForValue().set(key, value, expired, TimeUnit.MILLISECONDS);
     }
 
     public String getOnRedisForToken(String key) {
-        return (String) tokenRedisTemplate.opsForValue().get(key);
+        return (String) tokenRedis.opsForValue().get(key);
     }
 
     public Boolean findOnRedisForToken(String key) {
-        return tokenRedisTemplate.hasKey(key);
+        return tokenRedis.hasKey(key);
     }
 
     public void setOnRedisForAuthCode(String email, String authCode, long ttl) {
-        authCodeRedisTemplate.opsForValue().set(email, authCode, ttl, TimeUnit.MINUTES);
+        authCodeRedis.opsForValue().set(email, authCode, ttl, TimeUnit.MINUTES);
     }
 
     public String getOnRedisForAuthCode(String email) {
-        return (String) authCodeRedisTemplate.opsForValue().get(email);
+        return (String) authCodeRedis.opsForValue().get(email);
     }
 
     public Boolean findOnRedisForAuthenticEmail(String email) {
-        return authenticEmailredisTemplate.hasKey(email);
+        return authenticEmailRedis.hasKey(email);
     }
 
     public void setOnRedisForAuthenticEmail(String email, long ttl) {
-        authenticEmailredisTemplate.opsForValue().set(email, email, ttl, TimeUnit.MINUTES);
+        authenticEmailRedis.opsForValue().set(email, email, ttl, TimeUnit.MINUTES);
     }
 
     public void deleteOnRedisForAuthenticEmail(String email) {
-        authenticEmailredisTemplate.delete(email);
+        authenticEmailRedis.delete(email);
+    }
+
+    public Long incrementRedisForRateLimiter(String clientIp) {
+        return rateLimiterRedis.opsForValue().increment("req_count::" + clientIp);
+    }
+
+    public Boolean ExpiredForRateLimiter(String clientIp) {
+        return rateLimiterRedis.expire("req_count::" + clientIp, 60, TimeUnit.SECONDS);
     }
 }

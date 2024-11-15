@@ -46,7 +46,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> RateLimiterRedisTemplate() {
+    public RedisTemplate<String, Object> rateLimiterRedisTemplate() {
         return setRedisTemplate(3);
     }
 
