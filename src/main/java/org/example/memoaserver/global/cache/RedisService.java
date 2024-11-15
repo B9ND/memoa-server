@@ -15,12 +15,12 @@ public class RedisService {
     private final RedisTemplate<String, Object> authenticEmailredisTemplate;
 
     public RedisService(
-            @Qualifier("redisTemplate0") RedisTemplate<String, Object> tokenRedisTemplate,
-            @Qualifier("redisTemplate1") RedisTemplate<String, Object> authCodeRedisTemplate,
-            @Qualifier("redisTemplate2") RedisTemplate<String, Object> authenticEmailredisTemplate) {
-        this.tokenRedisTemplate = tokenRedisTemplate;
-        this.authCodeRedisTemplate = authCodeRedisTemplate;
-        this.authenticEmailredisTemplate = authenticEmailredisTemplate;
+            @Qualifier("tokenRedisTemplate") RedisTemplate<String, Object> tokenRedis,
+            @Qualifier("authCodeRedisTemplate") RedisTemplate<String, Object> codeRedis,
+            @Qualifier("authenticEmailTemplate") RedisTemplate<String, Object> authEmailRedis) {
+        this.tokenRedisTemplate = tokenRedis;
+        this.authCodeRedisTemplate = codeRedis;
+        this.authenticEmailredisTemplate = authEmailRedis;
     }
 
     public void deleteOnRedisForToken(String key) {

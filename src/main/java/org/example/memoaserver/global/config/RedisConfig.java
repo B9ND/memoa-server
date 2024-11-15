@@ -1,8 +1,6 @@
 package org.example.memoaserver.global.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,17 +36,17 @@ public class RedisConfig {
 
     @Bean
     @Primary
-    public RedisTemplate<String, Object> redisTemplate0(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> tokenRedisTemplate() {
         return setRedisTemplate(0);
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate1() {
+    public RedisTemplate<String, Object> authCodeRedisTemplate() {
         return setRedisTemplate(1);
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate2() {
+    public RedisTemplate<String, Object> authenticEmailTemplate() {
         return setRedisTemplate(2);
     }
 
