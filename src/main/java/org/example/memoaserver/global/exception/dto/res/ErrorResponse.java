@@ -8,7 +8,7 @@ import org.example.memoaserver.global.exception.enums.StatusCode;
 
 @Getter
 public class ErrorResponse extends Response {
-    private String message;
+    private final String message;
 
     @Builder
     public ErrorResponse(int status, String code, String message) {
