@@ -1,9 +1,12 @@
-package org.example.memoaserver.domain.user.exception;
+package org.example.memoaserver.domain.user.support;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.global.cache.RedisService;
-import org.example.memoaserver.global.exception.TokenException;
+import org.example.memoaserver.global.exception.TokenCategoryNotFoundException;
+import org.example.memoaserver.global.exception.TokenExpiredException;
+import org.example.memoaserver.global.exception.TokenInvalidException;
+import org.example.memoaserver.global.exception.TokenNotFoundException;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +26,7 @@ public class RefreshTokenValidator {
 
     private void checkNullToken(String token) {
         if (token == null) {
-            throw new TokenException("Refresh header is missing");
+            throw new TokenNotFoundException();
         }
     }
 
@@ -31,7 +34,7 @@ public class RefreshTokenValidator {
         try {
             jwtUtil.getEmail(token);
         } catch (Exception e) {
-            throw new TokenException("Refresh header is invalid");
+            throw new TokenInvalidException();
         }
     }
 
@@ -39,19 +42,19 @@ public class RefreshTokenValidator {
         try {
             jwtUtil.isExpired(token);
         } catch (ExpiredJwtException e) {
-            throw new TokenException("Refresh token is expired");
+            throw new TokenExpiredException();
         }
     }
 
     private void checkTokenCategory(String token) {
         if (!jwtUtil.getCategory(token).equals("refresh")) {
-            throw new TokenException("refresh token category is invalid");
+            throw new TokenCategoryNotFoundException();
         }
     }
 
     private void checkDeviceMatch(String device, String token) {
         if (!token.equals(redisService.getOnRedisForToken(device + "::" + jwtUtil.getEmail(token)))) {
-            throw new TokenException("no token match");
+            throw new TokenNotFoundException();
         }
     }
 }

@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.req.RefreshTokenRequest;
 import org.example.memoaserver.domain.user.entity.enums.Role;
-import org.example.memoaserver.domain.user.exception.RefreshTokenValidator;
+import org.example.memoaserver.domain.user.support.RefreshTokenValidator;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.res.JwtTokenResponse;

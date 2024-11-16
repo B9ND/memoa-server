@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.domain.user.exception.LoginFormException;
+import org.example.memoaserver.domain.user.exception.InvalidEmailException;
 import org.example.memoaserver.global.exception.ErrorResponseSender;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -29,7 +29,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException | IllegalArgumentException ex) {
 //            setErrorResponse(response, "토큰 관련 오류", ex.getMessage());
-        } catch (LoginFormException ex) {
+        } catch (InvalidEmailException ex) {
 //            setErrorResponse(response, "로그인 오류", ex.getMessage());
         }
     }

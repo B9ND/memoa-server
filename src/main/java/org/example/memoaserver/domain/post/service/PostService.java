@@ -11,12 +11,11 @@ import org.example.memoaserver.domain.post.exception.PostNotFoundException;
 import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.post.repository.TagRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
-import org.example.memoaserver.domain.user.exception.NullUserException;
+import org.example.memoaserver.domain.user.exception.UserNotfoundException;
 import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +58,7 @@ public class  PostService {
     @Transactional(readOnly=true)
     public List<PostResponse> getPostsByAuthor(String nickname) {
         return bookMarkedPosts(postRepository.findByUserOrderByCreatedAtDesc(
-            userRepository.findByNickname(nickname).orElseThrow(NullUserException::new)),
+            userRepository.findByNickname(nickname).orElseThrow(UserNotfoundException::new)),
             userAuthHolder.current()
         );
     }

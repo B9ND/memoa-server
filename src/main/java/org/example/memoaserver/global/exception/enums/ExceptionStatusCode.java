@@ -7,6 +7,10 @@ public enum ExceptionStatusCode implements StatusCode {
     NOT_FOUND(404, "존재하지 않는 데이터"),
     BAD_REQUEST(400, "존재하지 않는 요청"),
     NOT_ACCEPTABLE(406, "데이터 접근권한 없음"),
+    JSON_ERROR(401, "파싱할 수 없는 json 객체"),
+    JWT_SIGNATURE(400, "jwt 서명 오류"),
+    ENCODE_FAILED(500, "인코딩 실패"),
+    REQUIRE_ARGUMENTS(400, "필수 항목 입력 안됨"),
     INTERNAL_SERVER(500, "서버 오류");
 
     private final int status;

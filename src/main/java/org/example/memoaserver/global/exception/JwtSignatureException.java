@@ -1,10 +1,10 @@
 package org.example.memoaserver.global.exception;
 
-import org.springframework.http.HttpStatus;
+import org.example.memoaserver.global.exception.enums.ExceptionStatusCode;
 
 public class JwtSignatureException extends StatusException {
-    public JwtSignatureException(String message) {
+    public JwtSignatureException() {
 
-        super(HttpStatus.UNAUTHORIZED, message);
+        super(ExceptionStatusCode.JWT_SIGNATURE);
     }
 }

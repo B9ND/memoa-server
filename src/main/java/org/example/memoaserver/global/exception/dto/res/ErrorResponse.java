@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.example.memoaserver.global.dto.response.Response;
+import org.example.memoaserver.global.exception.enums.StatusCode;
 
 @Getter
 public class ErrorResponse extends Response {
@@ -13,6 +14,14 @@ public class ErrorResponse extends Response {
     public ErrorResponse(int status, String code, String message) {
         super(status, code);
         this.message = message;
+    }
+
+    public static ErrorResponse errorResponse(StatusCode status) {
+        return ErrorResponse.builder()
+                .status(status.getStatusCode())
+                .code(status.getExceptionName())
+                .message(status.getMessage())
+                .build();
     }
 
     public static ErrorResponse of(int status, String code, String message) {

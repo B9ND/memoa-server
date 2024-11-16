@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.user.dto.req.UserRequest;
 import org.example.memoaserver.domain.user.entity.enums.Role;
-import org.example.memoaserver.domain.user.exception.LoginFormException;
+import org.example.memoaserver.domain.user.exception.InvalidEmailException;
+import org.example.memoaserver.domain.user.exception.LoginFailException;
 import org.example.memoaserver.global.cache.RedisService;
+import org.example.memoaserver.global.exception.JsonPassingException;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.res.JwtTokenResponse;
 import org.example.memoaserver.global.security.jwt.enums.JwtType;
@@ -57,14 +58,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             String password = loginRequest.getPassword();
 
             if (!checkEmailVerification(email)) {
-                throw new LoginFormException("Invalid email");
+                throw new InvalidEmailException();
             }
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
             return authenticationManager.authenticate(authToken);
         } catch(IOException e) {
 
-            throw new LoginFormException("Json passing error", HttpStatus.BAD_REQUEST);
+            throw new JsonPassingException();
         }
     }
 
@@ -98,7 +99,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        throw new LoginFormException(failed.getMessage(), HttpStatus.UNAUTHORIZED);
+        throw new LoginFailException();
     }
 
     private Boolean checkEmailVerification(String email) {

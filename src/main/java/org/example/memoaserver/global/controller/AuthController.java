@@ -161,7 +161,7 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @PatchMapping("/me")
-    public ResponseEntity<UserResponse> updateMe(@RequestBody UpdateUserRequest user) {
+    public ResponseEntity<UserResponse> updateMe(@RequestBody(required = false) UpdateUserRequest user) {
         return ResponseEntity.ok(userService.updateMe(user));
     }
 }
