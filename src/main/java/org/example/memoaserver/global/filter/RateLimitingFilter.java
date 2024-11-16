@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.global.cache.RateLimiterService;
+import org.example.memoaserver.global.exception.ErrorResponseSender;
+import org.example.memoaserver.global.exception.enums.ExceptionStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,6 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class RateLimitingFilter extends OncePerRequestFilter {
     private final RateLimiterService rateLimiterService;
+    private final ErrorResponseSender errorResponseSender;
 
     @Override
     protected void doFilterInternal(
@@ -26,9 +29,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         String clientIp = request.getRemoteAddr();
 
         if (!rateLimiterService.isAllowed(clientIp)) {
-            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
+            errorResponseSender.sendErrorResponse(response, ExceptionStatusCode.NOT_ACCEPTABLE);
             return;
         }
 

@@ -3,8 +3,7 @@ package org.example.memoaserver.domain.user.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.domain.user.exception.VerifyCodeException;
-import org.springframework.http.HttpStatus;
+import org.example.memoaserver.global.exception.InternalServerException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class EmailService {
 
             javaMailSender.send(message);
         } catch (MessagingException e) {
-            throw new VerifyCodeException("이메일 전송 실패", e, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new InternalServerException();
         }
     }
 }

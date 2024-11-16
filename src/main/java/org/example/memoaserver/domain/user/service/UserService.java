@@ -2,22 +2,19 @@ package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.school.exception.NullSchoolException;
+import org.example.memoaserver.domain.school.exception.SchoolNotFoundException;
 import org.example.memoaserver.domain.school.repository.DepartmentRepository;
 import org.example.memoaserver.domain.user.dto.req.RegisterRequest;
 import org.example.memoaserver.domain.user.dto.req.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.res.UserResponse;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.entity.enums.Role;
-import org.example.memoaserver.domain.user.exception.NullUserException;
-import org.example.memoaserver.domain.user.exception.RegisterFormException;
-import org.example.memoaserver.domain.user.repository.UserAuthHolder;
+import org.example.memoaserver.domain.user.exception.*;
+import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.cache.RedisService;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +40,7 @@ public class UserService {
 
     public UserResponse findUserByNickname(String nickname) {
         return UserResponse.fromUserEntity(
-            userRepository.findByNickname(nickname).orElseThrow(NullUserException::new),
+            userRepository.findByNickname(nickname).orElseThrow(UserNotfoundException::new),
             followService.isExist(userAuthHolder.current(), nickname)
         );
     }
@@ -57,7 +54,10 @@ public class UserService {
         }
 
         if (updateUser.getDepartment() != null) {
-            toBuilder.department(departmentRepository.findById(updateUser.getDepartment()).orElseThrow(NullSchoolException::new));
+            toBuilder.department(departmentRepository.findById(
+                updateUser.getDepartment())
+                    .orElseThrow(SchoolNotFoundException::new)
+            );
         }
 
         if (updateUser.getProfileImage() != null) {
@@ -104,13 +104,13 @@ public class UserService {
 
     private void emailCheck(String email) {
         if (!checkEmailVerification(email)) {
-            throw new RegisterFormException("you need to use email [xxx@xxx.com]");
+            throw new InvalidEmailException();
         }
         if (userRepository.existsByEmail(email)) {
-            throw new RegisterFormException("your email already exists");
+            throw new ExistUserEmailException();
         }
         if (!checkVerification(email)) {
-            throw new RegisterFormException("this email does not verify", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new VerifyEmailException();
         }
     }
 
