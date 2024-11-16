@@ -13,7 +13,6 @@ import org.example.memoaserver.domain.user.exception.*;
 import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.cache.RedisService;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -111,7 +110,7 @@ public class UserService {
             throw new ExistUserEmailException();
         }
         if (!checkVerification(email)) {
-            throw new VeriftyEmailException();
+            throw new VerifyEmailException();
         }
     }
 
