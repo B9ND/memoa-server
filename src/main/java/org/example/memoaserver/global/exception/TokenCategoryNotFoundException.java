@@ -7,6 +7,4 @@ public class TokenCategoryNotFoundException extends StatusException{
     public TokenCategoryNotFoundException() {
         super(TokenExceptionStatusCode.CATEGORY_NOT_FOUND);
     }
-
-
 }
