@@ -7,7 +7,7 @@ import org.example.memoaserver.global.dto.response.Response;
 import org.example.memoaserver.global.exception.enums.StatusCode;
 
 @Getter
-public class ErrorResponse extends Response {
+public final class ErrorResponse extends Response {
     private final String message;
 
     @Builder
