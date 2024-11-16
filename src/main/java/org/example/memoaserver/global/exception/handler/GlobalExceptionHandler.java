@@ -7,7 +7,6 @@ import org.example.memoaserver.global.exception.enums.ExceptionStatusCode;
 import org.hibernate.PropertyValueException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.redis.RedisConnectionFailureException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -86,6 +85,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleClassCastException(ClassCastException ex) {
         return ResponseEntity
             .status(502)
-            .body(ErrorResponse.errorResponse(ExceptionStatusCode.PROXY_ERROR);
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.PROXY_ERROR));
     }
 }
