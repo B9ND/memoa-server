@@ -1,6 +1,5 @@
 package org.example.memoaserver.domain.post.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.bookmark.repository.BookmarkRepository;
 import org.example.memoaserver.domain.post.dto.req.PostRequest;
@@ -8,7 +7,7 @@ import org.example.memoaserver.domain.post.dto.req.SearchPostRequest;
 import org.example.memoaserver.domain.post.dto.res.PostResponse;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
-import org.example.memoaserver.domain.post.exception.PostException;
+import org.example.memoaserver.domain.post.exception.PostNotFoundException;
 import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.post.repository.TagRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
@@ -19,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class  PostService {
     private final TagRepository tagRepository;
     private final BookmarkRepository bookmarkRepository;
 
-    @Transactional
+    @Transactional(readOnly=true)
     public List<PostResponse> getPostsByTag(SearchPostRequest searchPostRequest) {
         Pageable pageable = PageRequest.of(searchPostRequest.getPage(), searchPostRequest.getSize());
         UserEntity user = userAuthHolder.current();
@@ -56,6 +56,7 @@ public class  PostService {
         return PostResponse.fromPostEntity(postRepository.save(post), false);
     }
 
+    @Transactional(readOnly=true)
     public List<PostResponse> getPostsByAuthor(String nickname) {
         return bookMarkedPosts(postRepository.findByUserOrderByCreatedAtDesc(
             userRepository.findByNickname(nickname).orElseThrow(NullUserException::new)),
@@ -66,7 +67,7 @@ public class  PostService {
     public PostResponse getPostById(Long id) {
         return bookMarkedPost(
             postRepository.findById(id)
-                .orElseThrow(() -> new PostException("존재하지 않는 게시물입니다.", HttpStatus.NOT_FOUND)),
+                .orElseThrow(PostNotFoundException::new),
             userAuthHolder.current()
         );
     }
