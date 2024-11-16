@@ -19,6 +19,13 @@ import java.security.NoSuchAlgorithmException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(StatusException.class)
+    public ResponseEntity<ErrorResponse> handleClassCastException(StatusException ex) {
+        return ResponseEntity
+                .status(ex.getStatus().getStatusCode())
+                .body(ErrorResponse.errorResponse(ex.getStatus()));
+    }
+
     @ExceptionHandler(NoSuchAlgorithmException.class)
     public ResponseEntity<ErrorResponse> handleNoSuchAlgorithmException(NoSuchAlgorithmException ex) {
         return ResponseEntity
@@ -35,43 +42,50 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        return new ResponseEntity<>(new ErrorResponse("이미 존재하는 데이터입니다.", ex.getMessage()), HttpStatus.CONFLICT);
+        return ResponseEntity
+            .status(409)
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.AlREADY_CREATED_DATA));
     }
 
     @ExceptionHandler({RedisConnectionFailureException.class, IOException.class})
     public ResponseEntity<ErrorResponse> handleRedisConnectionFailureException(RedisConnectionFailureException ex) {
-        return new ResponseEntity<>(new ErrorResponse("서버 오류", ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity
+            .status(500)
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.INTERNAL_SERVER));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        return new ResponseEntity<>(new ErrorResponse("필수 인자가 포함되지 않음", "body가 없음"), HttpStatus.FORBIDDEN);
+        return ResponseEntity
+            .status(400)
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.REQUIRE_ARGUMENTS));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return new ResponseEntity<>(new ErrorResponse("필수값이 공백일 수 없습니다.", ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+            .status(400)
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.REQUIRE_ARGUMENTS));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
-        return new ResponseEntity<>(new ErrorResponse("필수 파라미터가 포함되지 않았습니다.", ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+            .status(400)
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.REQUIRE_ARGUMENTS));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
-        return ErrorResponse(409, )
+        return ResponseEntity
+            .status(400)
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.BAD_REQUEST));
     }
 
     @ExceptionHandler(ClassCastException.class)
     public ResponseEntity<ErrorResponse> handleClassCastException(ClassCastException ex) {
-        return new ResponseEntity<>(new ErrorResponse("클래스 변환이 불가능합니다.", ex.getMessage()), HttpStatus.BAD_GATEWAY);
-    }
-
-    @ExceptionHandler(StatusException.class)
-    public ResponseEntity<ErrorResponse> handleClassCastException(StatusException ex) {
         return ResponseEntity
-            .status(ex.getStatus().getStatusCode())
-            .body(ErrorResponse.errorResponse(ex.getStatus()));
+            .status(502)
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.PROXY_ERROR);
     }
 }
