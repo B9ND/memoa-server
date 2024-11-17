@@ -21,4 +21,8 @@ public class ImageEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
+
+    public static String fromImageEntity(ImageEntity imageEntity) {
+        return imageEntity.getUrl();
+    }
 }
