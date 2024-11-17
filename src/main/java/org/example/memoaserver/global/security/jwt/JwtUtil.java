@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.global.exception.JsonPassingException;
 import org.example.memoaserver.global.exception.JwtSignatureException;
+import org.example.memoaserver.global.exception.TokenInvalidException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,15 @@ public class JwtUtil {
 
     public String getDevice(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("device", String.class);
+    }
+
+    public Boolean isValid(String token) {
+        try {
+            isExpired(token);
+            return true;
+        } catch (Exception e) {
+            throw new TokenInvalidException();
+        }
     }
 
     public String getCategory(String token) {
