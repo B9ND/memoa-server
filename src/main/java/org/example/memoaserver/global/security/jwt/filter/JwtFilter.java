@@ -36,11 +36,14 @@ public class JwtFilter extends OncePerRequestFilter {
         if (!accessToken.isEmpty()) {
             setAuthentication(accessToken);
         }
+
         filterChain.doFilter(request, response);
     }
 
     private void setAuthentication(String accessToken) {
-        SecurityContextHolder.getContext().setAuthentication(createAuthentication(accessToken));
+        if (jwtUtil.isValid(accessToken)) {
+            SecurityContextHolder.getContext().setAuthentication(createAuthentication(accessToken));
+        }
     }
 
     private Authentication createAuthentication(String accessToken) {

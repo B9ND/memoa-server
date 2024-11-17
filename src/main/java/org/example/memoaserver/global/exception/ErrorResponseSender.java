@@ -19,7 +19,7 @@ public final class ErrorResponseSender {
         StatusCode statusCode
     ) {
         try{
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(statusCode.getStatusCode());
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(objectMapper.writeValueAsString(errorMessage(statusCode)));
