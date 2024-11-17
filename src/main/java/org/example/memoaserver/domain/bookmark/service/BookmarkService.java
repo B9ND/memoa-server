@@ -7,9 +7,10 @@ import org.example.memoaserver.domain.bookmark.entity.BookmarkEntity;
 import org.example.memoaserver.domain.bookmark.exception.BookmarkException;
 import org.example.memoaserver.domain.bookmark.repository.BookmarkRepository;
 import org.example.memoaserver.domain.post.entity.PostEntity;
+import org.example.memoaserver.domain.post.exception.PostNotFoundException;
 import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
-import org.example.memoaserver.domain.user.repository.UserAuthHolder;
+import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class BookmarkService {
     @Transactional
     public void addOrDeleteBookmark(Long bookmarkRequest) {
         UserEntity user = userAuthHolder.current();
-        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(() -> new BookmarkException("존재하지 않는 게시물"));
+        PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(PostNotFoundException::new);
         Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(user, post);
 
         if (!bookmarkExists) {
@@ -39,7 +40,7 @@ public class BookmarkService {
     }
 
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
-        return bookmarkRepository.findByUserOrderByCreatedAtDesc(userAuthHolder.current()).orElseThrow(() -> new BookmarkException("존재하지 않는 북마크")).stream()
+        return bookmarkRepository.findByUserOrderByCreatedAtDesc(userAuthHolder.current()).orElseThrow(BookmarkException::new).stream()
                 .map(BookmarkResponse::fromBookmarkEntity)
                 .toList();
     }

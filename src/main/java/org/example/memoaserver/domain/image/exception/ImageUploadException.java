@@ -1,10 +1,10 @@
 package org.example.memoaserver.domain.image.exception;
 
+import org.example.memoaserver.domain.image.exception.enums.ImageExceptionStatusCode;
 import org.example.memoaserver.global.exception.StatusException;
-import org.springframework.http.HttpStatus;
 
 public class ImageUploadException extends StatusException {
-    public ImageUploadException(String message, Throwable cause) {
-        super(HttpStatus.INTERNAL_SERVER_ERROR, message, cause);
+    public ImageUploadException() {
+        super(ImageExceptionStatusCode.UPLOAD_FAILED);
     }
 }

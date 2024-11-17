@@ -2,6 +2,7 @@ package org.example.memoaserver.global.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.example.memoaserver.domain.user.entity.enums.Role;
+import org.example.memoaserver.global.exception.JsonPassingException;
 import org.example.memoaserver.global.exception.JwtSignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -51,10 +52,8 @@ public class JwtUtil {
                     .expiration(new Date(System.currentTimeMillis() + expiredTime))
                     .signWith(secretKey)
                     .compact();
-        } catch (JwtSignatureException e) {
-            throw new JwtSignatureException("Invalid JWT signature");
         } catch (Exception e) {
-            throw new RuntimeException("JWT processing error");
+            throw new JwtSignatureException();
         }
 
     }

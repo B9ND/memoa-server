@@ -1,17 +1,14 @@
-package org.example.memoaserver.domain.user.dto;
+package org.example.memoaserver.domain.user.dto.req;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.memoaserver.domain.user.entity.UserEntity;
-
-import java.util.Optional;
 
 @Schema(description = "유저 정보 모델")
 @Getter
 @NoArgsConstructor
-public class UserDTO {
+public class UserRequest {
     private String id;
     @Schema(description = "사용자 이메일", example = "example@example.com")
     private String email;
@@ -21,17 +18,10 @@ public class UserDTO {
     private String password;
 
     @Builder
-    public UserDTO(String id, String email, String nickname, String password) {
+    public UserRequest(String id, String email, String nickname, String password) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
         this.password = password;
-    }
-
-    public static UserDTO of(Optional<UserEntity> userEntity) {
-        return UserDTO.builder()
-                .email(userEntity.get().getEmail())
-                .nickname(userEntity.get().getNickname())
-                .build();
     }
 }

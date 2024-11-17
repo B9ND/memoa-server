@@ -2,16 +2,14 @@ package org.example.memoaserver.domain.school.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.school.dto.res.DepartmentResponse;
 import org.example.memoaserver.domain.school.dto.req.SchoolRequest;
 import org.example.memoaserver.domain.school.dto.res.SchoolDataResponse;
 import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.school.entity.SchoolEntity;
 import org.example.memoaserver.domain.school.repository.SchoolRepository;
-import org.example.memoaserver.domain.user.repository.UserAuthHolder;
-import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.domain.school.exception.SchoolAlreadyExistsException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class SchoolService {
 
     public void addSchool(SchoolRequest schoolRequest) {
         if (schoolRepository.existsByName(schoolRequest.getName())) {
-            throw new SchoolAlreadyExistsException(schoolRequest.getName() + "은/는 이미 존재합니다.");
+            throw new SchoolAlreadyExistsException();
         }
 
         SchoolEntity schoolEntity = new SchoolEntity();
@@ -45,6 +43,7 @@ public class SchoolService {
         schoolRepository.save(schoolEntity);
     }
 
+    @Transactional(readOnly = true)
     public List<SchoolDataResponse> searchSchool(String schoolName) {
 
         return schoolRepository.findByNameContainingIgnoreCase(schoolName).stream().map(SchoolDataResponse::fromSchoolEntity).toList();
