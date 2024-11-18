@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.memoaserver.domain.user.dto.req.UserRequest;
+import org.example.memoaserver.domain.user.dto.request.UserRequest;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.domain.user.exception.InvalidEmailException;
 import org.example.memoaserver.domain.user.exception.LoginFailException;

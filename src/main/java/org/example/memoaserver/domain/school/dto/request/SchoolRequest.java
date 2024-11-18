@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.school.dto.req;
+package org.example.memoaserver.domain.school.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -3,7 +3,7 @@ package org.example.memoaserver.global.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.domain.image.dto.res.ImageResponse;
+import org.example.memoaserver.domain.image.dto.response.ImageResponse;
 import org.example.memoaserver.domain.image.service.UploadService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

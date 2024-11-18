@@ -2,9 +2,9 @@ package org.example.memoaserver.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.bookmark.repository.BookmarkRepository;
-import org.example.memoaserver.domain.post.dto.req.PostRequest;
-import org.example.memoaserver.domain.post.dto.req.SearchPostRequest;
-import org.example.memoaserver.domain.post.dto.res.PostResponse;
+import org.example.memoaserver.domain.post.dto.request.PostRequest;
+import org.example.memoaserver.domain.post.dto.request.SearchPostRequest;
+import org.example.memoaserver.domain.post.dto.response.PostResponse;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
 import org.example.memoaserver.domain.post.exception.PostNotFoundException;

@@ -1,9 +1,8 @@
-package org.example.memoaserver.domain.user.dto.res;
+package org.example.memoaserver.domain.user.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.example.memoaserver.domain.school.dto.res.DepartmentResponse;
-import org.example.memoaserver.domain.school.entity.DepartmentEntity;
+import org.example.memoaserver.domain.school.dto.response.DepartmentResponse;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 
 @Getter
