@@ -19,10 +19,12 @@ public final class ErrorResponseSender {
         StatusCode statusCode
     ) {
         try{
-            response.setStatus(statusCode.getStatusCode());
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(errorMessage(statusCode)));
+            if (!response.isCommitted()) {
+                response.setStatus(statusCode.getStatusCode());
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(objectMapper.writeValueAsString(errorMessage(statusCode)));
+            }
         }catch (IOException e){
             e.printStackTrace();
         }
