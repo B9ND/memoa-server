@@ -2,6 +2,7 @@ package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.school.exception.SchoolNotFoundException;
 import org.example.memoaserver.domain.school.repository.DepartmentRepository;
 import org.example.memoaserver.domain.user.dto.request.RegisterRequest;
@@ -84,22 +85,29 @@ public class UserService {
 
         emailCheck(email);
 
-        String hashedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-
-        redisService.deleteOnRedisForAuthenticEmail(email);
-
-        UserEntity userEntity = UserEntity.builder()
-                .email(email)
-                .password(hashedPassword)
-                .nickname(user.getNickname())
-                .department(departmentRepository.findById(user.getDepartmentId()).orElse(null))
-                .profileImage("https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg")
-                .role(Role.ROLE_USER)
-                .build();
+        UserEntity userEntity = UserEntity.fromUserEntity(
+            user,
+            bCryptPasswordEncoder.encode(user.getPassword()),
+            getDepartment(user.getDepartmentId())
+        );
 
         userRepository.save(userEntity);
+        redisService.deleteOnRedisForAuthenticEmail(email);
 
         return UserResponse.fromUserEntity(userEntity);
+    }
+
+    private DepartmentEntity getDepartment(Long departmentId) {
+        return departmentRepository.findById(departmentId).orElse(null);
+    }
+
+    private Boolean checkVerification(String email) {
+        return redisService.findOnRedisForAuthenticEmail(email);
+    }
+
+    private Boolean checkEmailVerification(String email) {
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private void emailCheck(String email) {
@@ -112,14 +120,5 @@ public class UserService {
         if (!checkVerification(email)) {
             throw new VerifyEmailException();
         }
-    }
-
-    private Boolean checkVerification(String email) {
-        return redisService.findOnRedisForAuthenticEmail(email);
-    }
-
-    private Boolean checkEmailVerification(String email) {
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 }

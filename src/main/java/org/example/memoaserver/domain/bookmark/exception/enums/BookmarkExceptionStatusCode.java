@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.bookmark.exception;
+package org.example.memoaserver.domain.bookmark.exception.enums;
 
 import lombok.AllArgsConstructor;
 import org.example.memoaserver.global.exception.enums.StatusCode;
