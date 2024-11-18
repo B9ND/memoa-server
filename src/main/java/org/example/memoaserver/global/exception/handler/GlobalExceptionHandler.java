@@ -6,9 +6,11 @@ import org.example.memoaserver.global.exception.dto.res.ErrorResponse;
 import org.example.memoaserver.global.exception.enums.ExceptionStatusCode;
 import org.hibernate.PropertyValueException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -86,5 +88,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(502)
             .body(ErrorResponse.errorResponse(ExceptionStatusCode.PROXY_ERROR));
+    }
+
+    @ExceptionHandler({DuplicateKeyException.class, DataIntegrityViolationException.class})
+    public ResponseEntity<ErrorResponse> handleDuplicateKeyException(DuplicateKeyException ex) {
+        return ResponseEntity
+            .status(409)
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.AlREADY_CREATED_DATA));
     }
 }
