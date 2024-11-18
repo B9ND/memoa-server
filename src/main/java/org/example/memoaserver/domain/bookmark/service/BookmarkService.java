@@ -2,7 +2,7 @@ package org.example.memoaserver.domain.bookmark.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.domain.bookmark.dto.res.BookmarkResponse;
+import org.example.memoaserver.domain.bookmark.dto.response.BookmarkResponse;
 import org.example.memoaserver.domain.bookmark.entity.BookmarkEntity;
 import org.example.memoaserver.domain.bookmark.exception.BookmarkException;
 import org.example.memoaserver.domain.bookmark.repository.BookmarkRepository;

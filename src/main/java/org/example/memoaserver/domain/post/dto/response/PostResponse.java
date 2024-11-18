@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.post.dto.res;
+package org.example.memoaserver.domain.post.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +7,6 @@ import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

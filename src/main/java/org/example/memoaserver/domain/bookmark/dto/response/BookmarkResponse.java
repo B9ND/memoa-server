@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.bookmark.dto.res;
+package org.example.memoaserver.domain.bookmark.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

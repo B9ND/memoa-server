@@ -3,7 +3,7 @@ package org.example.memoaserver.domain.user.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.user.dto.res.FollowUserResponse;
+import org.example.memoaserver.domain.user.dto.response.FollowUserResponse;
 import org.example.memoaserver.domain.user.entity.FollowEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.exception.UserNotfoundException;
