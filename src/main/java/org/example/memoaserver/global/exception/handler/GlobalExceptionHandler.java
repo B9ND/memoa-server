@@ -41,13 +41,6 @@ public class GlobalExceptionHandler {
             .body(ErrorResponse.errorResponse(ExceptionStatusCode.REQUIRE_ARGUMENTS));
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        return ResponseEntity
-            .status(409)
-            .body(ErrorResponse.errorResponse(ExceptionStatusCode.AlREADY_CREATED_DATA));
-    }
-
     @ExceptionHandler({RedisConnectionFailureException.class, IOException.class})
     public ResponseEntity<ErrorResponse> handleRedisConnectionFailureException(RedisConnectionFailureException ex) {
         return ResponseEntity
