@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.example.memoaserver.domain.school.entity.DepartmentEntity;
+import org.example.memoaserver.domain.user.dto.request.RegisterRequest;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 
 import java.time.LocalDate;
@@ -42,4 +43,15 @@ public class UserEntity {
     private DepartmentEntity department;
 
     private LocalDate birth;
+
+    public static UserEntity fromUserEntity(RegisterRequest user, String password, DepartmentEntity department) {
+        return UserEntity.builder()
+                .email(user.getEmail())
+                .password(password)
+                .nickname(user.getNickname())
+                .department(department)
+                .profileImage("https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg")
+                .role(Role.ROLE_USER)
+                .build();
+    }
 }
