@@ -80,25 +80,21 @@ public class UserService {
         return UserResponse.fromUserEntity(updatedUser);
     }
 
-    public UserResponse register(RegisterRequest user) {
-        String email = user.getEmail();
+    public UserResponse register(RegisterRequest register) {
+        String email = register.getEmail();
 
         emailCheck(email);
 
-        UserEntity userEntity = UserEntity.fromUserEntity(
-            user,
-            bCryptPasswordEncoder.encode(user.getPassword()),
-            getDepartment(user.getDepartmentId())
-        );
+        UserEntity user = UserEntity.fromUserEntity(register, bCryptPasswordEncoder.encode(register.getPassword()), getDepartment(register));
 
-        userRepository.save(userEntity);
+        userRepository.save(user);
         redisService.deleteOnRedisForAuthenticEmail(email);
 
-        return UserResponse.fromUserEntity(userEntity);
+        return UserResponse.fromUserEntity(user);
     }
 
-    private DepartmentEntity getDepartment(Long departmentId) {
-        return departmentRepository.findById(departmentId).orElse(null);
+    private DepartmentEntity getDepartment(RegisterRequest user) {
+        return departmentRepository.findById(user.getDepartmentId()).orElse(null);
     }
 
     private Boolean checkVerification(String email) {
