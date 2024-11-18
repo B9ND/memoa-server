@@ -16,4 +16,8 @@ public class TagEntity {
 
     @Column(unique = true, nullable = false)
     private String tagName;
+
+    public static String fromTagEntity(TagEntity tagEntity) {
+        return tagEntity.tagName;
+    }
 }
