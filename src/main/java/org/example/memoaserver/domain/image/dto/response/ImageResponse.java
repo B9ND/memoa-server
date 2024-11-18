@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.image.dto.res;
+package org.example.memoaserver.domain.image.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

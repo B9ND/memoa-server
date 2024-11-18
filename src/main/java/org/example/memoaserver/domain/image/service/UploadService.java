@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.domain.image.dto.res.ImageResponse;
+import org.example.memoaserver.domain.image.dto.response.ImageResponse;
 import org.example.memoaserver.domain.image.exception.ImageNotFoundException;
 import org.example.memoaserver.domain.image.exception.ImageTypeException;
 import org.example.memoaserver.domain.image.exception.ImageUploadException;

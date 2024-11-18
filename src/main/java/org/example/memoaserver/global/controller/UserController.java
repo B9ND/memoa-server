@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.example.memoaserver.domain.user.dto.res.UserResponse;
+import org.example.memoaserver.domain.user.dto.response.UserResponse;
 import org.example.memoaserver.domain.user.service.UserService;
 import org.example.memoaserver.global.exception.dto.res.ErrorResponse;
 import org.springframework.http.ResponseEntity;

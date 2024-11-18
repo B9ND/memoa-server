@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.post.dto.req;
+package org.example.memoaserver.domain.post.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.bookmark.dto.res.BookmarkResponse;
+import org.example.memoaserver.domain.bookmark.dto.response.BookmarkResponse;
 import org.example.memoaserver.domain.bookmark.exception.BookmarkException;
 import org.example.memoaserver.domain.bookmark.service.BookmarkService;
 import org.springframework.http.HttpStatus;
