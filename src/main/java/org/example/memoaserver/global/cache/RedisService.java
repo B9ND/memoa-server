@@ -71,6 +71,6 @@ public class RedisService {
     }
 
     public Boolean ExpiredForRateLimiter(String clientIp) {
-        return rateLimiterRedis.expire("req_count::" + clientIp, 60, TimeUnit.SECONDS);
+        return rateLimiterRedis.expire("req_count::" + clientIp, 25, TimeUnit.SECONDS);
     }
 }
