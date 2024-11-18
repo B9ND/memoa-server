@@ -25,15 +25,7 @@ public class RefreshTokenService {
 
         refreshTokenValidator.validate(device, refresh);
 
-        String email = jwtUtil.getEmail(refresh);
-        Role role = Role.valueOf(jwtUtil.getRole(refresh));
-
-        String newAccess = jwtUtil.createJwt("access", email, role, device, jwtProperties.getAccess().getExpiration());
-        String newRefresh = jwtUtil.createJwt("refresh", email, role, device, jwtProperties.getRefresh().getExpiration());
-
-        redisService.saveToken(device + "::" + email, newRefresh, jwtProperties.getRefresh().getExpiration());
-
-        return JwtTokenResponse.builder().access(newAccess).refresh(newRefresh).build();
+        return getRefreshInfo(refresh, device);
     }
 
     public void logout(HttpServletRequest request) {
@@ -41,11 +33,23 @@ public class RefreshTokenService {
         String device = request.getHeader("User-Agent") + "_" + request.getRemoteAddr();
 
         refreshTokenValidator.validate(device, refresh);
-
         deleteTokenByEmail(device, jwtUtil.getEmail(refresh));
     }
 
     private void deleteTokenByEmail(String device, String email) {
         redisService.deleteOnRedisForToken(device + "::" + email);
+    }
+
+    private JwtTokenResponse getRefreshInfo(String refresh, String device) {
+        return createJwt(Role.valueOf(jwtUtil.getRole(refresh)), jwtUtil.getEmail(refresh), device);
+    }
+
+    private JwtTokenResponse createJwt(Role role, String email, String device) {
+        String newAccess = jwtUtil.createJwt("access", email, role, device, jwtProperties.getAccess().getExpiration());
+        String newRefresh = jwtUtil.createJwt("refresh", email, role, device, jwtProperties.getRefresh().getExpiration());
+
+        redisService.saveToken(device + "::" + email, newRefresh, jwtProperties.getRefresh().getExpiration());
+        return JwtTokenResponse.builder().access(newAccess).refresh(newRefresh).build();
+
     }
 }

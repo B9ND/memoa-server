@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RateLimiterService {
-    private static final int MAX_REQUEST = 40;
+    private static final int MAX_REQUEST = 500;
     private final RedisService redisService;
 
     public boolean isAllowed(String clientIp) {
