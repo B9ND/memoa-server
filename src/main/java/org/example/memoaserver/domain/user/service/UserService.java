@@ -2,6 +2,7 @@ package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.school.exception.SchoolNotFoundException;
 import org.example.memoaserver.domain.school.repository.DepartmentRepository;
 import org.example.memoaserver.domain.user.dto.request.RegisterRequest;
@@ -79,27 +80,30 @@ public class UserService {
         return UserResponse.fromUserEntity(updatedUser);
     }
 
-    public UserResponse register(RegisterRequest user) {
-        String email = user.getEmail();
+    public UserResponse register(RegisterRequest register) {
+        String email = register.getEmail();
 
         emailCheck(email);
 
-        String hashedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        UserEntity user = UserEntity.fromUserEntity(register, bCryptPasswordEncoder.encode(register.getPassword()), getDepartment(register));
 
+        userRepository.save(user);
         redisService.deleteOnRedisForAuthenticEmail(email);
 
-        UserEntity userEntity = UserEntity.builder()
-                .email(email)
-                .password(hashedPassword)
-                .nickname(user.getNickname())
-                .department(departmentRepository.findById(user.getDepartmentId()).orElse(null))
-                .profileImage("https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg")
-                .role(Role.ROLE_USER)
-                .build();
+        return UserResponse.fromUserEntity(user);
+    }
 
-        userRepository.save(userEntity);
+    private DepartmentEntity getDepartment(RegisterRequest user) {
+        return departmentRepository.findById(user.getDepartmentId()).orElse(null);
+    }
 
-        return UserResponse.fromUserEntity(userEntity);
+    private Boolean checkVerification(String email) {
+        return redisService.findOnRedisForAuthenticEmail(email);
+    }
+
+    private Boolean checkEmailVerification(String email) {
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private void emailCheck(String email) {
@@ -112,14 +116,5 @@ public class UserService {
         if (!checkVerification(email)) {
             throw new VerifyEmailException();
         }
-    }
-
-    private Boolean checkVerification(String email) {
-        return redisService.findOnRedisForAuthenticEmail(email);
-    }
-
-    private Boolean checkEmailVerification(String email) {
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 }
