@@ -15,6 +15,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -88,5 +89,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(409)
             .body(ErrorResponse.errorResponse(ExceptionStatusCode.AlREADY_CREATED_DATA));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
+        return ResponseEntity
+                .status(400)
+                .body(ErrorResponse.errorResponse(ExceptionStatusCode.PAYLOAD_TOO_LARGE));
     }
 }
