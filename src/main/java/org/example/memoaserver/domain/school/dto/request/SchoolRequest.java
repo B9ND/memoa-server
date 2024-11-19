@@ -3,7 +3,6 @@ package org.example.memoaserver.domain.school.dto.request;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.memoaserver.domain.school.dto.DepartmentDTO;
 
 import java.util.List;
 
@@ -11,5 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 public class SchoolRequest {
     private String name;
-    private List<DepartmentDTO> departments;
+    private List<DepartmentRequest> departments;
 }

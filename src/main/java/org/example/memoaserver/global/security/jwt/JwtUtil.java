@@ -1,9 +1,12 @@
 package org.example.memoaserver.global.security.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.global.exception.JsonPassingException;
 import org.example.memoaserver.global.exception.JwtSignatureException;
+import org.example.memoaserver.global.exception.TokenExpiredException;
 import org.example.memoaserver.global.exception.TokenInvalidException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,6 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
@@ -38,17 +42,21 @@ public class JwtUtil {
         try {
             isExpired(token);
             return true;
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e) {
+            throw new TokenExpiredException();
+        }
+        catch (Exception e) {
+            log.error(e.getMessage());
             throw new TokenInvalidException();
         }
     }
 
-    public String getCategory(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
-    }
-
     public void isExpired(String token) {
         Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration();
+    }
+
+    public String getCategory(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 
     public String createJwt(String category, String email, Role role, String deviceIdentifier, Long expiredTime) {
