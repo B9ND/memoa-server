@@ -28,16 +28,8 @@ public class BookmarkController {
             description = "게시물의 북마크를 추가하거나 삭제합니다. 북마크하고자 하는 게시물의 아이디를 파라미터로 전달합니다."
     )
     public ResponseEntity<?> toggleBookmark(@RequestParam(name = "post-id") Long postId) {
-        try {
             bookmarkService.addOrDeleteBookmark(postId);
             return ResponseEntity.ok().build();
-        } catch (BookmarkException e) {
-            log.error("북마크 동작 중 오류 발생: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            log.error("예기치 못한 오류 발생: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
     }
 
     @GetMapping
