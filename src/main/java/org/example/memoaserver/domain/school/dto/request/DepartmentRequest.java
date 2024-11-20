@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.school.dto;
+package org.example.memoaserver.domain.school.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
-public class DepartmentDTO {
+public class DepartmentRequest {
     private String name;
     private List<String> subjects;
     private Integer grade;
