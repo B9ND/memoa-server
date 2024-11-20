@@ -28,12 +28,11 @@ public class RefreshTokenService {
         return getRefreshInfo(refresh, device);
     }
 
-    public void logout(HttpServletRequest request) {
-        String refresh = request.getHeader("Refresh");
+    public void logout(HttpServletRequest request, RefreshTokenRequest tokenRequest) {
         String device = request.getHeader("User-Agent") + "_" + request.getRemoteAddr();
 
-        refreshTokenValidator.validate(device, refresh);
-        deleteTokenByEmail(device, jwtUtil.getEmail(refresh));
+        refreshTokenValidator.validate(device, tokenRequest.getRefresh());
+        deleteTokenByEmail(device, jwtUtil.getEmail(tokenRequest.getRefresh()));
     }
 
     private void deleteTokenByEmail(String device, String email) {
