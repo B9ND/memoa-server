@@ -10,6 +10,7 @@ public enum ExceptionStatusCode implements StatusCode {
     JSON_ERROR(401, "파싱할 수 없는 json 객체"),
     AlREADY_CREATED_DATA(409, "이미 존재하는 데이터"),
     JWT_SIGNATURE(400, "jwt 서명 오류"),
+    PAYLOAD_TOO_LARGE(413, "너무 큰 데이터"),
     ENCODE_FAILED(500, "인코딩 실패"),
     PROXY_ERROR(502, "프록시 에러"),
     REQUIRE_ARGUMENTS(400, "필수 항목 입력 안됨"),

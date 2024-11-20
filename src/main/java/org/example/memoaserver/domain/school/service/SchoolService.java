@@ -27,16 +27,12 @@ public class SchoolService {
         SchoolEntity schoolEntity = new SchoolEntity();
         schoolEntity.setName(schoolRequest.getName());
 
-        List<DepartmentEntity> departmentEntities = schoolRequest.getDepartments().stream()
-                .map(departmentDTO -> {
-                    DepartmentEntity departmentEntity = new DepartmentEntity();
-                    departmentEntity.setName(departmentDTO.getName());
-                    departmentEntity.setGrade(departmentDTO.getGrade());
-                    departmentEntity.setSubjects(departmentDTO.getSubjects());
-                    departmentEntity.setSchoolEntity(schoolEntity);
-                    return departmentEntity;
-                })
-                .toList();
+        List<DepartmentEntity> departmentEntities = schoolRequest.getDepartments()
+            .stream()
+            .map(
+                department -> DepartmentEntity.fromDepartmentRequest(department, schoolEntity)
+            )
+            .toList();
 
         schoolEntity.setDepartments(departmentEntities);
 

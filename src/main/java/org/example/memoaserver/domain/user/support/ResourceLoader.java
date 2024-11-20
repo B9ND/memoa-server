@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 public class ResourceLoader {
 
-    static public String loadEmailHtml(String email, String authCode, int expirationTime) throws IOException {
+    static public String loadEmailHtml(String authCode, int expirationTime) throws IOException {
         Resource resource = new ClassPathResource("templates/mail.html");
         String htmlBody = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
 
