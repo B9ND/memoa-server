@@ -9,15 +9,14 @@ import org.example.memoaserver.domain.user.dto.request.RegisterRequest;
 import org.example.memoaserver.domain.user.dto.request.UpdateUserRequest;
 import org.example.memoaserver.domain.user.dto.response.UserResponse;
 import org.example.memoaserver.domain.user.entity.UserEntity;
-import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.domain.user.exception.*;
+import org.example.memoaserver.domain.user.support.EmailValidator;
 import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.cache.RedisService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -101,13 +100,8 @@ public class UserService {
         return redisService.findOnRedisForAuthenticEmail(email);
     }
 
-    private Boolean checkEmailVerification(String email) {
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
     private void emailCheck(String email) {
-        if (!checkEmailVerification(email)) {
+        if (EmailValidator.isValidEmail(email)) {
             throw new InvalidEmailException();
         }
         if (userRepository.existsByEmail(email)) {

@@ -11,7 +11,7 @@ import org.example.memoaserver.domain.school.dto.request.DepartmentRequest;
 import java.util.List;
 
 @Entity(name = "department")
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 public class DepartmentEntity {
     @Id
@@ -23,7 +23,7 @@ public class DepartmentEntity {
     private Integer grade;
 
     @ManyToOne
-    @JoinColumn(name = "school_entity_id", nullable = false)
+    @JoinColumn(name = "school_id", nullable = false)
     private SchoolEntity schoolEntity;
 
     @ElementCollection(fetch = FetchType.EAGER)

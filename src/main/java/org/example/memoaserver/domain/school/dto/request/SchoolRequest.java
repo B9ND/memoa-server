@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 public class SchoolRequest {
     private String name;
