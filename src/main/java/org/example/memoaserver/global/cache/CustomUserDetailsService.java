@@ -1,6 +1,7 @@
 package org.example.memoaserver.global.cache;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.exception.TokenInvalidException;
@@ -18,10 +19,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         UserEntity userData = userRepository.findByEmail(email);
 
-        if (userData != null) {
-            return new CustomUserDetails(userData);
+        if (userData == null) {
+            throw new TokenInvalidException();
         }
-
-        throw new TokenInvalidException();
+        return new CustomUserDetails(userData);
     }
 }

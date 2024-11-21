@@ -37,19 +37,18 @@ public class UploadService {
             throw new ImageNotFoundException();
         }
         return ImageResponse.builder()
-                .url(uploadImageToS3(image))
-                .build();
+            .url(uploadImageToS3(image))
+            .build();
     }
 
     private String uploadImageToS3(MultipartFile image) throws IOException {
         String originalFilename = image.getOriginalFilename();
         String s3FileName = UUID.randomUUID().toString().substring(0, 10) + "_" + originalFilename;
-        byte[] bytes = image.getBytes();
 
-        ObjectMetadata metadata = createMetadata(originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase(), bytes);
+        ObjectMetadata metadata = createMetadata(originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase(), image.getBytes());
 
         try {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(image.getBytes());
             amazonS3.putObject(createPutObjectRequest(s3FileName, byteArrayInputStream, metadata));
         } catch (Exception e) {
             throw new ImageUploadException();
