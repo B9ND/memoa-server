@@ -27,9 +27,8 @@ public class BookmarkService {
     public void addOrDeleteBookmark(Long bookmarkRequest) {
         UserEntity user = userAuthHolder.current();
         PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(PostNotFoundException::new);
-        Boolean bookmarkExists = bookmarkRepository.existsByUserAndPost(user, post);
 
-        if (!bookmarkExists) {
+        if (!bookmarkRepository.existsByUserAndPost(user, post)) {
             bookmarkRepository.save(BookmarkEntity.builder()
                     .post(post)
                     .user(user)

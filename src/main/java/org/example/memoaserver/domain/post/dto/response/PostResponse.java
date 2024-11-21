@@ -7,6 +7,7 @@ import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.entity.TagEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class PostResponse {
 
     private Set<String> tags;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     private List<String> images;
 
