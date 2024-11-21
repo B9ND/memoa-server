@@ -25,7 +25,7 @@ public class BookmarkController {
     @PostMapping
     @Operation(
             summary = "특정 게시물 북마크 상태를 토글합니다.",
-            description = "게시물의 북마크를 추가하거나 삭제합니다. 북마크하고자 하는 게시물의 아이디를 파라미터로 전달합니다."
+            description = "게시물의 북마크를 추가하거나 삭제합니다. 게시물의 아이디를 파라미터로 전달합니다."
     )
     public ResponseEntity<?> toggleBookmark(@RequestParam(name = "post-id") Long postId) {
             bookmarkService.addOrDeleteBookmark(postId);
