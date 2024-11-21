@@ -27,7 +27,7 @@ public class AuthCodeService {
     public void sendAuthCode(String email)
             throws IOException, NoSuchAlgorithmException {
 
-        if (email.isEmpty() || EmailValidator.isValidEmail(email)) {
+        if (EmailValidator.isValidEmail(email)) {
             throw new InvalidEmailException();
         }
 

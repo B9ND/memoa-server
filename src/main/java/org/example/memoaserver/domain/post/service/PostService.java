@@ -75,7 +75,7 @@ public class  PostService {
         return postEntities.stream()
             .map(
                 post -> PostResponse.fromPostEntity(
-                        post, bookmarkRepository.existsByUserAndPost(user, post)
+                    post, bookmarkRepository.existsByUserAndPost(user, post)
                 )
             )
             .toList();
