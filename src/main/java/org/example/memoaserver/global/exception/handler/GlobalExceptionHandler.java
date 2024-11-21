@@ -23,8 +23,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(StatusException.class)
     public ResponseEntity<ErrorResponse> handleClassCastException(StatusException ex) {
         return ResponseEntity
-                .status(ex.getStatus().getStatusCode())
-                .body(ErrorResponse.errorResponse(ex.getStatus()));
+            .status(ex.getStatus().getStatusCode())
+            .body(ErrorResponse.errorResponse(ex.getStatus()));
     }
 
     @ExceptionHandler(NoSuchAlgorithmException.class)
@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
         return ResponseEntity
-                .status(400)
-                .body(ErrorResponse.errorResponse(ExceptionStatusCode.PAYLOAD_TOO_LARGE));
+            .status(400)
+            .body(ErrorResponse.errorResponse(ExceptionStatusCode.PAYLOAD_TOO_LARGE));
     }
 }
