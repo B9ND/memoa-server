@@ -3,30 +3,19 @@ package org.example.memoaserver.global.security.jwt.details;
 import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
-@Slf4j
 public record CustomUserDetails(UserEntity userEntity) implements UserDetails {
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        Collection<GrantedAuthority> collection = new ArrayList<>();
-
-        collection.add(new GrantedAuthority() {
-
-            @Override
-            public String getAuthority() {
-
-                return userEntity.getRole().value();
-            }
-        });
-
-        return collection;
+        return Collections.singleton(new SimpleGrantedAuthority(userEntity.getRole().name()));
     }
 
     @Override

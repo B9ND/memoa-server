@@ -45,10 +45,7 @@ public class  PostService {
 
     @Transactional
     public PostResponse save(PostRequest postRequest) {
-        Set<TagEntity> tags = postRequest.getTags()
-                .stream()
-                .map(this::findOrCreateTag)
-                .collect(Collectors.toSet());
+        Set<TagEntity> tags = toTagEntity(postRequest.getTags());
         PostEntity post = postRequest.toPostEntity(userAuthHolder.current(), tags);
         post.setImages(postRequest.toImageEntities(post));
 
@@ -65,8 +62,7 @@ public class  PostService {
 
     public PostResponse getPostById(Long id) {
         return bookMarkedPost(
-            postRepository.findById(id)
-                .orElseThrow(PostNotFoundException::new),
+            postRepository.findById(id).orElseThrow(PostNotFoundException::new),
             userAuthHolder.current()
         );
     }
@@ -77,9 +73,19 @@ public class  PostService {
 
     private List<PostResponse> bookMarkedPosts(List<PostEntity> postEntities, UserEntity user) {
         return postEntities.stream()
-                .map(
-                        bookmark -> PostResponse.fromPostEntity(bookmark, bookmarkRepository.existsByUserAndPost(user, bookmark)))
-                .toList();
+            .map(
+                post -> PostResponse.fromPostEntity(
+                    post, bookmarkRepository.existsByUserAndPost(user, post)
+                )
+            )
+            .toList();
+    }
+
+    private Set<TagEntity> toTagEntity(Set<String> tags) {
+        return tags
+            .stream()
+            .map(this::findOrCreateTag)
+            .collect(Collectors.toSet());
     }
 
     private TagEntity findOrCreateTag(String tagName) {
