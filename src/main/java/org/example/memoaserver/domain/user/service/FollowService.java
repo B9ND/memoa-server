@@ -26,22 +26,28 @@ public class FollowService {
     public List<FollowUserResponse> getFollowers(String nickname) {
         UserEntity user = (nickname != null) ? userRepository.findByNickname(nickname).orElseThrow(UserNotfoundException::new) : userAuthHolder.current();
 
-        return followRepository.findByFollowing(user)
+        return followRepository.findByFollower(user)
                 .stream()
-                .map(FollowEntity::getFollower)
-                .map(FollowUserResponse::fromUserEntity)
+                .map(this::fromFollowerUser)
                 .toList();
+    }
+
+    private FollowUserResponse fromFollowerUser(FollowEntity followedUser) {
+        return FollowUserResponse.fromUserEntity(followedUser.getFollowing(), isFollowed(followedUser.getFollowing()));
     }
 
     // nickname 이 팔로우 하는 사람들
     public List<FollowUserResponse> getFollowings(String nickname) {
         UserEntity user = (nickname != null) ? userRepository.findByNickname(nickname).orElseThrow(UserNotfoundException::new) : userAuthHolder.current();
 
-        return followRepository.findByFollower(user)
+        return followRepository.findByFollowing(user)
                 .stream()
-                .map(FollowEntity::getFollowing)
-                .map(FollowUserResponse::fromUserEntity)
+                .map(this::fromFollowingUser)
                 .toList();
+    }
+
+    private FollowUserResponse fromFollowingUser(FollowEntity followedUser) {
+        return FollowUserResponse.fromUserEntity(followedUser.getFollower(), isFollowed(followedUser.getFollower()));
     }
 
     @Transactional
@@ -56,24 +62,28 @@ public class FollowService {
 
     public Boolean isExist(UserEntity me, String nickname) {
         return followRepository.existsByFollowingAndFollower(
+            me,
             userRepository
-                .findByNickname(nickname)
-                .orElseThrow(UserNotfoundException::new),
-            me
+            .findByNickname(nickname)
+            .orElseThrow(UserNotfoundException::new)
         );
+    }
+
+    private Boolean isFollowed(UserEntity follower) {
+        return followRepository.existsByFollowingAndFollower(userAuthHolder.current(), follower);
     }
 
     private void addFollower(UserEntity me, String nickname) {
         UserEntity followerEntity = userRepository.findByNickname(nickname).orElseThrow(UserNotfoundException::new);
 
         followRepository.save(FollowEntity.builder()
-                .following(followerEntity)
-                .follower(me)
+                .following(me)
+                .follower(followerEntity)
                 .build());
     }
 
     private void removeFollower(UserEntity me, String nickname) {
         UserEntity follower = userRepository.findByNickname(nickname).orElseThrow(UserNotfoundException::new);
-        followRepository.deleteByFollowingAndFollower(follower, me);
+        followRepository.deleteByFollowingAndFollower(me, follower);
     }
 }
