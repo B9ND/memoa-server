@@ -54,7 +54,7 @@ public class AuthController {
 
     @Operation(
             summary = "로그아웃하는 주소입니다.",
-            description = "refresh token 을 헤더로 받습니다."
+            description = "refresh token 을 body로 받습니다."
     )
     @DeleteMapping("/logout")
     public void logout(HttpServletRequest request, @RequestBody RefreshTokenRequest refreshTokenRequest) {
