@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BookmarkService {
-
     private final PostRepository postRepository;
     private final BookmarkRepository bookmarkRepository;
     private final UserAuthHolder userAuthHolder;
