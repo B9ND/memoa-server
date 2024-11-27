@@ -50,7 +50,7 @@ public class SecurityConfig {
 
                 .addFilterBefore(rateLimitingFilter, LoginFilter.class)
                 .addFilterBefore(jwtExceptionHandlerFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtFilter, LoginFilter.class)
+                .addFilterAfter(jwtFilter, LoginFilter.class)
                 .addFilterAt(getLoginFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests((auth) -> auth
