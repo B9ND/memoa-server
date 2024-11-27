@@ -2,8 +2,10 @@ package org.example.memoaserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.memoaserver.domain.user.exception.ExistUserEmailException;
 import org.example.memoaserver.domain.user.exception.InvalidEmailException;
 import org.example.memoaserver.domain.user.exception.VerifyCodeException;
+import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.domain.user.support.EmailValidator;
 import org.example.memoaserver.domain.user.support.RandomCodeGenerator;
 import org.example.memoaserver.domain.user.support.ResourceLoader;
@@ -21,11 +23,16 @@ public class AuthCodeService {
     private final EmailService emailService;
     private final SHA256 sha256;
     private final RedisService redisService;
+    private final UserRepository userRepository;
 
     private static final int EXPIRATION_TIME = 5;
 
     public void sendAuthCode(String email)
             throws IOException, NoSuchAlgorithmException {
+
+        if (userRepository.findByEmail(email) != null) {
+            throw new ExistUserEmailException();
+        }
 
         if (EmailValidator.isValidEmail(email)) {
             throw new InvalidEmailException();
