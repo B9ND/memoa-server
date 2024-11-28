@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -95,5 +96,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(400)
             .body(ErrorResponse.errorResponse(ExceptionStatusCode.PAYLOAD_TOO_LARGE));
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorResponse> handleSignatureException(SignatureException ex) {
+        return ResponseEntity
+                .status(400)
+                .body(ErrorResponse.errorResponse(ExceptionStatusCode.JWT_SIGNATURE));
     }
 }
