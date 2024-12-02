@@ -10,6 +10,7 @@ import org.example.memoaserver.global.security.jwt.filter.LoginFilter;
 import org.example.memoaserver.global.security.properties.JwtProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -60,6 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/test").permitAll()
                         .requestMatchers("/report").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/report").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 

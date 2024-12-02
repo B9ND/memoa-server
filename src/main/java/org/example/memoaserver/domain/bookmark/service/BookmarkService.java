@@ -38,7 +38,8 @@ public class BookmarkService {
     }
 
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
-        return bookmarkRepository.findByUserOrderByCreatedAtDesc(userAuthHolder.current()).orElseThrow(BookmarkException::new).stream()
+        return bookmarkRepository.findByUserOrderByCreatedAtDesc(userAuthHolder.current())
+                .orElseThrow(BookmarkException::new).stream()
                 .map(BookmarkResponse::fromBookmarkEntity)
                 .toList();
     }

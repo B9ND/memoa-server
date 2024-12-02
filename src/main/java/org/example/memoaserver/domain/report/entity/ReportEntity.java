@@ -2,6 +2,7 @@ package org.example.memoaserver.domain.report.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.report.entity.enums.ReportStatus;
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @NoArgsConstructor
 public class ReportEntity {
@@ -34,7 +36,8 @@ public class ReportEntity {
     private LocalDateTime createdAt;
 
     @Builder
-    public ReportEntity(PostEntity post, UserEntity user, String reason, ReportStatus status) {
+    public ReportEntity(Long id, PostEntity post, UserEntity user, String reason, ReportStatus status) {
+        this.id = id;
         this.post = post;
         this.user = user;
         this.reason = reason;
