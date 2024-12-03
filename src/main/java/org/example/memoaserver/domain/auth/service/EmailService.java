@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.user.service;
+package org.example.memoaserver.domain.auth.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

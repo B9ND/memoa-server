@@ -1,12 +1,12 @@
-package org.example.memoaserver.domain.user.service;
+package org.example.memoaserver.domain.auth.service;
 
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.user.dto.request.RefreshTokenRequest;
+import org.example.memoaserver.domain.auth.request.RefreshTokenRequest;
 import org.example.memoaserver.domain.user.entity.enums.Role;
-import org.example.memoaserver.domain.user.support.RefreshTokenValidator;
+import org.example.memoaserver.domain.auth.support.RefreshTokenValidator;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.exception.JwtSignatureException;
 import org.example.memoaserver.global.security.jwt.JwtUtil;

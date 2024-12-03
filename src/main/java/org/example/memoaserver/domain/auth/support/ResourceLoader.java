@@ -1,11 +1,10 @@
-package org.example.memoaserver.domain.user.support;
+package org.example.memoaserver.domain.auth.support;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class ResourceLoader {

@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.user.support;
+package org.example.memoaserver.domain.auth.support;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;

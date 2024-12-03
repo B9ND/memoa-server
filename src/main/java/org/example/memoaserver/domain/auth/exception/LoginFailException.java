@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.user.exception;
+package org.example.memoaserver.domain.auth.exception;
 
 import org.example.memoaserver.domain.user.exception.enums.UserExceptionStatusCode;
 import org.example.memoaserver.global.exception.StatusException;

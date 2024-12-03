@@ -1,14 +1,13 @@
-package org.example.memoaserver.domain.user.service;
+package org.example.memoaserver.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.example.memoaserver.domain.user.exception.ExistUserEmailException;
-import org.example.memoaserver.domain.user.exception.InvalidEmailException;
-import org.example.memoaserver.domain.user.exception.VerifyCodeException;
+import org.example.memoaserver.domain.auth.exception.ExistUserEmailException;
+import org.example.memoaserver.domain.auth.exception.InvalidEmailException;
+import org.example.memoaserver.domain.auth.exception.VerifyCodeException;
 import org.example.memoaserver.domain.user.repository.UserRepository;
-import org.example.memoaserver.domain.user.support.EmailValidator;
-import org.example.memoaserver.domain.user.support.RandomCodeGenerator;
-import org.example.memoaserver.domain.user.support.ResourceLoader;
+import org.example.memoaserver.domain.auth.support.EmailValidator;
+import org.example.memoaserver.domain.auth.support.RandomCodeGenerator;
+import org.example.memoaserver.domain.auth.support.ResourceLoader;
 import org.example.memoaserver.global.cache.RedisService;
 import org.example.memoaserver.global.security.encode.SHA256;
 import org.springframework.stereotype.Service;

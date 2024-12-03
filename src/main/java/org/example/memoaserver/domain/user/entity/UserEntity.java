@@ -6,11 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.example.memoaserver.domain.school.entity.DepartmentEntity;
-import org.example.memoaserver.domain.user.dto.request.RegisterRequest;
+import org.example.memoaserver.domain.auth.request.RegisterRequest;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter @SuperBuilder(toBuilder = true)
 @Entity(name = "user")

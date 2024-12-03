@@ -1,4 +1,4 @@
-package org.example.memoaserver.domain.user.dto.request;
+package org.example.memoaserver.domain.auth.request;
 
 import lombok.Getter;
 
