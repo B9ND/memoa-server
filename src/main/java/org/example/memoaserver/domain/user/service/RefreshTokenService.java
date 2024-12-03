@@ -1,16 +1,20 @@
 package org.example.memoaserver.domain.user.service;
 
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.user.dto.request.RefreshTokenRequest;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 import org.example.memoaserver.domain.user.support.RefreshTokenValidator;
 import org.example.memoaserver.global.cache.RedisService;
+import org.example.memoaserver.global.exception.JwtSignatureException;
 import org.example.memoaserver.global.security.jwt.JwtUtil;
 import org.example.memoaserver.global.security.jwt.dto.res.JwtTokenResponse;
 import org.example.memoaserver.global.security.properties.JwtProperties;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
@@ -20,12 +24,15 @@ public class RefreshTokenService {
     private final RefreshTokenValidator refreshTokenValidator;
 
     public JwtTokenResponse reissue(HttpServletRequest request, RefreshTokenRequest tokenRequest) {
-        String device = request.getHeader("User-Agent") + "_" + request.getRemoteAddr();
-        String refresh = tokenRequest.getRefresh();
+        try {
+            String device = jwtUtil.getDevice(tokenRequest.getRefresh());
+            String refresh = tokenRequest.getRefresh();
 
-        refreshTokenValidator.validate(device, refresh);
-
-        return getRefreshInfo(refresh, device);
+            refreshTokenValidator.validate(device, refresh);
+            return getRefreshInfo(refresh, device);
+        } catch (SignatureException e) {
+            throw new JwtSignatureException();
+        }
     }
 
     public void logout(HttpServletRequest request, RefreshTokenRequest tokenRequest) {
