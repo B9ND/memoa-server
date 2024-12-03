@@ -28,7 +28,7 @@ public class ReportController {
             description = "게시물 아이디를 파라미터로 전달합니다."
     )
     public ResponseEntity<List<ReportResponse>> addReport(@RequestParam(name = "post-id") ReportRequest postId) {
-        reportService.save(postId);
+        reportService.save(postId.getPostId());
         return ResponseEntity.ok().build();
     }
 

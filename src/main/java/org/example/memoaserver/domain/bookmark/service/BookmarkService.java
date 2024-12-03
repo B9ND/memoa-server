@@ -37,6 +37,7 @@ public class BookmarkService {
         }
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
         return bookmarkRepository.findByUserOrderByCreatedAtDesc(userAuthHolder.current())
                 .orElseThrow(BookmarkException::new).stream()

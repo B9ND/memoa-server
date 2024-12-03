@@ -25,9 +25,9 @@ public class ReportService {
     private final UserAuthHolder userAuthHolder;
 
     @Transactional
-    public void save(ReportRequest reportRequest) {
+    public void save(Long reportRequest) {
         UserEntity user = userAuthHolder.current();
-        PostEntity post = postRepository.findById(reportRequest.getPostId()).orElseThrow(PostNotFoundException::new);
+        PostEntity post = postRepository.findById(reportRequest).orElseThrow(PostNotFoundException::new);
 
         reportRepository.save(ReportEntity.builder()
                 .post(post)
