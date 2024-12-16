@@ -2,16 +2,16 @@ package org.example.memoaserver.domain.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.auth.request.RegisterRequest;
+import org.example.memoaserver.domain.school.entity.DepartmentEntity;
 import org.example.memoaserver.domain.user.entity.enums.Role;
 
 import java.time.LocalDate;
 
-@Getter @SuperBuilder(toBuilder = true)
+@Getter
 @Entity(name = "user")
 @NoArgsConstructor
 public class UserEntity {
@@ -52,5 +52,18 @@ public class UserEntity {
                 .profileImage("https://memoa-s3.s3.ap-northeast-2.amazonaws.com/profile.jpg")
                 .role(Role.ROLE_USER)
                 .build();
+    }
+
+    @Builder
+    public UserEntity(Long id, String email, String nickname, String description, Role role, String password, String profileImage, DepartmentEntity department, LocalDate birth) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.description = description;
+        this.role = role;
+        this.password = password;
+        this.profileImage = profileImage;
+        this.department = department;
+        this.birth = birth;
     }
 }

@@ -1,9 +1,9 @@
 package org.example.memoaserver.domain.bookmark.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity(name = "bookmark")
 @EntityListeners(AuditingEntityListener.class)
-@SuperBuilder
 @IdClass(BookmarkId.class)
 @Table(name = "bookmark", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "post_id"})
@@ -33,4 +32,11 @@ public class BookmarkEntity {
 
     @CreatedDate
     private LocalDate createdAt;
+
+    @Builder
+    public BookmarkEntity(UserEntity user, PostEntity post, LocalDate createdAt) {
+        this.user = user;
+        this.post = post;
+        this.createdAt = createdAt;
+    }
 }

@@ -1,13 +1,12 @@
 package org.example.memoaserver.domain.post.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
-@SuperBuilder
 @NoArgsConstructor
 @Entity(name = "image")
 public class ImageEntity {
@@ -24,5 +23,12 @@ public class ImageEntity {
 
     public static String fromImageEntity(ImageEntity imageEntity) {
         return imageEntity.getUrl();
+    }
+
+    @Builder
+    public ImageEntity(Long image_id, String url, PostEntity post) {
+        this.image_id = image_id;
+        this.url = url;
+        this.post = post;
     }
 }

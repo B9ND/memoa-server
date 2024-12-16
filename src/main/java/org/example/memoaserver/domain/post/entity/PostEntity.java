@@ -2,10 +2,10 @@ package org.example.memoaserver.domain.post.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
-@SuperBuilder
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "post")
@@ -49,4 +48,16 @@ public class PostEntity {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @Builder
+    public PostEntity(Long post_id, String title, String content, Boolean isReleased, UserEntity user, Set<TagEntity> tags, List<ImageEntity> images, LocalDateTime createdAt) {
+        this.post_id = post_id;
+        this.title = title;
+        this.content = content;
+        this.isReleased = isReleased;
+        this.user = user;
+        this.tags = tags;
+        this.images = images;
+        this.createdAt = createdAt;
+    }
 }

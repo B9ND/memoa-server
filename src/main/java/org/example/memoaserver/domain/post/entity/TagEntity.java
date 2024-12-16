@@ -1,15 +1,11 @@
 package org.example.memoaserver.domain.post.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
-import java.util.List;
-import java.util.Set;
 
 @Getter
-@SuperBuilder
 @NoArgsConstructor
 @Entity(name = "tag")
 public class TagEntity {
@@ -22,5 +18,11 @@ public class TagEntity {
 
     public static String fromTagEntity(TagEntity tagEntity) {
         return tagEntity.tagName;
+    }
+
+    @Builder
+    public TagEntity(Long tag_id, String tagName) {
+        this.tag_id = tag_id;
+        this.tagName = tagName;
     }
 }

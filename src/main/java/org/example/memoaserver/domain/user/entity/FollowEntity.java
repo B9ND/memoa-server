@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -14,7 +12,6 @@ import java.time.LocalDate;
 @Getter
 @Entity(name = "follow")
 @EntityListeners(AuditingEntityListener.class)
-@SuperBuilder
 @NoArgsConstructor
 public class FollowEntity {
     @Id
@@ -31,4 +28,12 @@ public class FollowEntity {
 
     @CreatedDate
     private LocalDate createdAt;
+
+    @Builder
+    public FollowEntity(Long id, UserEntity following, UserEntity follower, LocalDate createdAt) {
+        this.id = id;
+        this.following = following;
+        this.follower = follower;
+        this.createdAt = createdAt;
+    }
 }

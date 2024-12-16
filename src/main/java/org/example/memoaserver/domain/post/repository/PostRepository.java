@@ -32,8 +32,6 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
                                         @Param("userId") Long userId,
                                         Pageable pageable);
 
-
-
     @Query( "SELECT DISTINCT p FROM post p " +
             "LEFT JOIN p.tags t " +
             "WHERE (:userId IS NULL OR p.user.id IN " +
