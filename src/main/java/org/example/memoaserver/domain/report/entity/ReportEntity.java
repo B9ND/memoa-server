@@ -30,12 +30,10 @@ public class ReportEntity {
     private String reason;
 
     @Enumerated(EnumType.STRING)
-    private ReportStatus staotus;
+    private ReportStatus status;
 
     @CreatedDate
     private LocalDateTime createdAt;
-
-    private ReportStatus status;
 
     @Builder
     public ReportEntity(Long id, PostEntity post, UserEntity user, String reason, ReportStatus status) {

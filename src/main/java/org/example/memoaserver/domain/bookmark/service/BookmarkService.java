@@ -1,6 +1,5 @@
 package org.example.memoaserver.domain.bookmark.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.memoaserver.domain.bookmark.dto.response.BookmarkResponse;
 import org.example.memoaserver.domain.bookmark.entity.BookmarkEntity;
@@ -12,12 +11,14 @@ import org.example.memoaserver.domain.post.repository.PostRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
 import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BookmarkService {
+
     private final PostRepository postRepository;
     private final BookmarkRepository bookmarkRepository;
     private final UserAuthHolder userAuthHolder;
@@ -27,17 +28,17 @@ public class BookmarkService {
         UserEntity user = userAuthHolder.current();
         PostEntity post = postRepository.findById(bookmarkRequest).orElseThrow(PostNotFoundException::new);
 
-        if (!bookmarkRepository.existsByUserAndPost(user, post)) {
+        if (bookmarkRepository.existsByUserAndPost(user, post)) {
+            bookmarkRepository.deleteByUserAndPost(user, post);
+        } else {
             bookmarkRepository.save(BookmarkEntity.builder()
                     .post(post)
                     .user(user)
                     .build());
-        } else {
-            bookmarkRepository.deleteByUserAndPost(user, post);
         }
     }
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional
     public List<BookmarkResponse> getBookmarkedPostsByUser() {
         return bookmarkRepository.findByUserOrderByCreatedAtDesc(userAuthHolder.current())
                 .orElseThrow(BookmarkException::new).stream()

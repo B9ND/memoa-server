@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 @Builder
 public class ReportResponse {
 
-    private
+    private ReportEntity reportId;
 
     private PostEntity postId;
 

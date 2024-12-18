@@ -54,7 +54,7 @@ public class UserEntity {
                 .build();
     }
 
-    @Builder
+    @Builder(toBuilder = true)
     public UserEntity(Long id, String email, String nickname, String description, Role role, String password, String profileImage, DepartmentEntity department, LocalDate birth) {
         this.id = id;
         this.email = email;

@@ -13,13 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/report")
 @Tag(name = "report", description = "게시물 신고 관련 API")
 public class ReportController {
-
     private final ReportService reportService;
 
     @PostMapping
@@ -27,8 +25,8 @@ public class ReportController {
             summary = "게시물을 신고합니다.",
             description = "게시물 아이디를 파라미터로 전달합니다."
     )
-    public ResponseEntity<List<ReportResponse>> addReport(@RequestParam(name = "post-id") ReportRequest postId) {
-        reportService.save(postId.getPostId());
+    public ResponseEntity<List<ReportResponse>> addReport(@RequestParam(name = "post") Long postId) {
+        reportService.save(postId);
         return ResponseEntity.ok().build();
     }
 

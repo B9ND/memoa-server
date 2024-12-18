@@ -1,6 +1,7 @@
 package org.example.memoaserver.domain.report.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.memoaserver.domain.post.entity.PostEntity;
 import org.example.memoaserver.domain.post.exception.PostNotFoundException;
 import org.example.memoaserver.domain.post.repository.PostRepository;
@@ -9,13 +10,13 @@ import org.example.memoaserver.domain.report.entity.ReportEntity;
 import org.example.memoaserver.domain.report.exception.ReportNotFoundException;
 import org.example.memoaserver.domain.report.repository.ReportRepository;
 import org.example.memoaserver.domain.user.entity.UserEntity;
-import org.example.memoaserver.domain.user.repository.UserRepository;
 import org.example.memoaserver.global.security.jwt.support.UserAuthHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReportService {

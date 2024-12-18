@@ -60,8 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/school/*", "school").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/test").permitAll()
-                        .requestMatchers("/report").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/report").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/report/*").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
