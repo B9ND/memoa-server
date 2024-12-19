@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 @Getter
 @Builder
 public class ReportResponse {
-
     private ReportEntity reportId;
 
     private PostEntity postId;

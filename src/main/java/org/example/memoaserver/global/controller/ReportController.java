@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/report")
@@ -35,13 +36,16 @@ public class ReportController {
             summary = "어드민 전용. 신고 목록을 조회합니다.",
             description = "인자는 없습니다."
     )
-    public ResponseEntity<List<ReportResponse>> getReport(ReportRequest reportRequest) {
-    List<ReportEntity> reports = reportService.getReportsByPostId(reportRequest);
-    List<ReportResponse> reportResponses = reports.stream()
+    public ResponseEntity<List<ReportResponse>> getReports(@RequestParam(name = "post") Long postId) {
+        List<ReportEntity> reports = reportService.getReports(postId);
+        List<ReportResponse> reportResponses = reports.stream()
             .map(ReportResponse::fromReportEntity)
             .toList();
-    return ResponseEntity.ok(reportResponses);
 
+    return ResponseEntity.ok(reportResponses);
     }
 
+    public ResponseEntity<List<ReportEntity>> getAllReports() {
+        return ResponseEntity.ok(reportService.getAllReports());
+    }
 }

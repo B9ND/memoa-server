@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/bookmark")
 @Tag(name = "bookmark", description = "게시물 북마크 관련 API")
 public class BookmarkController {
-
     private final BookmarkService bookmarkService;
 
     @PostMapping

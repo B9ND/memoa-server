@@ -37,13 +37,16 @@ public class ReportService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReportEntity> getReportsByPostId(ReportRequest reportRequest) {
-        PostEntity post = postRepository.findById(reportRequest.getPostId())
+    public List<ReportEntity> getReports(Long reportRequest) {
+        PostEntity post = postRepository.findById(reportRequest)
             .orElseThrow(PostNotFoundException::new);
 
         return reportRepository.findByPost(post)
             .orElseThrow(ReportNotFoundException::new);
     }
 
-    
+    @Transactional(readOnly = true)
+    public List<ReportEntity> getAllReports() {
+        return reportRepository.findAll();
+    }
 }
